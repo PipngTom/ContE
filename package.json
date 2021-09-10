@@ -22,6 +22,7 @@
     "mysql": "^2.18.1",
     "request": "^2.88.2"
   },
+  "type": "module",
   "devDependencies": {
     "concurrently": "^6.2.1",
     "nodemon": "^2.0.12"

@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Provider } from 'react-redux';
+import Header from './components/Header';
+import { Container } from 'react-bootstrap';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import HomeScreen from './screens/HomeScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import LoginScreen from './screens/LoginScreen';
+import Footer from './components/Footer';
+import store from './store';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+    <Router>
+      <Header />
+          <main className='py-3'>
+            <Container>
+                <Route path='/home' component={HomeScreen} /> 
+                <Route path='/register' component={RegisterScreen} />
+                <Route path='/login' component={LoginScreen} />
+            </Container>
+          </main>
+        <Footer />
+    </Router>
+    </Provider>
+    
   );
 }
 
