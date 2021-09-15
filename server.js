@@ -1,6 +1,7 @@
 import express from 'express'
 import userRoutes from './routes/api/users.js';
 import clientRoutes from './routes/api/clients.js';
+import meterRoutes from './routes/api/meters.js';
 
 
 const app = express();
@@ -11,6 +12,7 @@ app.get('/', (req, res) => {res.send('Api is running')})
 
 app.use('/api/users', userRoutes)
 app.use('/api/clients', clientRoutes)
+app.use('/api/meters', meterRoutes)
 
 const PORT = process.env.PORT || 5000;
 

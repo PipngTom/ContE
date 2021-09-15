@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { userRegisterReducer, userLoginReducer, unosReducer } from './reducers/userReducer';
 import { clientReducer, allClientsReducer, singleClientReducer } from './reducers/clientReducer';
+import { allMetersReducer, singleMeterReducer } from './reducers/meterReducer';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -10,7 +11,9 @@ const reducer = combineReducers({
   unosRacun: unosReducer,
   client: clientReducer,
   allClients: allClientsReducer,
-  singleClient: singleClientReducer
+  singleClient: singleClientReducer,
+  allMeters: allMetersReducer,
+  singleMeter: singleMeterReducer
 
 })
 

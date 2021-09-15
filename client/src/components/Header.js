@@ -47,6 +47,11 @@ const Header = () => {
                   <i className="fas fa-user-plus"></i> Klijenti
                 </Nav.Link>
               </LinkContainer>}
+              {userInfo && <LinkContainer to="/meters">
+                <Nav.Link>
+                  <i className="fas fa-user-plus"></i> Brojila
+                </Nav.Link>
+              </LinkContainer>}
             </Nav>
           </Navbar.Collapse>
         </Container>

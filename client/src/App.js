@@ -8,6 +8,8 @@ import RegisterScreen from './screens/RegisterScreen';
 import LoginScreen from './screens/LoginScreen';
 import NewClientScreen from './screens/NewClientScreen';
 import ClientsScreen from './screens/ClientsScreen';
+import MetersScreen from './screens/MetersScreen';
+import NewMeterScreen from './screens/NewMeterScreen';
 import Footer from './components/Footer';
 import store from './store';
 
@@ -24,6 +26,9 @@ const App = () => {
                 <Route exact path='/clients/new' component={NewClientScreen} />
                 <Route exact path='/clients/edit/:id' component={NewClientScreen} />
                 <Route exact path='/clients' component={ClientsScreen} />
+                <Route exact path='/meters' component={MetersScreen} />
+                <Route exact path='/meters/new' component={NewMeterScreen} />
+                <Route exact path='/meters/edit/:id' component={NewMeterScreen} />
             </Container>
           </main>
         <Footer />
