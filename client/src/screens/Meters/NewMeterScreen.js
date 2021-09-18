@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import {Form, Button, Row, Col} from 'react-bootstrap'
-import FormContainer from '../components/FormContainer';
+import FormContainer from '../../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
-import { novoBrojilo, getSingleMeter } from '../actions/meterActions';
-import {kategorija, vrsteSnabdevanja} from '../constants/brojila'
+import { novoBrojilo, getSingleMeter } from '../../actions/meterActions';
+import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
 
 
 const NewMeterScreen = ({match, history}) => {
@@ -52,7 +52,7 @@ const NewMeterScreen = ({match, history}) => {
         setBrojilo({...brojilo, [e.target.name] : e.target.value})
       }
 
-    const submitKlijent = () => {
+    const submitBrojilo = () => {
         if(meterId){
             dispatch(novoBrojilo(brojilo, meterId))
         } else {
@@ -66,7 +66,7 @@ const NewMeterScreen = ({match, history}) => {
     return (
         <>
         <div>   
-            <h1>Meter screen</h1>
+            <h2>Brojilo</h2>
         </div>
         <FormContainer>
             <Form>
@@ -118,7 +118,7 @@ const NewMeterScreen = ({match, history}) => {
             <Row>
                 <Col xs={3}></Col>
                 <Col xs={3}>
-                    <Button type='submit' variant='primary' onClick={submitKlijent}>
+                    <Button type='submit' variant='primary' onClick={submitBrojilo}>
                     Sačuvaj
                     </Button>
                 </Col>

@@ -4,6 +4,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { userRegisterReducer, userLoginReducer, unosReducer } from './reducers/userReducer';
 import { clientReducer, allClientsReducer, singleClientReducer } from './reducers/clientReducer';
 import { allMetersReducer, singleMeterReducer } from './reducers/meterReducer';
+import { allContractsReducer, singleContractReducer } from './reducers/contractReducer';
+import { meteringReducer, allMeteringByMeterIdReducer } from './reducers/meteringReducer';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -13,7 +15,11 @@ const reducer = combineReducers({
   allClients: allClientsReducer,
   singleClient: singleClientReducer,
   allMeters: allMetersReducer,
-  singleMeter: singleMeterReducer
+  singleMeter: singleMeterReducer,
+  allContracts: allContractsReducer,
+  singleContract: singleContractReducer,
+  metering: meteringReducer,
+  allMeteringByMeterId: allMeteringByMeterIdReducer
 
 })
 

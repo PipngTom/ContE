@@ -1,36 +1,36 @@
 import React , {useState, useEffect} from 'react'
 import {Table, Button, Nav, Modal} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllMeters, deleteSingleMeter } from '../actions/meterActions';
-import Loader from '../components/Loader'
-import {kategorija, vrsteSnabdevanja} from '../constants/brojila'
+import { getAllContracts, deleteSingleContract } from '../../actions/contractActions';
+import Loader from '../../components/Loader'
+import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
 
-const MetersScreen = ({history}) => {
+const ContractsScreen = ({history}) => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [selectedId, setSelectedId] = useState(0)
 
     const dispatch = useDispatch()
 
-    const allMeters = useSelector(state => state.allMeters)
+    const allContracts = useSelector(state => state.allContracts)
     
 
-    const {loading, error, meters} = allMeters
+    const {loading, error, contracts} = allContracts
     
 
 
     useEffect(() => {
-        dispatch(getAllMeters())
+        dispatch(getAllContracts())
     }, [dispatch])
 
     const editHandler = (id) => {
         console.log(id)
-        history.push({pathname: `/meters/edit/${id}`})
+        history.push({pathname: `/contracts/edit/${id}`})
     }
 
-    const novoBrojilo = () => {
+    const noviUgovor = () => {
         console.log('jhdjdj')
-        history.push({pathname: `/meters/new`})
+        history.push({pathname: `/contracts/new`})
     }
 
     const deleteHandler = (id) => {
@@ -43,39 +43,41 @@ const MetersScreen = ({history}) => {
     }
 
     const handleDeleteAccept = () => {
-        dispatch(deleteSingleMeter(selectedId))
+        dispatch(deleteSingleContract(selectedId))
         setShowDeleteModal(false)
     }
 
     return (
         <>
-            <h1>Lista svih brojila</h1>
+            <h1>Lista svih ugovora</h1>
             {loading ? (
                 <Loader/>
             ) : (<>
-                <Button type='submit' variant='primary' onClick={novoBrojilo}>
-                    Novo Brojilo
+                <Button type='submit' variant='primary' onClick={noviUgovor}>
+                    Novi Ugovor
                 </Button>
                 <br/>
                 <Table striped bordered hover variante='dark'>
                     <thead>
                         <tr>
                             <th>Naziv klijenta</th>
-                            <th>Sifra mernog mesta</th>
-                            <th>Adresa mernog mesta</th>
-                            <th>Kategorija</th>
-                            <th>Vrsta snabdevanja</th>
+                            <th>Datum sklapanja ugovora</th>
+                            <th>Datum isteka ugovora</th>
+                            <th>Cena VT</th>
+                            <th>Cena NT</th>
+                            <th>Cena JT</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {meters.map(item => (
+                        {contracts.map(item => (
                             <tr key={item.id}>
                                 <td>{item.nazivKlijenta}</td>
-                                <td>{item.mestoMerenja}</td>
-                                <td>{item.adresaMerenja}</td>
-                                <td>{kategorija.find((el)=>el.sifra==item.kategorija).naziv}</td>
-                                <td>{vrsteSnabdevanja.find((el)=>el.sifra==item.vrstaSnabdevanja).naziv}</td>
+                                <td>{item.datumSklapanja.slice(0,10)}</td>
+                                <td>{item.datumIsteka.slice(0,10)}</td>
+                                <td>{item.cenaVT}</td>
+                                <td>{item.cenaNT}</td>
+                                <td>{item.cenaJT}</td>
                                 <td>
                                     <Nav.Link onClick={()=>editHandler(item.id)}>Edit</Nav.Link>
                                     <Nav.Link onClick={()=>deleteHandler(item.id)}>Delete</Nav.Link>
@@ -91,10 +93,10 @@ const MetersScreen = ({history}) => {
                 onHide={handleDeleteClose}
             >
                 <Modal.Header>
-                    <Modal.Title>Brisanje brojila</Modal.Title>
+                    <Modal.Title>Brisanje ugovora</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Da li ste sigurni da zelite da obrisete brojilo?
+                    Da li ste sigurni da zelite da obrisete ugovor?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant='success' onClick={handleDeleteClose}>Nazad</Button>
@@ -107,4 +109,4 @@ const MetersScreen = ({history}) => {
     )
 }
 
-export default MetersScreen
+export default ContractsScreen

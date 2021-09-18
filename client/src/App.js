@@ -6,10 +6,15 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import UnosScreen from './screens/UnosScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import LoginScreen from './screens/LoginScreen';
-import NewClientScreen from './screens/NewClientScreen';
-import ClientsScreen from './screens/ClientsScreen';
-import MetersScreen from './screens/MetersScreen';
-import NewMeterScreen from './screens/NewMeterScreen';
+import NewClientScreen from './screens/Clients/NewClientScreen';
+import ClientsScreen from './screens/Clients/ClientsScreen';
+import MetersScreen from './screens/Meters/MetersScreen';
+import NewMeterScreen from './screens/Meters/NewMeterScreen';
+import ContractsScreen from './screens/Contracts/ContractsScreen';
+import NewContractScreen from './screens/Contracts/NewContractScreen';
+import MeteringScreen from './screens/Metering/MeteringScreen';
+import NewMeteringScreen from './screens/Metering/NewMeteringScreen';
+import AllMeteringScreen from './screens/Metering/AllMeteringScreen';
 import Footer from './components/Footer';
 import store from './store';
 
@@ -29,6 +34,13 @@ const App = () => {
                 <Route exact path='/meters' component={MetersScreen} />
                 <Route exact path='/meters/new' component={NewMeterScreen} />
                 <Route exact path='/meters/edit/:id' component={NewMeterScreen} />
+                <Route exact path='/contracts' component={ContractsScreen} />
+                <Route exact path='/contracts/new' component={NewContractScreen} />
+                <Route exact path='/contracts/edit/:id' component={NewContractScreen} />
+                <Route exact path='/unosi' component={MeteringScreen} />
+                <Route exact path='/unosi/edit/:id' component={NewMeteringScreen} />
+                <Route exact path='/unosi/new' component={NewMeteringScreen} />
+                <Route exact path='/allmetering/:id' component={AllMeteringScreen} />
             </Container>
           </main>
         <Footer />

@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import {Form, Button, Row, Col} from 'react-bootstrap'
-import FormContainer from '../components/FormContainer';
+import FormContainer from '../../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
-import { noviKlijent, getSingleClient } from '../actions/clientActions';
+import { noviKlijent, getSingleClient } from '../../actions/clientActions';
 
 
 const NewClientScreen = ({match, history}) => {
