@@ -5,6 +5,7 @@ import axios from 'axios';
 
 export const noviKlijent = (klijent, id = 0) => async (dispatch) => {
     try {
+      console.log('AAAAAAAAAAAAAAAAAAAA')
         let client
         client = id ? {...klijent, id} : {...klijent}
 
