@@ -4,6 +4,8 @@ import clientRoutes from './routes/api/clients.js';
 import meterRoutes from './routes/api/meters.js';
 import contractRoutes from './routes/api/contracts.js';
 import meteringRoutes from './routes/api/metering.js';
+import mrezarinaRoutes from './routes/api/mrezarina.js';
+import faktureRoutes from './routes/api/fakture.js';
 
 
 const app = express();
@@ -17,6 +19,8 @@ app.use('/api/clients', clientRoutes)
 app.use('/api/meters', meterRoutes)
 app.use('/api/contracts', contractRoutes)
 app.use('/api/metering', meteringRoutes)
+app.use('/api/mrezarina', mrezarinaRoutes)
+app.use('/api/fakture', faktureRoutes)
 
 const PORT = process.env.PORT || 5000;
 

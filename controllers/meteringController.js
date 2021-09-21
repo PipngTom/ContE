@@ -24,8 +24,10 @@ const newMetering = (req, res) => {
         },'')
         query = `UPDATE ${tabela} SET ${setColumns}
           WHERE ${tabela}.id = ${req.body.id}`; 
+        console.log(query)
   
       } else {
+        
         const columns= Object.keys(req.body.colone).reduce((acc, cur, index, array)=>{
             if(cur==='id'){
                 return  acc
@@ -71,7 +73,7 @@ const newMetering = (req, res) => {
 
     const {id, tabela} = req.body
       
-    const query = `SELECT * FROM ${tabela} WHERE idBrojilo = ${id}`;
+    const query = `SELECT *, DATE_FORMAT(datumpoc, '%Y-%m-%d') AS datumpoc, DATE_FORMAT(datumkr, '%Y-%m-%d') AS datumkr FROM ${tabela} WHERE idBrojilo = ${id}`;
   
     db.getConnection((err, connection) => {
       if (err) {
@@ -80,6 +82,7 @@ const newMetering = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          console.log(rows)
           res.send(rows)
         } else {
           console.log(err)

@@ -76,6 +76,27 @@ export const getAllContracts= () => async (dispatch) => {
     }
 }
 
+export const getSingleContractByMeterId= (meterId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GET_SINGLE_CONTRACT_REQUEST
+    })
+
+    const { data } = await axios.get((`/api/fakture/${meterId}`)) 
+
+    dispatch({
+      type: GET_SINGLE_CONTRACT_SUCCESS,
+      payload: data[0]
+    })
+
+  } catch (error) {
+    dispatch({
+      type: GET_SINGLE_CONTRACT_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
+
 export const deleteSingleContract = (id) => async (dispatch) => {
   try {
       dispatch({

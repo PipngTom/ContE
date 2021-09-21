@@ -1,6 +1,6 @@
 import { 
     GET_ALL_METERS_REQUEST, GET_ALL_METERS_SUCCESS, GET_ALL_METERS_FAIL, ALL_METERS_UPDATE,
-    GET_SINGLE_METER_REQUEST, GET_SINGLE_METER_SUCCESS, GET_SINGLE_METER_FAIL } from '../constants/meterConstants';
+    GET_SINGLE_METER_REQUEST, GET_SINGLE_METER_SUCCESS, GET_SINGLE_METER_FAIL, GET_SINGLE_METER_RESET } from '../constants/meterConstants';
 
     export const allMetersReducer = (state = { meters: []}, action) => {
         switch (action.type) {
@@ -40,6 +40,11 @@ import {
             return {
               loading: false,
               meter: action.payload
+            }
+          case GET_SINGLE_METER_RESET:
+            return {
+              loading: true,
+              meter: null
             }
           case GET_SINGLE_METER_FAIL:
             return {

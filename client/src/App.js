@@ -15,6 +15,9 @@ import NewContractScreen from './screens/Contracts/NewContractScreen';
 import MeteringScreen from './screens/Metering/MeteringScreen';
 import NewMeteringScreen from './screens/Metering/NewMeteringScreen';
 import AllMeteringScreen from './screens/Metering/AllMeteringScreen';
+import MrezarinaScreen from './screens/MrezarinaScreen';
+import FaktureScreen from './screens/Fakture/FaktureScreen';
+import NewFakturaScreen from './screens/Fakture/NewFakturaScreen';
 import Footer from './components/Footer';
 import store from './store';
 
@@ -41,6 +44,9 @@ const App = () => {
                 <Route exact path='/unosi/edit/:id' component={NewMeteringScreen} />
                 <Route exact path='/unosi/new' component={NewMeteringScreen} />
                 <Route exact path='/allmetering/:id' component={AllMeteringScreen} />
+                <Route exact path='/mrezarina' component={MrezarinaScreen} />
+                <Route exact path='/fakture' component={FaktureScreen} />
+                <Route exact path='/fakture/new/:id' component={NewFakturaScreen} />
             </Container>
           </main>
         <Footer />

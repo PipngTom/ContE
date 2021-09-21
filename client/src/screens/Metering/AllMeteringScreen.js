@@ -34,7 +34,7 @@ const AllMeteringScreen = ({match, history}) => {
         if(meter){
             const tabela = kategorija.find((item)=>item.sifra==meter.kategorija).tabela
             setSelectedTabela(tabela)
-            dispatch(getMeteringByMeterId(meterId, tabela))
+            dispatch(getMeteringByMeterId(meter.id, tabela))
         } else {
             dispatch(getSingleMeter(meterId))
         }

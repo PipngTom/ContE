@@ -62,6 +62,16 @@ const Header = () => {
                   <i className="fas fa-user-plus"></i> Ugovori
                 </Nav.Link>
               </LinkContainer>}
+              {userInfo && <LinkContainer to="/mrezarina">
+                <Nav.Link>
+                  <i className="fas fa-user-plus"></i> Mrezarina
+                </Nav.Link>
+              </LinkContainer>}
+              {userInfo && <LinkContainer to="/fakture">
+                <Nav.Link>
+                  <i className="fas fa-user-plus"></i> Fakture
+                </Nav.Link>
+              </LinkContainer>}
             </Nav>
           </Navbar.Collapse>
         </Container>

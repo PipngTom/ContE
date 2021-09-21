@@ -6,6 +6,7 @@ import { clientReducer, allClientsReducer, singleClientReducer } from './reducer
 import { allMetersReducer, singleMeterReducer } from './reducers/meterReducer';
 import { allContractsReducer, singleContractReducer } from './reducers/contractReducer';
 import { meteringReducer, allMeteringByMeterIdReducer } from './reducers/meteringReducer';
+import { mrezarinaReducer } from './reducers/mrezarinaReducer';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -19,7 +20,8 @@ const reducer = combineReducers({
   allContracts: allContractsReducer,
   singleContract: singleContractReducer,
   metering: meteringReducer,
-  allMeteringByMeterId: allMeteringByMeterIdReducer
+  allMeteringByMeterId: allMeteringByMeterIdReducer,
+  mrezarina: mrezarinaReducer
 
 })
 

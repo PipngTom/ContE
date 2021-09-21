@@ -6,6 +6,7 @@ import { novoBrojilo, getSingleMeter } from '../../actions/meterActions';
 import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
 
 
+
 const NewMeterScreen = ({match, history}) => {
 
     const dispatch = useDispatch()
@@ -43,6 +44,7 @@ const NewMeterScreen = ({match, history}) => {
             }  
         }
         console.log('initial render for NEW MODE')
+        
         
 
     },[dispatch, meter, meterId])
