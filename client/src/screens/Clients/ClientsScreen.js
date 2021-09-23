@@ -1,6 +1,7 @@
 import React , {useState, useEffect} from 'react'
-import {Table, Button, Nav, Modal} from 'react-bootstrap'
+import {Table, Button, Nav, Modal, Form} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
+import debounce from 'lodash.debounce';
 import { getAllClients, deleteSingleClient } from '../../actions/clientActions';
 import Loader from '../../components/Loader'
 
@@ -8,6 +9,7 @@ const ClientsScreen = ({history}) => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [selectedId, setSelectedId] = useState(0)
+    const [searchString, setsearchString] = useState('')
 
     const dispatch = useDispatch()
 
@@ -43,6 +45,13 @@ const ClientsScreen = ({history}) => {
         setShowDeleteModal(false)
     }
 
+    const handleTypeNazivKlijenta=(e)=>{
+       
+        console.log(e.target.value);
+        setsearchString(e.target.value)
+        
+      }
+
     return (
         <>
             <h1>Lista svih klijenata</h1>
@@ -66,7 +75,19 @@ const ClientsScreen = ({history}) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {clients.map(item => (
+                        <tr>
+                            <td>
+                            <Form.Control type="text" placeholder="Pretrazi klijenta" onChange={debounce(handleTypeNazivKlijenta, 300)} />
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        {clients.filter((el)=>searchString==='' || el.nazivKlijenta.toUpperCase().includes(searchString.toUpperCase()))
+                        .map(item => (
                             <tr key={item.id}>
                                 <td>{item.nazivKlijenta}</td>
                                 <td>{item.adresaKlijenta}</td>

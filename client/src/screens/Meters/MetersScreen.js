@@ -1,6 +1,7 @@
 import React , {useState, useEffect} from 'react'
-import {Table, Button, Nav, Modal} from 'react-bootstrap'
+import {Table, Button, Nav, Modal, Form} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
+import debounce from 'lodash.debounce';
 import { getAllMeters, deleteSingleMeter } from '../../actions/meterActions';
 import Loader from '../../components/Loader'
 import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
@@ -9,6 +10,8 @@ const MetersScreen = ({history}) => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [selectedId, setSelectedId] = useState(0)
+    const [searchString, setsearchString] = useState('')
+    const [searchStringEdBroj, setsearchStringEdBroj] = useState('')
 
     const dispatch = useDispatch()
 
@@ -47,6 +50,16 @@ const MetersScreen = ({history}) => {
         setShowDeleteModal(false)
     }
 
+    const handleTypeNazivKlijenta=(e)=>{
+        console.log(e.target.value);
+        setsearchString(e.target.value)   
+      }
+
+      const handleTypeEdBroj=(e)=>{
+        console.log(e.target.value);
+        setsearchStringEdBroj(e.target.value)   
+      }
+
     return (
         <>
             <h1>Lista svih brojila</h1>
@@ -68,8 +81,23 @@ const MetersScreen = ({history}) => {
                             <th></th>
                         </tr>
                     </thead>
+                    
                     <tbody>
-                        {meters.map(item => (
+                        <tr>
+                            <td>
+                            <Form.Control type="text" placeholder="Pretrazi klijenta" onChange={debounce(handleTypeNazivKlijenta, 300)} />
+                            </td>
+                            <td>
+                            <Form.Control type="text" placeholder="Pretrazi ED broj" onChange={debounce(handleTypeEdBroj, 300)} />
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        {meters.filter((el)=>(searchString==='' || el.nazivKlijenta.toUpperCase().includes(searchString.toUpperCase()))
+                        && (searchStringEdBroj==='' || el.mestoMerenja.toUpperCase().includes(searchStringEdBroj.toUpperCase())))
+                        .map(item => (
                             <tr key={item.id}>
                                 <td>{item.nazivKlijenta}</td>
                                 <td>{item.mestoMerenja}</td>
