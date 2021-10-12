@@ -1,13 +1,23 @@
 import { GET_MREZARINA_REQUEST, GET_MREZARINA_SUCCESS, GET_MREZARINA_FAIL, GET_MREZARINA_RESET, MREZARINA_UPDATE_REQUEST, MREZARINA_UPDATE_SUCCESS, MREZARINA_UPDATE_FAIL } from '../constants/mrezarinaConstants';
 import axios from 'axios';
 
-export const getMrezarina= () => async (dispatch) => {
+export const getMrezarina= () => async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_MREZARINA_REQUEST
       })
 
-      const { data } = await axios.get(`/api/mrezarina`) 
+      const {
+        userLogin: { userInfo },
+      } = getState()
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        }
+      }
+
+      const { data } = await axios.get(`/api/mrezarina`, config) 
   
       dispatch({
         type: GET_MREZARINA_SUCCESS,

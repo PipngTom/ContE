@@ -23,7 +23,6 @@ const ClientsScreen = ({history}) => {
     }, [dispatch])
 
     const editHandler = (id) => {
-        console.log(id)
         history.push({pathname: `/clients/edit/${id}`})
     }
 

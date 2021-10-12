@@ -1,24 +1,16 @@
-import mysql from 'mysql';
-
-const db = mysql.createPool({
-  user: "root",
-  host: "localhost",
-  password: "password",
-  database: "users",
-  port: "3306",
-  connectionLimit: 10
-})
+import db from '../db/db.js';
 
 const newClient = (req, res) => {
-  const { nazivKlijenta, adresaKlijenta, kontaktMail, kontaktTelefon, pib, maticniBroj, nazivBanke, racunBanka } = req.body
+  console.log(req.body)
+  const { nazivKlijenta, adresaKlijenta, postanskiBroj, opstina, kontaktMail, kontaktTelefon, pib, glavniPibUgovora, maticniBroj, pdv, nazivBanke, racunBanka, odgovornoLice, kontaktOsoba, sajt, firma, balansOdg, podUgovorom, zbirniRacun, tipPotrosaca } = req.body
     let query;
     if(req.body.id){
-        query = `UPDATE klijenti SET nazivKlijenta = '${nazivKlijenta}', adresaKlijenta = '${adresaKlijenta}', kontaktMail = '${kontaktMail}', kontaktTelefon = '${kontaktTelefon}', pib = '${pib}', maticniBroj = '${maticniBroj}', nazivBanke = '${nazivBanke}', racunBanka = '${racunBanka}'
-        WHERE klijenti.id = ${req.body.id}`;
+        query = `UPDATE klijenti SET nazivKlijenta = '${nazivKlijenta}', adresaKlijenta = '${adresaKlijenta}', postanskiBroj = '${postanskiBroj}', opstina = '${opstina}',kontaktMail = '${kontaktMail}', kontaktTelefon = '${kontaktTelefon}', pib = '${pib}', glavniPibUgovora = '${glavniPibUgovora}',maticniBroj = '${maticniBroj}', pdv = '${pdv}',nazivBanke = '${nazivBanke}', racunBanka = '${racunBanka}', odgovornoLice = '${odgovornoLice}',
+       kontaktOsoba = '${kontaktOsoba}', sajt = '${sajt}', firma = ${firma}, uBalansnojOdgovornosti = ${balansOdg}, podUgovorom = ${podUgovorom} ,zbirniRacun = ${zbirniRacun}, tipPotrosaca = '${tipPotrosaca}' WHERE klijenti.id = ${req.body.id}`;
 
     } else {
-        query = `INSERT INTO klijenti (nazivKlijenta, adresaKlijenta, kontaktMail, kontaktTelefon, pib, maticniBroj, nazivBanke, racunBanka) 
-        VALUES ('${nazivKlijenta}', '${adresaKlijenta}', '${kontaktMail}', '${kontaktTelefon}', '${pib}', '${maticniBroj}', '${nazivBanke}', '${racunBanka}')`;
+        query = `INSERT INTO klijenti (nazivKlijenta, adresaKlijenta, postanskiBroj, opstina, kontaktMail, kontaktTelefon, pib, glavniPibUgovora, maticniBroj, pdv, nazivBanke, odgovornoLice, kontaktOsoba, racunBanka, sajt, firma, uBalansnojOdgovornosti, podUgovorom, zbirniRacun, tipPotrosaca) 
+        VALUES ('${nazivKlijenta}', '${adresaKlijenta}', '${postanskiBroj}', '${opstina}', '${kontaktMail}', '${kontaktTelefon}', '${pib}', '${glavniPibUgovora}','${maticniBroj}', '${pdv}','${nazivBanke}', '${odgovornoLice}', '${kontaktOsoba}','${racunBanka}', '${sajt}', ${firma}, ${balansOdg}, ${podUgovorom}, ${zbirniRacun}, '${tipPotrosaca}')`;
     }
   
 

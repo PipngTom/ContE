@@ -5,7 +5,6 @@ import axios from 'axios';
 
 export const noviKlijent = (klijent, id = 0) => async (dispatch) => {
     try {
-      console.log('AAAAAAAAAAAAAAAAAAAA')
         let client
         client = id ? {...klijent, id} : {...klijent}
 
@@ -83,8 +82,8 @@ export const noviKlijent = (klijent, id = 0) => async (dispatch) => {
               })
               
         const { data } = await axios.delete(`/api/clients/${id}`) 
-        console.log(data)
-        if(data.message===''){
+      
+        if(data.message === ''){
             dispatch({
                 type: ALL_CLIENTS_UPDATE,
                 payload: id

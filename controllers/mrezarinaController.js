@@ -1,13 +1,4 @@
-import mysql from 'mysql';
-
-const db = mysql.createPool({
-  user: "root",
-  host: "localhost",
-  password: "password",
-  database: "users",
-  port: "3306",
-  connectionLimit: 10
-})
+import db from '../db/db.js';
 
 const getMrezarina = (req, res) => {
 
@@ -31,7 +22,6 @@ const getMrezarina = (req, res) => {
 
   const updateMrezarina = (req, res) => {
 
-   console.log(req.body)
     
      let query;
     const setColumns = Object.keys(req.body).reduce((acc, cur, index, array)=>{

@@ -1,13 +1,4 @@
-import mysql from 'mysql';
-
-const db = mysql.createPool({
-  user: "root",
-  host: "localhost",
-  password: "password",
-  database: "users",
-  port: "3306",
-  connectionLimit: 10
-})
+import db from '../db/db.js';
 
 const getAllContracts = (req, res) => {
       

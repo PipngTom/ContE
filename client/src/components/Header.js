@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
  import { Nav, NavDropdown, Container, Navbar } from 'react-bootstrap';
  import { LinkContainer } from 'react-router-bootstrap'
  import { logout } from '../actions/userActions';
@@ -7,12 +8,15 @@ import React from 'react';
 const Header = () => {
 
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
 
    const logoutHandler = () => {
       dispatch(logout())
+      history.push( '/register')
+      
    }
 
   return (

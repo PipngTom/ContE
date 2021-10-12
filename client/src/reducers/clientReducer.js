@@ -1,6 +1,6 @@
 import { CLIENT_SAVE_REQUEST, CLIENT_SAVE_SUCCESS, CLIENT_SAVE_FAIL, 
     GET_ALL_CLIENTS_REQUEST, GET_ALL_CLIENTS_SUCCESS, GET_ALL_CLIENTS_FAIL, ALL_CLIENTS_UPDATE,
-    GET_SINGLE_CLIENT_REQUEST, GET_SINGLE_CLIENT_SUCCESS, GET_SINGLE_CLIENT_FAIL } from '../constants/clientConstants';
+    GET_SINGLE_CLIENT_REQUEST, GET_SINGLE_CLIENT_RESET, GET_SINGLE_CLIENT_SUCCESS, GET_SINGLE_CLIENT_FAIL } from '../constants/clientConstants';
 
 
 
@@ -56,6 +56,11 @@ export const clientReducer = (state = {}, action) => {
   export const singleClientReducer = (state = { client: null}, action) => {
     switch (action.type) {
       case GET_SINGLE_CLIENT_REQUEST:
+        return {
+          loading: true,
+          client: null
+        }
+        case GET_SINGLE_CLIENT_RESET:
         return {
           loading: true,
           client: null

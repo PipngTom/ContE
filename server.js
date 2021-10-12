@@ -1,4 +1,5 @@
 import express from 'express'
+import dotenv from 'dotenv';
 import userRoutes from './routes/api/users.js';
 import clientRoutes from './routes/api/clients.js';
 import meterRoutes from './routes/api/meters.js';
@@ -7,6 +8,7 @@ import meteringRoutes from './routes/api/metering.js';
 import mrezarinaRoutes from './routes/api/mrezarina.js';
 import faktureRoutes from './routes/api/fakture.js';
 
+dotenv.config()
 
 const app = express();
 

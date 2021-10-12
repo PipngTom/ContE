@@ -13,10 +13,18 @@ export const login = (email, password) => async (dispatch) => {
     }
 
     const {data} = await axios.post('/api/users/login', {email, password}, config)
-  
+
+    const userInfo = {
+      name: data.data[0].name,
+      id: data.data[0].id,
+      token: data.token
+    }
+
+    localStorage.setItem('userInfo', JSON.stringify(userInfo))
+
     dispatch({
       type: USER_LOGIN_SUCCESS,
-      payload: data[0]
+      payload: userInfo
     })
   } catch (error) {
     dispatch({
@@ -38,7 +46,7 @@ export const register = (name, email, password) => async (dispatch) => {
       }
     }
     const { data } = await axios.post('/api/users', {name, email, password}, config)
-
+    console.log(data)
     dispatch({
       type: USER_REGISTER_SUCCESS,
       payload: data
@@ -80,6 +88,7 @@ export const unosiRacuna = (maxSnaga, odSnaga, prekSnaga, akEnergijaV, akEnergij
 }
 
 export const logout = () => (dispatch) => {
+  localStorage.removeItem('userInfo')
   dispatch({
     type: USER_LOGOUT
   })

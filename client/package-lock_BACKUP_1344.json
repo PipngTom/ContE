@@ -13,13 +13,22 @@
         "@testing-library/react": "^11.2.7",
         "@testing-library/user-event": "^12.8.3",
         "axios": "^0.21.4",
+<<<<<<< Updated upstream
+        "big.js": "^6.1.1",
+        "debug": "^4.3.2",
+=======
         "formik": "^2.2.9",
         "jspdf-autotable": "^3.5.20",
+>>>>>>> Stashed changes
         "moment": "^2.29.1",
         "react": "^17.0.2",
         "react-bootstrap": "^1.6.1",
         "react-dom": "^17.0.2",
+<<<<<<< Updated upstream
+        "react-hook-form": "^7.16.2",
+=======
         "react-hook-form": "^7.16.1",
+>>>>>>> Stashed changes
         "react-moment": "^1.1.1",
         "react-redux": "^7.2.5",
         "react-router-bootstrap": "^0.25.0",
@@ -16926,6 +16935,12 @@
       "resolved": "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.9.tgz",
       "integrity": "sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew=="
     },
+<<<<<<< Updated upstream
+    "node_modules/react-hook-form": {
+      "version": "7.16.2",
+      "resolved": "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.16.2.tgz",
+      "integrity": "sha512-99BOspznkVoYppJJSMRsQv9jIw65P0T5g3JhegeosRAeNut/VEEViuBPViDb+mU4sP+uaAcPqqSa7dxZOOgknw==",
+=======
     "node_modules/react-fast-compare": {
       "version": "2.0.4",
       "resolved": "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-2.0.4.tgz",
@@ -16935,6 +16950,7 @@
       "version": "7.16.1",
       "resolved": "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.16.1.tgz",
       "integrity": "sha512-kcLDmSmlyLUFx2UU5bG/o4+3NeK753fhKodJa8gkplXohGkpAq0/p+TR24OWjZmkEc3ES7ppC5v5d6KUk+fJTA==",
+>>>>>>> Stashed changes
       "funding": {
         "type": "opencollective",
         "url": "https://opencollective.com/react-hook-form"
