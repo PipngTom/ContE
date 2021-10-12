@@ -1,6 +1,8 @@
 export const kategorija = [
     {
         tabela: 'merenja_srednji_napon',
+        obracun: 'dvotarifno_merenje',
+        kategorija: 'privreda_preko_1kv',
         sifra: 1,
         naziv: 'Potrosnja na srednjem naponu',
         stavke: [
@@ -15,6 +17,8 @@ export const kategorija = [
     },
     {
         tabela: 'merenja_niski_napon',
+        obracun: 'dvotarifno_merenje',
+        kategorija: 'privreda_do_1kv_sa_merenjem_snage',
         sifra: 2,
         naziv: 'Potrosnja na niskom naponu',
         stavke: [
@@ -29,6 +33,8 @@ export const kategorija = [
     },
     {
         tabela: 'merenja_sp_dvotarifno',
+        obracun: 'dvotarifno_merenje',
+        kategorija: 'privreda_do_1kv_bez_merenja_snage',
         sifra: 3,
         naziv: 'Siroka potrosnja - dvotarifno brojilo',
         stavke: [
@@ -39,6 +45,8 @@ export const kategorija = [
     },
     {
         tabela: 'merenja_sp_jednotarifno',
+        obracun: 'jednotarifno_merenje',
+        kategorija: 'privreda_do_1kv_bez_merenja_snage',
         sifra: 4,
         naziv: 'Siroka potrosnja - jednotarifno brojilo',
         stavke: [{kolona: 'jt', naziv: 'Jedinstvena tarifa'},
@@ -47,6 +55,7 @@ export const kategorija = [
     },
     {
         tabela: 'merenja_jr',
+        kategorija: 'javna_rasveta',
         sifra: 5,
         naziv: 'Javno osvetljenje',
         stavke: [{kolona: 'jt', naziv: 'Jedinstvena tarifa'}
@@ -54,6 +63,8 @@ export const kategorija = [
     },
     {
         tabela: 'merenja_sp_domacinstvo',
+        obracun: 'dvotarifno_merenje',
+        kategorija: 'domacinstvo',
         sifra: 6,
         naziv: 'Siroka potrosnja - domacinstvo',
         stavke: [

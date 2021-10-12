@@ -82,13 +82,62 @@ const newMetering = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
-          console.log(rows)
+      //    console.log(rows)
           res.send(rows)
         } else {
           console.log(err)
         }
       })
     })
+  }
+
+  const getMeteringByMeterIds = (req, res) => {
+
+    const {datum: mesec, selectedMeters: primer} = req.body
+    console.log(primer)
+    console.log(mesec)
+  //  const primer =  [{id:12, tabela: 'merenja_srednji_napon'}, {id:16, tabela: 'merenja_srednji_napon'}, {id: 14, tabela: 'merenja_sp_jednotarifno'}] 
+  //  const mesec = '2021-08-15'
+    //AND DATE(${mesec})<=datumkr AND DATE(${mesec})>=datumpoc
+    //14 Promises with queries are dynamically generated
+    //DATE_FORMAT(m.datumpoc, '%Y-%m-%d') AS datumpoc, DATE_FORMAT(m.datumkr, '%Y-%m-%d') AS datumkr
+    //LEFT JOIN brojila AS b ON b.id = m.idBrojilo idBrojilo = ${item.id} AND WHERE DATE('${mesec}')<=m.datumkr AND DATE('${mesec}')>=m.datumpoc
+    const queryPromises = primer.map((item)=>{
+      const query = `SELECT m.*, DATE_FORMAT(m.datumpoc, '%Y-%m-%d') AS datumpoc, DATE_FORMAT(m.datumkr, '%Y-%m-%d') AS datumkr, b.kategorija
+      FROM ${item.tabela} AS m
+      LEFT JOIN brojila AS b ON b.id = m.idBrojilo
+      WHERE m.idBrojilo = ${item.id} AND DATE('${mesec}')<=m.datumkr AND DATE('${mesec}')>=m.datumpoc`;
+
+      return new Promise((resolve, reject)=>{
+          db.query(query,  (error, results)=>{
+              if(error){
+                  return reject(error);
+              }
+              return resolve(results);
+          });
+      })
+  }
+  ) 
+  // in order to excecute 14 and pick up their results we need Promise.all function
+  try {
+      //const results = []
+      Promise.all(queryPromises).then((values)=>{
+          //values is array of promise results and we need to add them JS object "results"
+          //results[item.var]=values[index] means in first iteration: results[sprache] = [{id:1,inhalt:"deutsch"},...] ...
+      //    tables.forEach((item,index)=>results[item.var]=values[index])
+      //    console.log(results)
+          ///results.push(values)
+         console.log(values)
+         res.send(values)
+      })
+      
+      
+        
+  } 
+  catch(error){
+  console.log(error)
+  }
+   
   }
 
   const deleteSingleMetering = (req, res) => {
@@ -113,4 +162,4 @@ const newMetering = (req, res) => {
     })
   }
 
-  export {newMetering, getAllMeteringByMeterId, deleteSingleMetering}
+  export {newMetering, getAllMeteringByMeterId, deleteSingleMetering, getMeteringByMeterIds}

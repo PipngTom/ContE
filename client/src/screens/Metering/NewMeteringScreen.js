@@ -5,8 +5,33 @@ import { useDispatch, useSelector } from 'react-redux';
 import { newMetering } from '../../actions/meteringActions';
 import { getSingleMeter } from '../../actions/meterActions';
 import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema1 = yup.object().shape({
+    vt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
+    nt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
+    reak: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
+    prereak: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
+    odosnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
+    prekosnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
+    maxsnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required()
+  });
+
+  const schema2 = yup.object().shape({
+    vt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
+    nt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
+    odosnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required()
+  });
+  const schema3 = yup.object().shape({
+    jt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
+    odosnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required()
+  });
 
 const NewMeteringScreen = ({match, history}) => {
+
+    
 
     const dispatch = useDispatch()
 
@@ -17,6 +42,24 @@ const NewMeteringScreen = ({match, history}) => {
     const singleMeter = useSelector(state => state.singleMeter)
     const {loading, error, meter} = singleMeter
     const {kategorija: sifraKategorijeBrojila, mestoMerenja, nazivKlijenta, id: idBrojila} = meter
+    let schema;
+    if(sifraKategorijeBrojila==6 || sifraKategorijeBrojila==3){
+       schema = schema2
+    } 
+    if(sifraKategorijeBrojila==1 || sifraKategorijeBrojila==2)
+    {
+        schema = schema1 
+    }
+    if(sifraKategorijeBrojila==4)
+    {
+        schema = schema3 
+    }
+    const { register, handleSubmit, formState: { errors }  } = useForm(
+        {
+       resolver: yupResolver(schema)
+   } 
+   )
+    
 
     const allMeteringByMeterId = useSelector(state => state.allMeteringByMeterId)
     const {metering} = allMeteringByMeterId
@@ -56,14 +99,27 @@ const NewMeteringScreen = ({match, history}) => {
         setFields(copy)
     }
 
-    const submitUnos = () => {
-        const tabela = kategorija.find((el)=>el.sifra == sifraKategorijeBrojila).tabela
+    const submitUnos = async (data, e) => {
+
+        e.preventDefault()
+        let isValid = await schema.isValid(fields)
+        console.log(isValid)
+        
+        console.log('YYYYYYYYYYYYYYYYYYYYYYYY', data, e)
+         const tabela = kategorija.find((el)=>el.sifra == sifraKategorijeBrojila).tabela
           if(meteringId){
             dispatch(newMetering(fields, idBrojila, tabela,  meteringId))
         } else {
             dispatch(newMetering(fields, idBrojila, tabela))
         }  
-        history.push({pathname: `/allmetering/${idBrojila}`})
+        history.push({pathname: `/allmetering/${idBrojila}`}) 
+
+    }
+
+    const errorHandler = async (errors, e) => {
+        console.log('BBBBBBB', errors, e)
+        let isValid = await schema.isValid(fields)
+        console.log(isValid)
 
     }
 
@@ -72,7 +128,7 @@ const NewMeteringScreen = ({match, history}) => {
         <div>
             <h2>ED broj: {mestoMerenja}</h2>
             <FormContainer>
-            <Form>
+            <Form onSubmit={handleSubmit(submitUnos, errorHandler)}>
             <Form.Group controlId='Datum poč stanja'>
                 <Form.Label>Datum početnog stanja</Form.Label>
                 <Form.Control type='date'  name='datumpoc' placeholder='Datum početnog stanja' value={fields['datumpoc']}
@@ -87,26 +143,28 @@ const NewMeteringScreen = ({match, history}) => {
             {sifraKategorijeBrojila && kategorija.find((item)=>item.sifra==sifraKategorijeBrojila).stavke.map((stavka, index)=>(
                 <Form.Group key={index} controlId='nazivKlijenta'>
                     <Form.Label>{stavka.naziv}</Form.Label>
-                    <Form.Control type='name' name={stavka.kolona} placeholder={stavka.naziv} value={fields[stavka.kolona]}
+                    <Form.Control type='name' name={stavka.kolona} placeholder={stavka.naziv} value={fields[stavka.kolona]} {...register(stavka.kolona)}
                     onChange={handleInput}></Form.Control>
+                    <p style={{color: errors[stavka.kolona]?.message ? 'red' : ''}}>{errors[stavka.kolona]?.message}</p>
                 </Form.Group>
             ))}
-            </Form>
-            </FormContainer>
             <Row>
                 <Col xs={3}></Col>
                 <Col xs={3}>
-                    <Button type='submit' variant='primary' onClick={submitUnos}>
+                    <Button type='submit' variant='primary'>
                     Sačuvaj
                     </Button>
                 </Col>
                 <Col xs={3}>
-                    <Button type='submit' variant='primary' onClick={()=>history.push({pathname: `/allmetering/${idBrojila}`})}>
+                    {/* <Button type='submit' variant='primary' onClick={()=>history.push({pathname: `/allmetering/${idBrojila}`})}>
                     Nazad
-                    </Button>
+                    </Button> */}
                 </Col>
                 <Col xs={3}></Col>
             </Row>
+            </Form>
+            </FormContainer>
+            
 
         </div>
     )

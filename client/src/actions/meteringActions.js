@@ -1,7 +1,8 @@
 import { 
     METERING_SAVE_REQUEST, METERING_SAVE_SUCCESS, METERING_SAVE_FAIL,
     GET_ALL_METERING_BY_METERID_REQUEST, GET_ALL_METERING_BY_METERID_SUCCESS, GET_ALL_METERING_BY_METERID_FAIL, GET_ALL_METERING_BY_METERID_UPDATE,
-    METERING_DELETE_REQUEST, METERING_DELETE_FAIL } from '../constants/meteringConstants';
+    METERING_DELETE_REQUEST, METERING_DELETE_FAIL, GET_METERING_BY_METER_IDS_REQUEST, 
+    GET_METERING_BY_METER_IDS_SUCCESS, GET_METERING_BY_METER_IDS_FAIL } from '../constants/meteringConstants';
 
 import axios from 'axios';
 
@@ -64,6 +65,35 @@ export const newMetering = (fields, meterId, tabela, id = 0) => async (dispatch)
       })
     }
   }
+
+  export const getMeteringByMeterIds = (selectedMeters, datum) => async (dispatch) => {
+    const dataToSend = {selectedMeters, datum}
+    console.log(dataToSend)
+  try {
+    dispatch({
+      type: GET_METERING_BY_METER_IDS_REQUEST
+    })
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    const { data } = await axios.post(`/api/metering/all`,dataToSend, config) 
+
+    dispatch({
+      type: GET_METERING_BY_METER_IDS_SUCCESS,
+      payload: data
+    })
+
+  } catch (error) {
+    dispatch({
+      type: GET_METERING_BY_METER_IDS_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
 
   export const deleteSingleMetering = (id, tabela) => async (dispatch) => {
 

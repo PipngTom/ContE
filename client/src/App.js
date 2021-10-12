@@ -18,6 +18,7 @@ import AllMeteringScreen from './screens/Metering/AllMeteringScreen';
 import MrezarinaScreen from './screens/MrezarinaScreen';
 import FaktureScreen from './screens/Fakture/FaktureScreen';
 import NewFakturaScreen from './screens/Fakture/NewFakturaScreen';
+import BalansnaOdgovornostScreen from './screens/BalansnaOdgovrnost/BalansnaOdgovornostScreen';
 import Footer from './components/Footer';
 import store from './store';
 
@@ -47,6 +48,7 @@ const App = () => {
                 <Route exact path='/mrezarina' component={MrezarinaScreen} />
                 <Route exact path='/fakture' component={FaktureScreen} />
                 <Route exact path='/fakture/new/:id' component={NewFakturaScreen} />
+                <Route exact path='/balansna' component={BalansnaOdgovornostScreen} />
             </Container>
           </main>
         <Footer />

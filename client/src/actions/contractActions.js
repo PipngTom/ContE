@@ -26,6 +26,7 @@ export const getAllContracts= () => async (dispatch) => {
   }
 
   export const noviUgovor = (ugovor, id = 0) => async (dispatch) => {
+    console.log(ugovor)
     try {
         let contract
         contract = id ? {...ugovor, id} : {...ugovor}

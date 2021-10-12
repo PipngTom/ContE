@@ -1,6 +1,6 @@
 import { 
     GET_ALL_CONTRACTS_REQUEST, GET_ALL_CONTRACTS_SUCCESS, GET_ALL_CONTRACTS_FAIL, ALL_CONTRACTS_UPDATE,
-    GET_SINGLE_CONTRACT_REQUEST, GET_SINGLE_CONTRACT_SUCCESS, GET_SINGLE_CONTRACT_FAIL } from '../constants/contractConstants';
+    GET_SINGLE_CONTRACT_REQUEST, GET_SINGLE_CONTRACT_SUCCESS, GET_SINGLE_CONTRACT_RESET, GET_SINGLE_CONTRACT_FAIL } from '../constants/contractConstants';
 
     export const allContractsReducer = (state = { contracts: []}, action) => {
         switch (action.type) {
@@ -32,6 +32,11 @@ import {
       export const singleContractReducer = (state = { contract: null}, action) => {
         switch (action.type) {
           case GET_SINGLE_CONTRACT_REQUEST:
+            return {
+              loading: true,
+              contract: null
+            }
+            case GET_SINGLE_CONTRACT_RESET:
             return {
               loading: true,
               contract: null
