@@ -1,10 +1,10 @@
-import React , {useState, useEffect} from 'react'
-import {Table, Button, Nav, Modal, Form} from 'react-bootstrap'
+import React , {useState, useEffect} from 'react';
+import {Table, Button, Nav, Modal, Form} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { getAllMeters, deleteSingleMeter } from '../../actions/meterActions';
-import Loader from '../../components/Loader'
-import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
+import Loader from '../../components/Loader';
+import { nadjiNazivPoKategoriji, nadjiNazivVrsteSnabdevanja } from '../../constants/brojila';
 
 const MetersScreen = ({history}) => {
 
@@ -27,12 +27,10 @@ const MetersScreen = ({history}) => {
     }, [dispatch])
 
     const editHandler = (id) => {
-        console.log(id)
         history.push({pathname: `/meters/edit/${id}`})
     }
 
     const novoBrojilo = () => {
-        console.log('jhdjdj')
         history.push({pathname: `/meters/new`})
     }
 
@@ -51,12 +49,10 @@ const MetersScreen = ({history}) => {
     }
 
     const handleTypeNazivKlijenta=(e)=>{
-        console.log(e.target.value);
         setsearchString(e.target.value)   
       }
 
       const handleTypeEdBroj=(e)=>{
-        console.log(e.target.value);
         setsearchStringEdBroj(e.target.value)   
       }
 
@@ -102,8 +98,8 @@ const MetersScreen = ({history}) => {
                                 <td>{item.nazivKlijenta}</td>
                                 <td>{item.mestoMerenja}</td>
                                 <td>{item.adresaMerenja}</td>
-                                <td>{kategorija.find((el)=>el.sifra==item.kategorija).naziv}</td>
-                                <td>{vrsteSnabdevanja.find((el)=>el.sifra==item.vrstaSnabdevanja).naziv}</td>
+                                <td>{nadjiNazivPoKategoriji(item.kategorija)}</td>
+                                <td>{nadjiNazivVrsteSnabdevanja(item.vrstaSnabdevanja)}</td>
                                 <td>
                                     <Nav.Link onClick={()=>editHandler(item.id)}>Edit</Nav.Link>
                                     <Nav.Link onClick={()=>deleteHandler(item.id)}>Delete</Nav.Link>

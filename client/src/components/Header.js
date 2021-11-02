@@ -31,7 +31,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-            {!userInfo && <LinkContainer to="/register">
+            {!userInfo && <LinkContainer to="/register"  >
                 <Nav.Link>
                   <i className="fas fa-user-plus"></i> Register
                 </Nav.Link>
@@ -41,7 +41,7 @@ const Header = () => {
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>}
-               {!userInfo && <LinkContainer to="/login">
+               {!userInfo && <LinkContainer to="/login" >
                 <Nav.Link>
                   <i className="fas fa-user"></i> Sign In
                 </Nav.Link>
@@ -79,6 +79,11 @@ const Header = () => {
               {userInfo && <LinkContainer to="/balansna">
                 <Nav.Link>
                   <i className="fas fa-user-plus"></i> Balansna odgovornost
+                </Nav.Link>
+              </LinkContainer>}
+              {userInfo && <LinkContainer to="/fakturaklijent">
+                <Nav.Link>
+                  <i className="fas fa-user-plus"></i> Faktura za klijenta
                 </Nav.Link>
               </LinkContainer>}
             </Nav>

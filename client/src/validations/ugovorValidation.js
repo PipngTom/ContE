@@ -1,7 +1,9 @@
 import * as yup from 'yup';
 
-export const ugovorSchema = yup.object().shape({
-    cenaVT: yup.number().typeError('mora biti broj').positive('moras ukucati poz'),
-    cenaNT: yup.number().typeError('mora biti broj').positive('moras ukucati poz'),
-    cenaJT: yup.number().typeError('mora biti broj').positive('moras ukucati poz')
-})
+const ugovorSchema = yup.object().shape({
+    cenaVT: yup.number().typeError('Unesite brojcanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
+    cenaNT: yup.number().typeError('Unesite brojcanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
+    cenaJT: yup.number().typeError('Unesite brojcanu vrednost...').positive('Unesite pozitivnu vrednost...').required()
+  });
+
+export { ugovorSchema }

@@ -3,7 +3,6 @@ import {Table, Button, Nav, Modal} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllContracts, deleteSingleContract } from '../../actions/contractActions';
 import Loader from '../../components/Loader'
-import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
 
 const ContractsScreen = ({history}) => {
 
@@ -15,7 +14,7 @@ const ContractsScreen = ({history}) => {
     const allContracts = useSelector(state => state.allContracts)
     
 
-    const {loading, error, contracts} = allContracts
+    const {loading, contracts} = allContracts
     
 
 
@@ -56,6 +55,7 @@ const ContractsScreen = ({history}) => {
                 <Button type='submit' variant='primary' onClick={noviUgovor}>
                     Novi Ugovor
                 </Button>
+                <br/>
                 <br/>
                 <Table striped bordered hover variante='dark'>
                     <thead>

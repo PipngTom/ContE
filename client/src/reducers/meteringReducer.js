@@ -2,7 +2,7 @@ import {
     METERING_SAVE_REQUEST, METERING_SAVE_SUCCESS, METERING_SAVE_FAIL,
     GET_ALL_METERING_BY_METERID_REQUEST, GET_ALL_METERING_BY_METERID_SUCCESS, GET_ALL_METERING_BY_METERID_FAIL, GET_ALL_METERING_BY_METERID_UPDATE,
     GET_METERING_BY_METER_IDS_REQUEST, 
-    GET_METERING_BY_METER_IDS_SUCCESS, GET_METERING_BY_METER_IDS_FAIL } from '../constants/meteringConstants';
+    GET_METERING_BY_METER_IDS_SUCCESS, GET_METERING_BY_METER_IDS_FAIL , FAKTURA_METERING_REQUEST, FAKTURA_METERING_SUCCESS, FAKTURA_METERING_FAIL, METERING_SAVE_RESET} from '../constants/meteringConstants';
 
 export const meteringReducer = (state = {}, action) => {
     switch (action.type) {
@@ -10,6 +10,12 @@ export const meteringReducer = (state = {}, action) => {
         return {
           loading: true,
           info: ''
+        }
+      case METERING_SAVE_RESET: 
+        return {
+          loading: false,
+          info: '',
+          error: ''
         }
       case METERING_SAVE_SUCCESS:
         return {
@@ -66,6 +72,28 @@ export const meteringReducer = (state = {}, action) => {
           metering: action.payload
         }
       case GET_METERING_BY_METER_IDS_FAIL:
+        return {
+          loading: false,
+          error: action.payload
+        }
+      default:
+        return state;
+    }
+  }
+
+  export const fakturaMeteringReducer = (state = {fakturaMetering: []}, action) => {
+    switch (action.type) {
+      case FAKTURA_METERING_REQUEST:
+        return {
+          loading: true,
+          fakturaMetering: []
+        }
+      case FAKTURA_METERING_SUCCESS:
+        return {
+          loading: false,
+          fakturaMetering: action.payload
+        }
+      case FAKTURA_METERING_FAIL:
         return {
           loading: false,
           error: action.payload

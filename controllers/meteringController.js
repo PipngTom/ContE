@@ -53,7 +53,9 @@ const newMetering = (req, res) => {
         if (!err) {
           res.send(rows)
         } else {
-          console.log(err)
+          console.log(err.sqlMessage)
+         // res.status(404)
+          res.json({err: err.sqlMessage})
         }
       })
     })
@@ -63,8 +65,9 @@ const newMetering = (req, res) => {
   const getAllMeteringByMeterId = (req, res) => {
 
     const {id, tabela} = req.body
+    
       
-    const query = `SELECT *, DATE_FORMAT(datumpoc, '%Y-%m-%d') AS datumpoc, DATE_FORMAT(datumkr, '%Y-%m-%d') AS datumkr FROM ${tabela} WHERE idBrojilo = ${id}`;
+    const query = `SELECT *, DATE_FORMAT(datumpoc, '%d.%m.%Y') AS datumpoc, DATE_FORMAT(datumkr, '%d.%m.%Y') AS datumkr FROM ${tabela} WHERE idBrojilo = ${id}`;
   
     db.getConnection((err, connection) => {
       if (err) {
@@ -73,7 +76,7 @@ const newMetering = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
-      //    console.log(rows)
+          console.log(rows)
           res.send(rows)
         } else {
           console.log(err)
@@ -85,8 +88,6 @@ const newMetering = (req, res) => {
   const getMeteringByMeterIds = (req, res) => {
 
     const {datum: mesec, selectedMeters: primer} = req.body
-    console.log(primer)
-    console.log(mesec)
   //  const primer =  [{id:12, tabela: 'merenja_srednji_napon'}, {id:16, tabela: 'merenja_srednji_napon'}, {id: 14, tabela: 'merenja_sp_jednotarifno'}] 
   //  const mesec = '2021-08-15'
     //AND DATE(${mesec})<=datumkr AND DATE(${mesec})>=datumpoc
@@ -118,7 +119,6 @@ const newMetering = (req, res) => {
       //    tables.forEach((item,index)=>results[item.var]=values[index])
       //    console.log(results)
           ///results.push(values)
-         console.log(values)
          res.send(values)
       })
       
@@ -129,6 +129,36 @@ const newMetering = (req, res) => {
   console.log(error)
   }
    
+  }
+
+  const fakturaMetering = (req, res) => {
+    const { rezultatN, mesec, godina } = req.body
+    console.log('mesec: ', mesec)
+    console.log('godina: ', godina)
+    const queryPromises = rezultatN.map((item)=>{
+      const query = `SELECT t.*, DATE_FORMAT(t.datumpoc, '%d.%m.%Y') AS datumpoc, DATE_FORMAT(t.datumkr, '%d.%m.%Y') AS datumkr, b.kategorija
+      FROM ${item.tabela} as t
+      LEFT JOIN brojila AS b ON b.id = t.idBrojilo
+      WHERE idBrojilo = ${item.idBrojila} AND mesec = ${mesec} AND godina = ${godina}`
+      return new Promise((resolve, reject)=>{
+        db.query(query, (error, results)=>{
+          if(error){
+            return reject(error)
+          }
+          return resolve(results)
+        })
+      })
+    })
+    try{
+      Promise.all(queryPromises).then((values)=>{
+        console.log(values)
+        res.send(values)
+      })
+
+    }catch(error){
+      console.log(error)
+    }
+    console.log(rezultatN, mesec, godina)
   }
 
   const deleteSingleMetering = (req, res) => {
@@ -153,4 +183,4 @@ const newMetering = (req, res) => {
     })
   }
 
-  export {newMetering, getAllMeteringByMeterId, deleteSingleMetering, getMeteringByMeterIds}
+  export {newMetering, getAllMeteringByMeterId, deleteSingleMetering, getMeteringByMeterIds, fakturaMetering}

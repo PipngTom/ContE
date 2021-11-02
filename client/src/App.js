@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import Header from './components/Header';
 import { Container } from 'react-bootstrap';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import UnosScreen from './screens/UnosScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -21,6 +22,9 @@ import NewFakturaScreen from './screens/Fakture/NewFakturaScreen';
 import BalansnaOdgovornostScreen from './screens/BalansnaOdgovrnost/BalansnaOdgovornostScreen';
 import Footer from './components/Footer';
 import store from './store';
+import LandingScreen from './screens/LandingScreen';
+import FakturaZaKlijentaScreen from './screens/FakturaKlijent/FakturaZaKlijentaScreen';
+import RacuniKlijentaScreen from './screens/FakturaKlijent/RacuniKlijentaScreen';
 
 const App = () => {
   return (
@@ -29,26 +33,29 @@ const App = () => {
       <Header />
           <main className='py-3'>
             <Container>
-                <Route path='/unos' component={UnosScreen} /> 
+                <ProtectedRoute path='/unos' component={UnosScreen} /> 
+                <Route path='/' component={LandingScreen}/>
                 <Route path='/register' component={RegisterScreen} />
                 <Route path='/login' component={LoginScreen} />
-                <Route exact path='/clients/new' component={NewClientScreen} />
-                <Route exact path='/clients/edit/:id' component={NewClientScreen} />
-                <Route exact path='/clients' component={ClientsScreen} />
-                <Route exact path='/meters' component={MetersScreen} />
-                <Route exact path='/meters/new' component={NewMeterScreen} />
-                <Route exact path='/meters/edit/:id' component={NewMeterScreen} />
-                <Route exact path='/contracts' component={ContractsScreen} />
-                <Route exact path='/contracts/new' component={NewContractScreen} />
-                <Route exact path='/contracts/edit/:id' component={NewContractScreen} />
-                <Route exact path='/unosi' component={MeteringScreen} />
-                <Route exact path='/unosi/edit/:id' component={NewMeteringScreen} />
-                <Route exact path='/unosi/new' component={NewMeteringScreen} />
-                <Route exact path='/allmetering/:id' component={AllMeteringScreen} />
-                <Route exact path='/mrezarina' component={MrezarinaScreen} />
-                <Route exact path='/fakture' component={FaktureScreen} />
-                <Route exact path='/fakture/new/:id' component={NewFakturaScreen} />
-                <Route exact path='/balansna' component={BalansnaOdgovornostScreen} />
+                <ProtectedRoute exact path='/clients/new' component={NewClientScreen} />
+                <ProtectedRoute exact path='/clients/edit/:id' component={NewClientScreen} />
+                <ProtectedRoute exact path='/clients' component={ClientsScreen} />
+                <ProtectedRoute exact path='/meters' component={MetersScreen} />
+                <ProtectedRoute exact path='/meters/new' component={NewMeterScreen} />
+                <ProtectedRoute exact path='/meters/edit/:id' component={NewMeterScreen} />
+                <ProtectedRoute exact path='/contracts' component={ContractsScreen} />
+                <ProtectedRoute exact path='/contracts/new' component={NewContractScreen} />
+                <ProtectedRoute exact path='/contracts/edit/:id' component={NewContractScreen} />
+                <ProtectedRoute exact path='/unosi' component={MeteringScreen} />
+                <ProtectedRoute exact path='/unosi/edit/:id' component={NewMeteringScreen} />
+                <ProtectedRoute exact path='/unosi/new' component={NewMeteringScreen} />
+                <ProtectedRoute exact path='/allmetering/:id' component={AllMeteringScreen} />
+                <ProtectedRoute exact path='/mrezarina' component={MrezarinaScreen} />
+                <ProtectedRoute exact path='/fakture' component={FaktureScreen} />
+                <ProtectedRoute exact path='/fakture/new/:id' component={NewFakturaScreen} />
+                <ProtectedRoute exact path='/balansna' component={BalansnaOdgovornostScreen} />
+                <ProtectedRoute exact path='/fakturaklijent' component={FakturaZaKlijentaScreen} />
+                <ProtectedRoute exact path='/fakturaklijent/racuni/:id' component={RacuniKlijentaScreen} />
             </Container>
           </main>
         <Footer />

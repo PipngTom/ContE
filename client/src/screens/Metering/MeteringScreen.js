@@ -1,16 +1,16 @@
-import React , {useState, useEffect} from 'react'
-import {Table, Button, Nav, Modal, Form} from 'react-bootstrap'
+import React , {useState, useEffect} from 'react';
+import {Table, Nav, Form} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { getAllMeters, deleteSingleMeter, getSingleMeter } from '../../actions/meterActions';
-import Loader from '../../components/Loader'
-import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
+import Loader from '../../components/Loader';
+import { nadjiNazivPoKategoriji, nadjiNazivVrsteSnabdevanja } from '../../constants/brojila';
 
 const MeteringScreen = ({history}) => {
 
     const [searchString, setsearchString] = useState('')
     const [searchStringEdBroj, setsearchStringEdBroj] = useState('')
-    const [selectedId, setSelectedId] = useState(0)
+    
 
     const dispatch = useDispatch()
 
@@ -28,17 +28,14 @@ const MeteringScreen = ({history}) => {
     
     const allMeteringHandler = (id) => {
         dispatch(getSingleMeter(id))
-        //dispatch getMeteringByMeterId action
         history.push({pathname: `/allmetering/${id}`})
     }
 
     const handleTypeNazivKlijenta=(e)=>{
-        console.log(e.target.value);
         setsearchString(e.target.value)   
       }
 
       const handleTypeEdBroj=(e)=>{
-        console.log(e.target.value);
         setsearchStringEdBroj(e.target.value)   
       }
  
@@ -80,8 +77,8 @@ const MeteringScreen = ({history}) => {
                                 <td>{item.nazivKlijenta}</td>
                                 <td>{item.mestoMerenja}</td>
                                 <td>{item.adresaMerenja}</td>
-                                <td>{kategorija.find((el)=>el.sifra==item.kategorija).naziv}</td>
-                                <td>{vrsteSnabdevanja.find((el)=>el.sifra==item.vrstaSnabdevanja).naziv}</td>
+                                <td>{nadjiNazivPoKategoriji(item.kategorija)}</td>
+                                <td>{nadjiNazivVrsteSnabdevanja(item.vrstaSnabdevanja)}</td>
                                 <td>
                                     <Nav.Link onClick={()=>allMeteringHandler(item.id)}>Lista merenja</Nav.Link>
                                 </td>

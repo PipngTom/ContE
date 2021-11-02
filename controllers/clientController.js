@@ -70,6 +70,26 @@ const getAllClients = (req, res) => {
     })
   }
 
+  const getSingleClientByMeterId = (req, res) => {
+    const id = req.params.id
+
+    const query = `SELECT * FROM users.klijenti WHERE id in (SELECT idKlijent FROM users.brojila WHERE id=${id})`
+
+    db.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+      connection.query(query, (err, rows) => {
+        connection.release()
+        if (!err) {
+          res.send(rows)
+        } else {
+          console.log(err)
+        }
+      })
+    })
+  }
+
   const deleteSingleClient = (req, res) => {
 
     const id = req.params.id
@@ -91,4 +111,4 @@ const getAllClients = (req, res) => {
     })
   }
 
-export { newClient, getAllClients, getSingleClient, deleteSingleClient }
+export { newClient, getAllClients, getSingleClient, getSingleClientByMeterId, deleteSingleClient }

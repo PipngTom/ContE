@@ -1,16 +1,16 @@
-import React, {useState, useEffect}  from 'react'
-import {Form, Button, Row, Col, Table} from 'react-bootstrap'
+import React, {useState, useEffect}  from 'react';
+import {Form, Button, Row, Col, Table} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import Loader from '../../components/Loader'
+import Loader from '../../components/Loader';
 import debounce from 'lodash.debounce';
 import { getMeteringByMeterId, getMeteringByMeterIds } from '../../actions/meteringActions';
 import {getAllMeters} from '../../actions/meterActions';
-import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
+import { nadjiTabeluPoKategoriji, nadjiCitavuTabelu, nadjiNazivPoKategoriji, nadjiNazivVrsteSnabdevanja } from '../../constants/brojila';
 import {
     generisiProfilPotrosnje,
     izracunajTipMernogMesta,
     getPeriod
-} from '../../lib/profilPotrosnje'
+} from '../../lib/profilPotrosnje';
 
 
 const BalansnaOdogovrnostScreen = () => {
@@ -22,7 +22,6 @@ const BalansnaOdogovrnostScreen = () => {
     const [godina, setGodina] = useState(new Date().getFullYear())
     const [mesec, setMesec] = useState(new Date().getMonth())
 
- //   const [selectedMetering, setSelectedMetering] = useState({})
     const [profil, setProfil] = useState(null)
 
     const allMeteringByMeterIds = useSelector(state => state.allMeteringByMeterIds)
@@ -38,38 +37,24 @@ const BalansnaOdogovrnostScreen = () => {
 
     useEffect(() => {
         dispatch(getAllMeters())
-     //   if(!meter){
-        //    console.log('upaopoo')
-        
-         //   dispatch(getSingleMeter(brojiloId))
-         //   dispatch(getMrezarina())
-      //  } else {
-         //   const tabela = kategorija.find((item)=>item.sifra == meter.kategorija).tabela
-         //   dispatch(getMeteringByMeterId(brojiloId, tabela))
-          //  dispatch(getMeteringByMeterIds(selectedMeters))
-      //  }
-        
         
     }, [dispatch, newRender])
 
     const handleTypeNazivKlijenta=(e)=>{
-        console.log(e.target.value);
         setsearchString(e.target.value)   
       }
 
       const handleTypeEdBroj=(e)=>{
-        console.log(e.target.value);
         setsearchStringEdBroj(e.target.value)   
       }
 
       const checkHandler = (e, id) => {
-          console.log(e.target.checked, id)
           if(e.target.checked){
               const meter  = meters.find((item)=>item.id==id)
-              const tabela =  kategorija.find((cur)=>cur.sifra == meter.kategorija).tabela
+              const tabela = nadjiTabeluPoKategoriji(meter.kategorija)
               setSelectedMeters([...selectedMeters, {tabela, id}])
           }else{
-            setSelectedMeters([...selectedMeters.filter(item=>item.id!==id)])
+            setSelectedMeters([...selectedMeters.filter(item => item.id !== id)])
           }
       }
 
@@ -82,9 +67,10 @@ const BalansnaOdogovrnostScreen = () => {
         console.log(meteringByAllIds)
         
             meteringByAllIds.forEach((met, index) => {
-                console.log(met)
                 if(met.length!==0){
-                    const kat =  kategorija.find((cur)=>cur.sifra == met[0].kategorija)
+                    const kat = nadjiCitavuTabelu(met[0].kategorija)
+                    console.log(met[0].kategorija)
+                    console.log(kat)
                 
                  const merenje = {
                     Wnt: met[0].nt,
@@ -203,13 +189,12 @@ const BalansnaOdogovrnostScreen = () => {
                                 <td>{item.nazivKlijenta}</td>
                                 <td>{item.mestoMerenja}</td>
                                 <td>{item.adresaMerenja}</td>
-                                <td>{kategorija.find((el)=>el.sifra==item.kategorija).naziv}</td>
-                                <td>{vrsteSnabdevanja.find((el)=>el.sifra==item.vrstaSnabdevanja).naziv}</td>
+                                <td>{nadjiNazivPoKategoriji(item.kategorija)}</td>
+                                <td>{nadjiNazivVrsteSnabdevanja(item.vrstaSnabdevanja)}</td>
                                 <td>
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                     <Form.Check type="checkbox" label="Ubaci" onChange={(e)=>checkHandler(e, item.id)}/>
                                 </Form.Group>
-                                    {/* <Nav.Link onClick={()=>createFakture(item.id)}>Kreiraj fakturu</Nav.Link> */}
                                 </td>
                             </tr>  
                         ))}

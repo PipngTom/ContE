@@ -75,6 +75,27 @@ export const noviKlijent = (klijent, id = 0) => async (dispatch) => {
     }
 }
 
+export const getSingleClientByMeterId = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GET_SINGLE_CLIENT_REQUEST
+    })
+
+    const { data } = await axios.get(`/api/clients/meterid/${id}`) 
+
+    dispatch({
+      type: GET_SINGLE_CLIENT_SUCCESS,
+      payload: data[0]
+    })
+
+  } catch (error) {
+    dispatch({
+      type: GET_SINGLE_CLIENT_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
+
     export const deleteSingleClient = (id) => async (dispatch) => {
         try {
             dispatch({

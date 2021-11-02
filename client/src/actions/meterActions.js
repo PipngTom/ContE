@@ -1,5 +1,5 @@
 import { 
-    GET_ALL_METERS_REQUEST, GET_ALL_METERS_SUCCESS, GET_ALL_METERS_FAIL, ALL_METERS_UPDATE,
+    GET_ALL_METERS_REQUEST, GET_ALL_METERS_SUCCESS, GET_ALL_METERS_FAIL, ALL_METERS_UPDATE, GET_ALL_METERS_BY_CLIENT_ID_REQUEST, GET_ALL_METERS_BY_CLIENT_ID_SUCCESS, GET_ALL_METERS_BY_CLIENT_ID_FAIL,
     METER_SAVE_REQUEST, METER_SAVE_SUCCESS, METER_SAVE_FAIL,
     GET_SINGLE_METER_REQUEST, GET_SINGLE_METER_SUCCESS, GET_SINGLE_METER_FAIL, METER_DELETE_REQUEST, METER_DELETE_FAIL} from '../constants/meterConstants';
 import axios from 'axios';
@@ -20,6 +20,27 @@ export const getAllMeters= () => async (dispatch) => {
     } catch (error) {
       dispatch({
         type: GET_ALL_METERS_FAIL,
+        payload: error.response && error.response.data.message ? error.response.data.message : error.message
+      })
+    }
+  }
+
+  export const getAllMetersByClientId = (id) => async (dispatch) => {
+    try {
+      dispatch({
+        type: GET_ALL_METERS_BY_CLIENT_ID_REQUEST
+      })
+
+      const { data } = await axios.get(`/api/meters/racuni/${id}`)
+
+      dispatch({
+        type: GET_ALL_METERS_BY_CLIENT_ID_SUCCESS,
+        payload: data
+      })
+
+    } catch (error) {
+      dispatch({
+        type: GET_ALL_METERS_BY_CLIENT_ID_FAIL,
         payload: error.response && error.response.data.message ? error.response.data.message : error.message
       })
     }

@@ -1,6 +1,6 @@
 import { 
     GET_ALL_METERS_REQUEST, GET_ALL_METERS_SUCCESS, GET_ALL_METERS_FAIL, ALL_METERS_UPDATE,
-    GET_SINGLE_METER_REQUEST, GET_SINGLE_METER_SUCCESS, GET_SINGLE_METER_FAIL, GET_SINGLE_METER_RESET } from '../constants/meterConstants';
+    GET_SINGLE_METER_REQUEST, GET_SINGLE_METER_SUCCESS, GET_SINGLE_METER_FAIL, GET_SINGLE_METER_RESET, GET_ALL_METERS_BY_CLIENT_ID_REQUEST, GET_ALL_METERS_BY_CLIENT_ID_SUCCESS, GET_ALL_METERS_BY_CLIENT_ID_FAIL } from '../constants/meterConstants';
 
     export const allMetersReducer = (state = { meters: []}, action) => {
         switch (action.type) {
@@ -20,6 +20,28 @@ import {
                meters: state.meters.filter((item)=>(item.id !== action.payload)) 
             }
           case GET_ALL_METERS_FAIL:
+            return {
+              loading: false,
+              error: action.payload
+            }
+          default:
+            return state;
+        }
+      }
+
+      export const allMetersByClientIdReducer = (state = { metersByClientId: [] }, action) => {
+        switch (action.type) {
+          case GET_ALL_METERS_BY_CLIENT_ID_REQUEST:
+            return {
+              loading: true,
+              metersByClientId: []
+            }
+          case GET_ALL_METERS_BY_CLIENT_ID_SUCCESS:
+            return {
+              loading: false,
+              metersByClientId: action.payload
+            }
+          case GET_ALL_METERS_BY_CLIENT_ID_FAIL:
             return {
               loading: false,
               error: action.payload

@@ -3,31 +3,14 @@ import {Form, Button, Row, Col} from 'react-bootstrap'
 import FormContainer from '../../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { newMetering } from '../../actions/meteringActions';
-import { getSingleMeter } from '../../actions/meterActions';
-import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
-import * as yup from "yup";
+import { nadjiTabeluPoKategoriji, nadjiStavkePoSifri } from '../../constants/brojila';
+import { nadjiPocetakObracuna, nadjiKrajObracuna, transformDatum } from '../../constants/datum';
+import { meteringSchema1, meteringSchema2, meteringSchema3 } from '../../validations/meteringValidations';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-const schema1 = yup.object().shape({
-    vt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
-    nt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
-    reak: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
-    prereak: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
-    odosnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
-    prekosnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
-    maxsnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required()
-  });
 
-  const schema2 = yup.object().shape({
-    vt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
-    nt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
-    odosnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required()
-  });
-  const schema3 = yup.object().shape({
-    jt: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required(),
-    odosnaga: yup.number().typeError('Unesite brojcanu vrednost').moreThan(-0.00001, 'Unesite pozitivnu vrednost').required()
-  });
+
 
 const NewMeteringScreen = ({match, history}) => {
 
@@ -35,66 +18,93 @@ const NewMeteringScreen = ({match, history}) => {
 
     const dispatch = useDispatch()
 
-    const [fields, setFields] = useState({datumpoc:'', datumkr: ''})
+    const [fields, setFields] = useState({mesec: new Date().getMonth(), godina: new Date().getFullYear()})
+
 
     const meteringId = match.params.id;
     
     const singleMeter = useSelector(state => state.singleMeter)
+
+    const meteringInfo = useSelector(state => state.metering)
+
+    const {error: meteringError, info } = meteringInfo
+
     const {loading, error, meter} = singleMeter
+
     const {kategorija: sifraKategorijeBrojila, mestoMerenja, nazivKlijenta, id: idBrojila} = meter
+
     let schema;
-    if(sifraKategorijeBrojila==6 || sifraKategorijeBrojila==3){
-       schema = schema2
+    if (sifraKategorijeBrojila == 6 || sifraKategorijeBrojila == 3) {
+       schema = meteringSchema2
     } 
-    if(sifraKategorijeBrojila==1 || sifraKategorijeBrojila==2)
+    if (sifraKategorijeBrojila == 1 || sifraKategorijeBrojila == 2)
     {
-        schema = schema1 
+        schema = meteringSchema1
     }
-    if(sifraKategorijeBrojila==4)
+    if (sifraKategorijeBrojila == 4)
     {
-        schema = schema3 
+        schema = meteringSchema3
     }
-    const { register, handleSubmit, formState: { errors }  } = useForm(
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm(
         {
        resolver: yupResolver(schema)
-   } 
+    } 
    )
     
 
     const allMeteringByMeterId = useSelector(state => state.allMeteringByMeterId)
     const {metering} = allMeteringByMeterId
 
-    //meters.find((item)=> item.id == meterId)
 
     useEffect(() => {
-
-        if(meteringId){
-            const temp = metering.find((item)=>item.id == meteringId)
-            if(temp) {
-                temp.datumpoc = temp.datumpoc.slice(0,10)
-                temp.datumkr = temp.datumkr.slice(0,10)
-            }
-            setFields(temp)
-        } else {
-
-        }
-        //dispatch(getSingleMeter(meterId))
-   /*      if(meterId)//EDIT MODE
-        {
-            if(!meter || meter.id != meterId){
-                dispatch(getSingleMeter(meterId))
-                console.log('EDIT MODE need to dispatch getSingleClient')
-            } else{
-                
-            }  
-        }
-        console.log('initial render for NEW MODE') */
         
 
-    },[dispatch])
+        if(meteringId){
+            const temp = metering.find((item)=> item.id == meteringId)
+            
+             setFields(temp)
+             if (sifraKategorijeBrojila == 1 || sifraKategorijeBrojila == 2) {
+                setValue('vt', temp.vt)
+                 setValue('nt', temp.nt)
+                 setValue('reak', temp.reak)
+                 setValue('prereak', temp.prereak)
+                 setValue('odosnaga', temp.odosnaga)
+                 setValue('prekosnaga', temp.prekosnaga)
+                 setValue('maxsnaga', temp.maxsnaga)
+                 
+             }
+             if (sifraKategorijeBrojila == 4) {
+                setValue('jt', temp.jt)
+                setValue('odosnaga', temp.odosnaga)
+             }
+             if (sifraKategorijeBrojila == 6 || sifraKategorijeBrojila == 3) {
+                 setValue('vt', temp.vt)
+                 setValue('nt', temp.nt)
+                 setValue('odosnaga', temp.odosnaga)
+             }
+        } else {
+                       
+
+        }
+        if(info){
+            history.push({pathname: `/allmetering/${idBrojila}`}) 
+        }
+            
+        
+
+    },[dispatch, meteringError, info])
 
     const handleInput = (e) => {
         const copy = {...fields}
+        if(e.target.name == 'mesec' ){
+            copy['datumpoc'] = nadjiPocetakObracuna(e.target.value) + fields['godina']
+            copy['datumkr'] = nadjiKrajObracuna(e.target.value) + fields['godina']
+        }
+        if(e.target.name == 'godina'){
+            copy['datumpoc'] = nadjiPocetakObracuna(fields['mesec']) + e.target.value
+            copy['datumkr'] = nadjiKrajObracuna(fields['mesec']) + e.target.value
+
+        }
         copy[e.target.name] = e.target.value
         setFields(copy)
     }
@@ -102,24 +112,19 @@ const NewMeteringScreen = ({match, history}) => {
     const submitUnos = async (data, e) => {
 
         e.preventDefault()
-        let isValid = await schema.isValid(fields)
-        console.log(isValid)
-        
-        console.log('YYYYYYYYYYYYYYYYYYYYYYYY', data, e)
-         const tabela = kategorija.find((el)=>el.sifra == sifraKategorijeBrojila).tabela
+        const polja = {...fields, datumpoc: transformDatum(fields['datumpoc']), datumkr: transformDatum(fields['datumkr']) }
+    
+        const tabela = nadjiTabeluPoKategoriji(sifraKategorijeBrojila)
           if(meteringId){
-            dispatch(newMetering(fields, idBrojila, tabela,  meteringId))
+            dispatch(newMetering(polja, idBrojila, tabela,  meteringId))
         } else {
-            dispatch(newMetering(fields, idBrojila, tabela))
-        }  
-        history.push({pathname: `/allmetering/${idBrojila}`}) 
-
-    }
-
-    const errorHandler = async (errors, e) => {
-        console.log('BBBBBBB', errors, e)
-        let isValid = await schema.isValid(fields)
-        console.log(isValid)
+            dispatch(newMetering(polja, idBrojila, tabela))
+        }
+      /*   if(meteringId)  {
+            history.push({pathname: `/allmetering/${idBrojila}`}) 
+        } */
+        
+        
 
     }
 
@@ -127,31 +132,56 @@ const NewMeteringScreen = ({match, history}) => {
     return (
         <div>
             <h2>ED broj: {mestoMerenja}</h2>
+            <h2>{meteringError && 'Uneli ste vec merenje za ovu godinu i mesec'}</h2>
             <FormContainer>
-            <Form onSubmit={handleSubmit(submitUnos, errorHandler)}>
-            <Form.Group controlId='Datum poč stanja'>
-                <Form.Label>Datum početnog stanja</Form.Label>
-                <Form.Control type='date'  name='datumpoc' placeholder='Datum početnog stanja' value={fields['datumpoc']}
-                onChange={handleInput}></Form.Control>
-            </Form.Group>
-            temp<Form.Group controlId='Datum kraj stanja'>
-                <Form.Label>Datum krajnjeg stanja</Form.Label>
-                <Form.Control type='date' name='datumkr' placeholder='Datum krajnjeg stanja' value={fields['datumkr']}
-                onChange={handleInput}></Form.Control>
-            </Form.Group>
-            
-            {sifraKategorijeBrojila && kategorija.find((item)=>item.sifra==sifraKategorijeBrojila).stavke.map((stavka, index)=>(
+            <Form onSubmit={handleSubmit(submitUnos)}>
+            <h6>Period obračuna:{'  '}{fields['datumpoc']}{'  -  '}{fields['datumkr']}</h6>
+            <Row>
+                <Col xs={6}>
+                    <h5>Mesec</h5>
+                    <Form.Group controlId='pocetakObracuna'>
+                        <Form.Control as='select' name='mesec' value={fields['mesec']} onChange={handleInput} >
+                            <option value={0}>Januar</option>
+                            <option value={1}>Februar</option>
+                            <option value={2}>Mart</option>
+                            <option value={3}>April</option>
+                            <option value={4}>Maj</option>
+                            <option value={5}>Jun</option>
+                            <option value={6}>Jul</option>
+                            <option value={7}>Avgust</option>
+                            <option value={8}>Septembar</option>
+                            <option value={9}>Oktobar</option>
+                            <option value={10}>Novembar</option>
+                            <option value={11}>Decembar</option>
+                        </Form.Control>
+                    </Form.Group>
+                </Col>
+                <Col xs={6}>
+                    <h5>Godina</h5>
+                    <Form.Group controlId='krajObracuna'>
+                        <Form.Control as='select' name='godina' value={fields['godina']} onChange={handleInput} >
+                            <option value={2021}>2021</option>
+                            <option value={2020}>2020</option>
+                            <option value={2019}>2019</option>
+                        </Form.Control>
+                    </Form.Group>
+                </Col>
+            </Row>
+            <br/>
+            {sifraKategorijeBrojila && nadjiStavkePoSifri(sifraKategorijeBrojila).map((stavka, index) => (
                 <Form.Group key={index} controlId='nazivKlijenta'>
                     <Form.Label>{stavka.naziv}</Form.Label>
-                    <Form.Control type='name' name={stavka.kolona} placeholder={stavka.naziv} value={fields[stavka.kolona]} {...register(stavka.kolona)}
+                    <Form.Control isInvalid={errors[stavka.kolona]?.message ? true : false} type='name' name={stavka.kolona} placeholder={stavka.naziv} value={fields[stavka.kolona]} {...register(stavka.kolona)}
                     onChange={handleInput}></Form.Control>
-                    <p style={{color: errors[stavka.kolona]?.message ? 'red' : ''}}>{errors[stavka.kolona]?.message}</p>
+                    <Form.Control.Feedback type='invalid'>{errors[stavka.kolona]?.message}</Form.Control.Feedback>
                 </Form.Group>
             ))}
+             <br/>
+            <br/>
             <Row>
                 <Col xs={3}></Col>
                 <Col xs={3}>
-                    <Button type='submit' variant='primary'>
+                    <Button type='submit' variant='info' size='lg'>
                     Sačuvaj
                     </Button>
                 </Col>

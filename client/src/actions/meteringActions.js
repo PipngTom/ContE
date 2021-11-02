@@ -2,7 +2,7 @@ import {
     METERING_SAVE_REQUEST, METERING_SAVE_SUCCESS, METERING_SAVE_FAIL,
     GET_ALL_METERING_BY_METERID_REQUEST, GET_ALL_METERING_BY_METERID_SUCCESS, GET_ALL_METERING_BY_METERID_FAIL, GET_ALL_METERING_BY_METERID_UPDATE,
     METERING_DELETE_REQUEST, METERING_DELETE_FAIL, GET_METERING_BY_METER_IDS_REQUEST, 
-    GET_METERING_BY_METER_IDS_SUCCESS, GET_METERING_BY_METER_IDS_FAIL } from '../constants/meteringConstants';
+    GET_METERING_BY_METER_IDS_SUCCESS, GET_METERING_BY_METER_IDS_FAIL, FAKTURA_METERING_REQUEST, FAKTURA_METERING_SUCCESS, FAKTURA_METERING_FAIL } from '../constants/meteringConstants';
 
 import axios from 'axios';
 
@@ -23,17 +23,23 @@ export const newMetering = (fields, meterId, tabela, id = 0) => async (dispatch)
       }
   
       const { data } = await axios.post('/api/metering/new', metering, config) 
-  
-      dispatch({
-        type: METERING_SAVE_SUCCESS,
-        payload: data
-      })
+      
+      if (data.err) {
+        dispatch({
+          type: METERING_SAVE_FAIL,
+          payload: data.err
+        })
+      } else {
+        dispatch({
+          type: METERING_SAVE_SUCCESS,
+          payload: data
+        })
+      }
+      
   
     } catch (error) {
-      dispatch({
-        type: METERING_SAVE_FAIL,
-        payload: error.response && error.response.data.message ? error.response.data.message : error.message
-      })
+      console.log(error)
+      
     }
   }
 
@@ -90,6 +96,35 @@ export const newMetering = (fields, meterId, tabela, id = 0) => async (dispatch)
   } catch (error) {
     dispatch({
       type: GET_METERING_BY_METER_IDS_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
+
+export const getFakturaMetering = (rezultatN, mesec, godina) => async (dispatch) => {
+  console.log(godina)
+  console.log(mesec)
+  try {
+    dispatch({
+      type: FAKTURA_METERING_REQUEST
+    })
+
+   const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    const { data } = await axios.post('/api/metering/fakturametering', {rezultatN, mesec, godina}, config)
+
+    dispatch({
+      type: FAKTURA_METERING_SUCCESS,
+      payload: data
+    })
+
+  } catch (error) {
+    dispatch({
+      type: METERING_DELETE_FAIL,
       payload: error.response && error.response.data.message ? error.response.data.message : error.message
     })
   }

@@ -1,12 +1,12 @@
 import React , {useState, useEffect} from 'react'
-import {Table, Button, Nav, Modal, Form} from 'react-bootstrap'
+import {Table, Nav,  Form} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllMeters, deleteSingleMeter } from '../../actions/meterActions';
 import { getMrezarina } from '../../actions/mrezarinaActions';
-import Loader from '../../components/Loader'
+import Loader from '../../components/Loader';
 import debounce from 'lodash.debounce';
-import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
-import {GET_SINGLE_METER_RESET} from '../../constants/meterConstants'
+import { nadjiNazivPoKategoriji, nadjiNazivVrsteSnabdevanja } from '../../constants/brojila';
+import {GET_SINGLE_METER_RESET} from '../../constants/meterConstants';
 
 const FaktureScreen = ({history}) => {
 
@@ -25,25 +25,23 @@ const FaktureScreen = ({history}) => {
     useEffect(() => {
         dispatch(getAllMeters())
         dispatch(getMrezarina())
+        
         return () => {
             dispatch({
-                type: GET_SINGLE_METER_RESET
-              })
-        }
+            type: GET_SINGLE_METER_RESET
+          })
+        } 
     }, [dispatch])
 
     const createFakture = (id) => {
-        console.log(id)
         history.push({pathname: `/fakture/new/${id}`})
     }
 
     const handleTypeNazivKlijenta=(e)=>{
-        console.log(e.target.value);
         setsearchString(e.target.value)   
       }
 
       const handleTypeEdBroj=(e)=>{
-        console.log(e.target.value);
         setsearchStringEdBroj(e.target.value)   
       }
 
@@ -87,8 +85,8 @@ const FaktureScreen = ({history}) => {
                                 <td>{item.nazivKlijenta}</td>
                                 <td>{item.mestoMerenja}</td>
                                 <td>{item.adresaMerenja}</td>
-                                <td>{kategorija.find((el)=>el.sifra==item.kategorija).naziv}</td>
-                                <td>{vrsteSnabdevanja.find((el)=>el.sifra==item.vrstaSnabdevanja).naziv}</td>
+                                <td>{nadjiNazivPoKategoriji(item.kategorija)}</td>
+                                <td>{nadjiNazivVrsteSnabdevanja(item.vrstaSnabdevanja)}</td>
                                 <td>
                                     <Nav.Link onClick={()=>createFakture(item.id)}>Kreiraj fakturu</Nav.Link>
                                 </td>

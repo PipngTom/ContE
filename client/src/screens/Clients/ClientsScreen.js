@@ -3,7 +3,7 @@ import {Table, Button, Nav, Modal, Form} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { getAllClients, deleteSingleClient } from '../../actions/clientActions';
-import Loader from '../../components/Loader'
+import Loader from '../../components/Loader';
 
 const ClientsScreen = ({history}) => {
 
@@ -15,7 +15,7 @@ const ClientsScreen = ({history}) => {
 
     const allClients = useSelector(state => state.allClients)
 
-    const {loading, error, clients} = allClients
+    const {loading, clients} = allClients
 
 
     useEffect(() => {
@@ -45,8 +45,7 @@ const ClientsScreen = ({history}) => {
     }
 
     const handleTypeNazivKlijenta=(e)=>{
-       
-        console.log(e.target.value);
+    
         setsearchString(e.target.value)
         
       }

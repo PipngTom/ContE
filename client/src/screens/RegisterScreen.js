@@ -3,12 +3,21 @@ import FormContainer from '../components/FormContainer';
 import { registerSchema } from '../validations/userValidation';
 import { useSelector } from 'react-redux';
 import { Form, Button } from 'react-bootstrap';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { register } from '../actions/userActions';
+import { registerUs } from '../actions/userActions';
+import { useHistory } from 'react-router';
 
 const RegisterScreen = () => {
 
   const dispatch = useDispatch()
+
+  const history = useHistory()
+
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(registerSchema)
+  })
 
   const registerUser = useSelector(state => state.userRegister)
   const { userInfo } = registerUser
@@ -16,40 +25,42 @@ const RegisterScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [valid, setValid] = useState(false)
 
-  const submitHandler = async (e) => {
+  const submitHandler = async (data, e) => {
     e.preventDefault()
-    const fData = {name, email, password}
-    const isValid = await registerSchema.isValid(fData)
-    setValid(isValid)
-    dispatch(register(name, email, password))
+    
+    dispatch(registerUs(name, email, password))
+
     
   }
 
+
   return (
     <>
-    {userInfo && userInfo.affectedRows === 1 ? <h1>Uspesno ste se registrovali</h1> :
+    {userInfo && userInfo.affectedRows === 1 ? <h1>Uspesno ste se registrovali</h1> : 
     <FormContainer>
     <h1>Sign Up</h1>
-    <Form onSubmit={submitHandler}>
+    <Form onSubmit={handleSubmit(submitHandler)}>
     <Form.Group controlId='name'>
         <Form.Label>Name</Form.Label>
-        <Form.Control type='name' placeholder='Enter name' value={name}
+        <Form.Control isInvalid={errors.name?.message ? true : false} type='name' placeholder='Enter name' value={name} {...register('name')}
         onChange={(e) => setName(e.target.value)}></Form.Control>
+        <Form.Control.Feedback type='invalid'>{errors.name?.message}</Form.Control.Feedback>
       </Form.Group>
       <Form.Group controlId='email'>
         <Form.Label>Email Address</Form.Label>
-        <Form.Control type='email' placeholder='Enter email' value={email}
+        <Form.Control isInvalid={errors.email?.message ? true : false} type='email' placeholder='Enter email' value={email} {...register('email')}
         onChange={(e) => setEmail(e.target.value)}></Form.Control>
+        <Form.Control.Feedback type='invalid'>{errors.email?.message}</Form.Control.Feedback>
         {userInfo ? <p style={{ color: 'red' }}>{userInfo}</p> : ''}
       </Form.Group>
       <Form.Group controlId='password'>
         <Form.Label>Password</Form.Label>
-        <Form.Control type='password' placeholder='Enter password' value={password}
+        <Form.Control isInvalid={errors.passoword?.message} type='password' placeholder='Enter password' value={password} {...register('password')}
         onChange={(e) => setPassword(e.target.value)}></Form.Control>
+        <Form.Control.Feedback type='invalid'>{errors.password?.message}</Form.Control.Feedback>
       </Form.Group>
-      <Button type='submit' variant='primary' disabled={!true}>
+      <Button type='submit' variant='primary'>
         Register
       </Button>
     </Form>
@@ -62,7 +73,7 @@ const RegisterScreen = () => {
       </Col>
     </Row> */}
   </FormContainer>
-    }
+     } 
   </>
   )
 }

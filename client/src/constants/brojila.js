@@ -1,4 +1,4 @@
-export const kategorija = [
+const kategorija = [
     {
         tabela: 'merenja_srednji_napon',
         obracun: 'dvotarifno_merenje',
@@ -76,7 +76,7 @@ export const kategorija = [
 
 ]
 
-export const vrsteSnabdevanja = [
+const vrsteSnabdevanja = [
     {
         sifra: 1,
         naziv: 'komercijalno snabdevanje'
@@ -91,3 +91,41 @@ export const vrsteSnabdevanja = [
     }
     
 ]
+
+export const celaKategorija = () => {
+    return kategorija.map(item => {
+       return {
+        sifra: item.sifra,
+        naziv: item.naziv
+        }
+})
+}
+
+export const nadjiTabeluPoKategoriji = (sifra) => {
+    return kategorija.find(item => item.sifra == sifra).tabela
+}
+
+export const nadjiCitavuTabelu = (kat) => {
+    return kategorija.find(item => item.sifra == kat)
+}
+
+export const nadjiNazivPoKategoriji = (kat) => {
+    return kategorija.find(item => item.sifra == kat).naziv
+}
+
+export const nadjiStavkePoSifri = (sifra) => {
+    return kategorija.find(item => item.sifra == sifra).stavke
+}
+
+export const celaVrstaSnabdevanja = () => {
+    return vrsteSnabdevanja.map(item => {
+        return {
+            sifra: item.sifra,
+            naziv: item.naziv
+        }
+    })
+}
+
+export const nadjiNazivVrsteSnabdevanja = (vrsta) => {
+    return vrsteSnabdevanja.find(item => item.sifra == vrsta).naziv
+}

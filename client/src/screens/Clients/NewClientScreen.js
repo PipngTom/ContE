@@ -1,20 +1,27 @@
-import React, {useState, useEffect} from 'react'
-import {Form, Button, Row, Col, Select} from 'react-bootstrap'
+import React, {useState, useEffect} from 'react';
+import {Form, Button, Row, Col} from 'react-bootstrap';
 import FormContainer from '../../components/FormContainer';
+import { clientSchema } from '../../validations/clientValidation';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { noviKlijent, getSingleClient } from '../../actions/clientActions';
-import {GET_SINGLE_CLIENT_RESET} from '../../constants/clientConstants'
+import {GET_SINGLE_CLIENT_RESET} from '../../constants/clientConstants';
 
 
 const NewClientScreen = ({match, history}) => {
 
     const dispatch = useDispatch()
 
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm({
+      resolver: yupResolver(clientSchema)
+    })
+
     const clientId = match.params.id;
 
     const singleClient = useSelector(state => state.singleClient)
 
-    const {loading, error, client} = singleClient
+    const {client} = singleClient
 
     const [klijent, setKlijent] = useState({
         nazivKlijenta: '',
@@ -75,12 +82,17 @@ const NewClientScreen = ({match, history}) => {
             balansOdg: client.uBalansnojOdgovornosti,
             zbirniRacun: client.zbirniRacun,
             podUgovorom: client.podUgovorom})
+            setValue('nazivKlijenta', client.nazivBanke)
+            setValue('kontaktMail', client.kontaktMail)
+            setValue('pib', client.pib)
+            setValue('nazivBanke', client.nazivBanke)
+            setValue('racunBanka', client.racunBanka)
             }  
         }
         console.log('initial render for NEW MODE')
         
 
-    },[dispatch, client, clientId])
+    },[dispatch, client ,clientId])
 
     const handleInput = (e) => {
         
@@ -91,7 +103,9 @@ const NewClientScreen = ({match, history}) => {
       setCheck({...check, [e.target.name]: e.target.checked ? 1 : 0})
     }
 
-    const submitKlijent = () => {
+    const submitKlijent = async (data, e) => {
+      console.log(data)
+      e.preventDefault()
         if(clientId){
             dispatch(noviKlijent({...klijent, ...check}, clientId))
         } else {
@@ -106,11 +120,12 @@ const NewClientScreen = ({match, history}) => {
     return (
         <>
         <FormContainer>
-        <Form>
+        <Form onSubmit={handleSubmit(submitKlijent)} >
   <Row className="mb-3">
     <Form.Group as={Col} controlId="formGridEmail">
       <Form.Label>Naziv klijenta</Form.Label>
-      <Form.Control type="text" name='nazivKlijenta' value={klijent.nazivKlijenta} onChange={handleInput} />
+      <Form.Control isInvalid={errors.nazivKlijenta?.message ? true : false} type="text" name='nazivKlijenta' value={klijent.nazivKlijenta} {...register('nazivKlijenta')} onChange={handleInput} />
+      <Form.Control.Feedback type='invalid'>{errors.nazivKlijenta?.message}</Form.Control.Feedback> 
     </Form.Group>
 
     <Form.Group as={Col} controlId="formGridPassword">
@@ -133,7 +148,8 @@ const NewClientScreen = ({match, history}) => {
     <Row className="mb-3">
   <Form.Group controlId="formGridAddress1">
     <Form.Label>Kontakt mail</Form.Label>
-    <Form.Control type='email' name='kontaktMail' value={klijent.kontaktMail} onChange={handleInput}/>
+    <Form.Control isInvalid={errors.kontaktMail?.message ? true : false} type='email' name='kontaktMail' value={klijent.kontaktMail} {...register('kontaktMail')} onChange={handleInput}/>
+    <Form.Control.Feedback type='invalid'>{errors.kontaktMail?.message}</Form.Control.Feedback>
   </Form.Group>
 
   <Form.Group  controlId="formGridAddress2">
@@ -144,7 +160,8 @@ const NewClientScreen = ({match, history}) => {
   <Row className="mb-3">
     <Form.Group as={Col} controlId="formGridCity">
       <Form.Label>PIB</Form.Label>
-      <Form.Control type='text' name='pib' value={klijent.pib} onChange={handleInput} />
+      <Form.Control isInvalid={errors.pib?.message ? true : false} type='text' name='pib' value={klijent.pib} {...register('pib')} onChange={handleInput} />
+      <Form.Control.Feedback type='invalid'>{errors.pib?.message}</Form.Control.Feedback>
     </Form.Group>
 
     <Form.Group as={Col} controlId="formGridState">
@@ -160,13 +177,15 @@ const NewClientScreen = ({match, history}) => {
   <Row className="mb-3">
   <Form.Group controlId="formGridAddress1">
     <Form.Label>Naziv banke</Form.Label>
-    <Form.Control type='text' name='nazivBanke' value={klijent.nazivBanke} onChange={handleInput} />
+    <Form.Control isInvalid={errors.nazivBanke?.message ? true : false} type='text' name='nazivBanke' value={klijent.nazivBanke} {...register('nazivBanke')} onChange={handleInput} />
+    <Form.Control.Feedback type='invalid'>{errors.nazivBanke?.message}</Form.Control.Feedback>
   </Form.Group>
       </Row>
       <Row className='mb-3'>
   <Form.Group as={Col} controlId="formGridAddress2">
     <Form.Label>Racun</Form.Label>
-    <Form.Control type='text' name='racunBanka' value={klijent.racunBanka} onChange={handleInput} />
+    <Form.Control isInvalid={errors.racunBanka?.message ? true : false} type='text' name='racunBanka' value={klijent.racunBanka} {...register('racunBanka')} onChange={handleInput} />
+    <Form.Control.Feedback type='invalid'>{errors.racunBanka?.message}</Form.Control.Feedback>
   </Form.Group>
 
   <Form.Group as={Col} controlId="formGridAddress2">
@@ -229,13 +248,10 @@ const NewClientScreen = ({match, history}) => {
     </Form.Group>
     </Row> 
 
-
-</Form>
-            </FormContainer>
-            <Row>
+    <Row>
                 <Col xs={3}></Col>
                 <Col xs={3}>
-                    <Button type='submit' variant='primary' onClick={submitKlijent}>
+                    <Button type='submit' variant='primary'>
                     Sačuvaj
                     </Button>
                 </Col>
@@ -246,6 +262,8 @@ const NewClientScreen = ({match, history}) => {
                 </Col>
                 <Col xs={3}></Col>
             </Row> 
+</Form>
+            </FormContainer>
         </>
         
     )

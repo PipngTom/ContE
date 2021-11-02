@@ -1,12 +1,13 @@
-import React , {useState, useEffect} from 'react'
-import {Table, Button, Nav, Modal} from 'react-bootstrap'
+import React , {useState, useEffect} from 'react';
+import {Table, Button, Nav, Modal} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMeteringByMeterId} from '../../actions/meteringActions';
 import { getAllMeters, getSingleMeter} from '../../actions/meterActions';
 import { deleteSingleMetering} from '../../actions/meteringActions';
-import Loader from '../../components/Loader'
-import {kategorija} from '../../constants/brojila'
-import { selectFields } from 'express-validator/src/select-fields';
+import Loader from '../../components/Loader';
+import { nadjiNazivMeseca } from '../../constants/datum';
+import { nadjiTabeluPoKategoriji } from '../../constants/brojila';
+import { METERING_SAVE_RESET } from '../../constants/meteringConstants';
 
 const AllMeteringScreen = ({match, history}) => {
 
@@ -30,9 +31,10 @@ const AllMeteringScreen = ({match, history}) => {
 
     useEffect(() => {
         dispatch(getAllMeters())
+        dispatch({type: METERING_SAVE_RESET})
         
         if(meter){
-            const tabela = kategorija.find((item)=>item.sifra==meter.kategorija).tabela
+            const tabela = nadjiTabeluPoKategoriji(meter.kategorija)
             setSelectedTabela(tabela)
             dispatch(getMeteringByMeterId(meter.id, tabela))
         } else {
@@ -43,7 +45,6 @@ const AllMeteringScreen = ({match, history}) => {
     }, [dispatch, meter])
 
     const editHandler = (id) => {
-        console.log(id)
         history.push({pathname: `/unosi/edit/${id}`})
     }
 
@@ -87,9 +88,13 @@ const AllMeteringScreen = ({match, history}) => {
                     <tbody>
                        {metering.map(item => (
                             <tr key={item.id}>
-                                {Object.keys(item).filter((elem)=>!(elem=='id'|| elem=='idBrojilo')).map((el)=>(
-                                    <td>{el=='datumpoc' || el=='datumkr'? item[el].slice(0,10) : item[el]}</td>
-                                ))}
+                                {Object.keys(item).filter((elem)=>!(elem=='id'|| elem=='idBrojilo')).map((el)=>{
+                                    console.log(el)
+                                    if(el == 'mesec'){
+                                        return <td>{nadjiNazivMeseca(item[el])}</td>
+                                    }
+                                   return <td>{item[el]}</td>
+                                })}
                                 
                                 <td>
                                     <Nav.Link onClick={()=>editHandler(item.id)}>Edit</Nav.Link>

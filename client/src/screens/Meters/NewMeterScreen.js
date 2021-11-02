@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react'
-import {Form, Button, Row, Col} from 'react-bootstrap'
+import React, {useState, useEffect} from 'react';
+import {Form, Button, Row, Col} from 'react-bootstrap';
 import FormContainer from '../../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { novoBrojilo, getSingleMeter } from '../../actions/meterActions';
-import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
+import { celaKategorija, celaVrstaSnabdevanja } from '../../constants/brojila';
 
 
 
@@ -32,7 +32,6 @@ const NewMeterScreen = ({match, history}) => {
         {
             if(!meter || meter.id != meterId){
                 dispatch(getSingleMeter(meterId))
-                console.log('EDIT MODE need to dispatch getSingleClient')
             } else{
                 setBrojilo({...brojilo,
                 idKlijent: meter.idKlijent,
@@ -43,7 +42,6 @@ const NewMeterScreen = ({match, history}) => {
             })
             }  
         }
-        console.log('initial render for NEW MODE')
         
         
 
@@ -97,8 +95,8 @@ const NewMeterScreen = ({match, history}) => {
                 <Form.Control as='select' name='kategorija' value={brojilo.kategorija}
                 onChange={handleInput}>
                     <option value={0}>Izaberi kategoriju</option>
-                    {kategorija.map((item)=>(
-                        <option value={item.sifra}>{item.naziv}</option>
+                    {celaKategorija().map((item) => (
+                         <option value={item.sifra}>{item.naziv}</option>
                     ))}
                 </Form.Control>
             </Form.Group>
@@ -107,7 +105,7 @@ const NewMeterScreen = ({match, history}) => {
                 <Form.Control as='select' name='vrstaSnabdevanja' value={brojilo.vrstaSnabdevanja}
                 onChange={handleInput}>
                     <option value={0}>Izaberi vrstu snabdevanja</option>
-                    {vrsteSnabdevanja.map((item)=>(
+                    {celaVrstaSnabdevanja().map(item => (
                         <option value={item.sifra}>{item.naziv}</option>
                     ))}
                 </Form.Control>

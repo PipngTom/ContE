@@ -1,7 +1,7 @@
 import { 
     GET_ALL_CONTRACTS_REQUEST, GET_ALL_CONTRACTS_SUCCESS, GET_ALL_CONTRACTS_FAIL, ALL_CONTRACTS_UPDATE,
     CONTRACT_SAVE_REQUEST, CONTRACT_SAVE_SUCCESS, CONTRACT_SAVE_FAIL,
-    GET_SINGLE_CONTRACT_REQUEST, GET_SINGLE_CONTRACT_SUCCESS, GET_SINGLE_CONTRACT_FAIL, CONTRACT_DELETE_REQUEST, CONTRACT_DELETE_FAIL} from '../constants/contractConstants';
+    GET_SINGLE_CONTRACT_REQUEST, GET_SINGLE_CONTRACT_SUCCESS, GET_SINGLE_CONTRACT_FAIL, GET_SINGLE_CONTRACT_BY_CLIENT_ID_REQUEST, GET_SINGLE_CONTRACT_BY_CLIENT_ID_SUCCESS, GET_SINGLE_CONTRACT_BY_CLIENT_ID_FAIL, CONTRACT_DELETE_REQUEST, CONTRACT_DELETE_FAIL} from '../constants/contractConstants';
 import axios from 'axios';
 
 export const getAllContracts= () => async (dispatch) => {
@@ -93,6 +93,25 @@ export const getSingleContractByMeterId= (meterId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: GET_SINGLE_CONTRACT_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
+
+export const getSingleContractByClientId = (clientId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GET_SINGLE_CONTRACT_BY_CLIENT_ID_REQUEST
+    })
+
+    const { data } = await axios.get(`/api/contracts/ugovorklijent/${clientId}`)
+    dispatch({
+      type: GET_SINGLE_CONTRACT_BY_CLIENT_ID_SUCCESS,
+      payload: data[0]
+    })
+  } catch (error) {
+    dispatch({
+      type: GET_SINGLE_CONTRACT_BY_CLIENT_ID_FAIL,
       payload: error.response && error.response.data.message ? error.response.data.message : error.message
     })
   }

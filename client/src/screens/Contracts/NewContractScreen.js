@@ -3,24 +3,17 @@ import {Form, Button, Row, Col} from 'react-bootstrap'
 import FormContainer from '../../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { noviUgovor, getSingleContract } from '../../actions/contractActions';
-import {kategorija, vrsteSnabdevanja} from '../../constants/brojila'
-import * as yup from "yup";
+import { ugovorSchema } from '../../validations/ugovorValidation';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GET_SINGLE_CONTRACT_RESET} from '../../constants/contractConstants'
-
-const schema = yup.object().shape({
-    cenaVT: yup.number().typeError('Unesite brojcanu vrednost').positive('Unesite pozitivnu vrednost').required(),
-    cenaNT: yup.number().typeError('Unesite brojcanu vrednost').positive('Unesite pozitivnu vrednost').required(),
-    cenaJT: yup.number().typeError('Unesite brojcanu vrednost').positive('Unesite pozitivnu vrednost').required()
-  });
+import { GET_SINGLE_CONTRACT_RESET} from '../../constants/contractConstants';
 
 
 const NewContractScreen = ({match, history}) => {
 
     const { register, handleSubmit, formState: { errors }, setValue   } = useForm(
         {
-       resolver: yupResolver(schema)
+       resolver: yupResolver(ugovorSchema)
    } 
    )  
     const dispatch = useDispatch()
@@ -46,13 +39,10 @@ const NewContractScreen = ({match, history}) => {
 
     useEffect(() => {
         
-        console.log(errors)
-        console.log(register('cenaVT'))
         if(contractId)//EDIT MODE
         {
             if(!contract || contract.id != contractId){
                 dispatch(getSingleContract(contractId))
-                console.log('EDIT MODE need to dispatch getSingleClient')
             } else{
                 setUgovor({...ugovor,
                 idKlijent: contract.idKlijent,
@@ -68,7 +58,6 @@ const NewContractScreen = ({match, history}) => {
             
             }  
         }
-        console.log('initial render for NEW MODE')
         
 
     },[dispatch, contract, contractId])
@@ -81,10 +70,6 @@ const NewContractScreen = ({match, history}) => {
     const submitUgovor = async (data, e) => {
         e.preventDefault()
         
-        let isValid = await schema.isValid(ugovor)
-        console.log(isValid)
-        
-        console.log('YYYYYYYYYYYYYYYYYYYYYYYY', data, e)
          if(contractId){
             dispatch(noviUgovor(ugovor, contractId))
         } else {
@@ -94,14 +79,7 @@ const NewContractScreen = ({match, history}) => {
         history.push({pathname: `/contracts`}) 
 
     }
-    const errorHandler = async (errors, e) => {
-        console.log('BBBBBBB', errors, e)
-        let isValid = await schema.isValid(ugovor)
-        console.log(isValid)
-
-    }
-    /* const onSubmit = (data, e) => console.log(data, e);
-    const onError = (errors, e) => console.log(errors, e); */
+  
 
     return (
         <>
@@ -109,7 +87,7 @@ const NewContractScreen = ({match, history}) => {
             <h2>Ugovor</h2>
         </div>
         <FormContainer>
-            <Form onSubmit={handleSubmit(submitUgovor, errorHandler)}>
+            <Form onSubmit={handleSubmit(submitUgovor)}>
             <Form.Group controlId='nazivKlijenta'>
                 <Form.Label>Naziv klijenta</Form.Label>
                 <Form.Control as='select' name='idKlijent' value={ugovor.idKlijent}
@@ -137,33 +115,35 @@ const NewContractScreen = ({match, history}) => {
                 <Form.Control.Feedback type='invalid'>
                     {errors.cenaVT?.message}
                 </Form.Control.Feedback>
-                {/* <p style={{color: errors.cenaVT?.message ? 'red' : ''}}>{errors.cenaVT?.message}</p> */}
             </Form.Group>
             <Form.Group controlId='cenaNT'>
                 <Form.Label>Cena nize tarife</Form.Label>
-                <Form.Control style={{borderColor: errors.cenaNT?.message ? 'red' : ''}} type='name' name='cenaNT' placeholder='NT Cena' value={ugovor.cenaNT} {...register('cenaNT')}
+                <Form.Control isInvalid={errors.cenaNT?.message ? true : false} type='text' name='cenaNT' placeholder='NT Cena' value={ugovor.cenaNT} {...register('cenaNT')}
                 onChange={handleInput}></Form.Control>
-                <p style={{color: errors.cenaNT?.message ? 'red' : ''}}>{errors.cenaNT?.message}</p>
+                 <Form.Control.Feedback type='invalid'>
+                    {errors.cenaNT?.message}
+                </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId='cenaJT'>
                 <Form.Label>Cena jedinstvene tarife</Form.Label>
-                <Form.Control style={{borderColor: errors.cenaJT?.message ? 'red' : ''}} type='name' name='cenaJT' placeholder='JT Cena' value={ugovor.cenaJT} {...register('cenaJT')}
+                <Form.Control isInvalid={errors.cenaJT?.message ? true : false} type='text' name='cenaJT' placeholder='JT Cena' value={ugovor.cenaJT} {...register('cenaJT')}
                 onChange={handleInput}></Form.Control>
-                <p style={{color: errors.cenaJT?.message ? 'red' : ''}}>{errors.cenaJT?.message}</p>
+                 <Form.Control.Feedback type='invalid'>
+                    {errors.cenaJT?.message}
+                </Form.Control.Feedback>
             </Form.Group>
             <br/>
             <Row>
-                <Col xs={3}></Col>
                  <Col xs={3}>
-                    <Button type='submit' variant='primary'>
+                    <Button type='submit' variant='outline-primary'>
                     Sačuvaj
                     </Button>
                 </Col>
-               {/* <Col xs={3}>
-                    <Button type='submit' variant='primary' onClick={()=>history.push({pathname: `/contracts`})}>
+               <Col xs={3}>
+                    <Button type='submit' variant='outline-primary' onClick={()=>history.push({pathname: `/contracts`})}>
                     Nazad
                     </Button>
-                </Col> */}
+                </Col>
                 <Col xs={3}></Col>
             </Row>
             

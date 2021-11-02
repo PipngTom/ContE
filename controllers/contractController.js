@@ -70,6 +70,26 @@ const getAllContracts = (req, res) => {
     })
   }
 
+  const getSingleContractByClientId = (req, res) => {
+    const id = req.params.id
+
+    const query = `SELECT * FROM ugovori WHERE idKlijent = ${id}`
+
+    db.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+      connection.query(query, (err, rows) => {
+        connection.release()
+        if (!err) {
+          res.send(rows)
+        } else {
+          console.log(err)
+        }
+      })
+    })
+  }
+
   const deleteSingleContract = (req, res) => {
 
     const id = req.params.id
@@ -91,4 +111,4 @@ const getAllContracts = (req, res) => {
     })
   }
 
-  export {getAllContracts, newContract, getSingleContract, deleteSingleContract}
+  export {getAllContracts, newContract, getSingleContract, getSingleContractByClientId, deleteSingleContract}

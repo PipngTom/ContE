@@ -20,6 +20,26 @@ const getAllMeters = (req, res) => {
     })
   }
 
+  const getAllMetersByKlijentId = (req, res) => {
+    const id = req.params.id
+
+    const query = `SELECT * FROM brojila WHERE idKlijent = ${id}`
+
+    db.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+      connection.query(query, (err, rows) => {
+        connection.release()
+        if (!err) {
+          res.send(rows)
+        } else {
+          console.log(err)
+        }
+      })
+    })
+  }
+
   const newMeter = (req, res) => {
     const { idKlijent, mestoMerenja, adresaMerenja, kategorija, vrstaSnabdevanja } = req.body
       let query;
@@ -91,4 +111,4 @@ const getAllMeters = (req, res) => {
     })
   }
 
-  export {getAllMeters, newMeter, getSingleMeter, deleteSingleMeter}
+  export {getAllMeters, newMeter, getSingleMeter, deleteSingleMeter, getAllMetersByKlijentId}
