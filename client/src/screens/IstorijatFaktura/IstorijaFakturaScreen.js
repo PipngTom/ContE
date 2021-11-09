@@ -5,7 +5,7 @@ import debounce from 'lodash.debounce';
 import { getAllClients } from '../../actions/clientActions';
 import Loader from '../../components/Loader';
 
-const FakturaZaKlijentaScreen = ({history}) => {
+const IstorijaFakturaScreen = ({history}) => {
 
     const dispatch = useDispatch()
 
@@ -19,10 +19,9 @@ const FakturaZaKlijentaScreen = ({history}) => {
         dispatch(getAllClients())
     } , [dispatch])
 
-    const racuniHandler = (id) => {
-        history.push({pathname: `/fakturaklijent/racuni/${id}`})
+    const istorijaRacunaHandler = (id) => {
+        history.push({pathname: `/istorijafaktura/${id}`})
     }
-
 
     const handleTypeNazivKlijenta=(e)=>{
     
@@ -74,7 +73,7 @@ const FakturaZaKlijentaScreen = ({history}) => {
                             <td>{item.pib}</td>
                             <td>{item.maticniBroj}</td>
                             <td>
-                                <Nav.Link onClick={()=> racuniHandler(item.id)}>Računi</Nav.Link>
+                                <Nav.Link onClick={()=> istorijaRacunaHandler(item.id)}>Računi</Nav.Link>
                                 {/* <Nav.Link onClick={()=>deleteHandler(item.id)}>Delete</Nav.Link> */}
                             </td>
                         </tr>  
@@ -88,4 +87,4 @@ const FakturaZaKlijentaScreen = ({history}) => {
     )
 }
 
-export default FakturaZaKlijentaScreen
+export default IstorijaFakturaScreen

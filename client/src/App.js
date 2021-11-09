@@ -20,11 +20,13 @@ import MrezarinaScreen from './screens/MrezarinaScreen';
 import FaktureScreen from './screens/Fakture/FaktureScreen';
 import NewFakturaScreen from './screens/Fakture/NewFakturaScreen';
 import BalansnaOdgovornostScreen from './screens/BalansnaOdgovrnost/BalansnaOdgovornostScreen';
+import IstorijaFakturaScreen from './screens/IstorijatFaktura/IstorijaFakturaScreen';
 import Footer from './components/Footer';
 import store from './store';
 import LandingScreen from './screens/LandingScreen';
 import FakturaZaKlijentaScreen from './screens/FakturaKlijent/FakturaZaKlijentaScreen';
 import RacuniKlijentaScreen from './screens/FakturaKlijent/RacuniKlijentaScreen';
+import BackUpFaktureScreen from './screens/IstorijatFaktura/BackUpFaktureScreen';
 
 const App = () => {
   return (
@@ -56,6 +58,8 @@ const App = () => {
                 <ProtectedRoute exact path='/balansna' component={BalansnaOdgovornostScreen} />
                 <ProtectedRoute exact path='/fakturaklijent' component={FakturaZaKlijentaScreen} />
                 <ProtectedRoute exact path='/fakturaklijent/racuni/:id' component={RacuniKlijentaScreen} />
+                <ProtectedRoute exact path='/istorijafaktura' component={IstorijaFakturaScreen} />
+                <ProtectedRoute exact path='/istorijafaktura/:id' component={BackUpFaktureScreen} />
             </Container>
           </main>
         <Footer />

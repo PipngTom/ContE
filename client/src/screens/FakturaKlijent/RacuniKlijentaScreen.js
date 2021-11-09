@@ -6,9 +6,11 @@ import { getSingleClient } from '../../actions/clientActions';
 import { getMrezarina } from '../../actions/mrezarinaActions';
 import { getSingleContractByClientId } from '../../actions/contractActions';
 import { getFakturaMetering } from '../../actions/meteringActions';
+import { backupFaktura } from '../../actions/backupFakturaActions';
 import { nadjiTabeluPoKategoriji, nadjiNazivPoKategoriji, nadjiNazivVrsteSnabdevanja } from '../../constants/brojila';
-import { nadjiPocetakObracuna, nadjiKrajObracuna } from '../../constants/datum';
+import { nadjiPocetakObracuna, nadjiKrajObracuna, nadjiNazivMeseca } from '../../constants/datum';
 import { dajPunNaziv, dajMeru } from '../Fakture/pomocnaFunkcija';
+import { backupFunkcija } from './backupFunkcija';
 import FormContainer from '../../components/FormContainer';
 import { imgData } from './img'; 
 import { jsPDF } from 'jspdf';
@@ -56,13 +58,14 @@ const RacuniKlijentaScreen = ({ match }) => {
         setGodinaMerenja(e.target.value)
     }
 
+
     const createPdfHandler = () => {
 
         var doc = new jsPDF('p','pt', 'a4')
 
         var y= 30
             doc.setLineWidth(2)
-            doc.text(200, y = y + 30, 'Racun za elektricnu energiju')
+            doc.text(150, y = y + 30, `Racun za elektricnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
     
             
     
@@ -109,7 +112,7 @@ const RacuniKlijentaScreen = ({ match }) => {
         fakMetering.forEach((_, index)=>{
             var y= 30
             doc.setLineWidth(2)
-            doc.text(200, y = y + 30, 'Racun za elektricnu energiju')
+            doc.text(150, y = y + 30, `Racun za eletricnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
     
             
     
@@ -171,8 +174,8 @@ const RacuniKlijentaScreen = ({ match }) => {
             doc.addPage() 
         })
        
-    
-      
+        const faktura = backupFunkcija(client, fakMetering, contract, metersByClientId, mrezarinaZaFakturu, mesecMerenja, godinaMerenja)
+        dispatch(backupFaktura(faktura))
         doc.save('Faktura proba.pdf')
     }
 
@@ -410,7 +413,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                                 <tr>
                                     <td>Porez na dodatu vrednost 20%</td>
                                     <td>9=8*0.20</td>
-                                    <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 0.29).toFixed(2))}</td>
+                                    <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 0.215).toFixed(2))}</td>
                                 </tr>
                                 <tr>
                                     <td>Taksa za javni medijski servis</td>
@@ -435,12 +438,12 @@ const RacuniKlijentaScreen = ({ match }) => {
                                 <tr>
                                     <td>Ukupan PDV</td>
                                     <td>14=9-12</td>
-                                    <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 0.29).toFixed(2))}</td>
+                                    <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 0.215).toFixed(2))}</td>
                                 </tr>
                                 <tr>
                                     <td>Ukupno za uplatu</td>
                                     <td>15=13+14+10</td>
-                                    <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 1.29+(mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv)).toFixed(2))}</td>
+                                    <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 1.29 + (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv)).toFixed(2))}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -542,9 +545,9 @@ const RacuniKlijentaScreen = ({ match }) => {
                             </thead>
                             <tbody>
                                 
-                                {item[0].vt ? <tr><td>Visa tarifa</td><td>kWh</td><td>{item[0].vt}</td><td>{contract.cenaVT}</td><td>{numberWithDots((contract.cenaVT * item[0].vt).toFixed(2))}</td></tr> : ''}
-                                {item[0].nt ? <tr><td>Niza tarifa</td><td>kWh</td><td>{item[0].nt}</td><td>{contract.cenaNT}</td><td>{numberWithDots((contract.cenaNT * item[0].nt).toFixed(2))}</td></tr> : ''}
-                                {item[0].jt ? <tr><td>Jedinstvena tarifa</td><td>kWh</td><td>{item[0].jt}</td><td>{contract.cenaJT}</td><td>{numberWithDots((contract.cenaJT * item[0].jt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].vt || item[0].vt === 0) ? <tr><td>Visa tarifa</td><td>kWh</td><td>{item[0].vt}</td><td>{contract.cenaVT}</td><td>{numberWithDots((contract.cenaVT * item[0].vt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].nt || item[0].nt === 0) ? <tr><td>Niza tarifa</td><td>kWh</td><td>{item[0].nt}</td><td>{contract.cenaNT}</td><td>{numberWithDots((contract.cenaNT * item[0].nt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].jt || item[0].jt === 0) ? <tr><td>Jedinstvena tarifa</td><td>kWh</td><td>{item[0].jt}</td><td>{contract.cenaJT}</td><td>{numberWithDots((contract.cenaJT * item[0].jt).toFixed(2))}</td></tr> : ''}
                                 <tr>
                                     <td></td>
                                     <td></td>
