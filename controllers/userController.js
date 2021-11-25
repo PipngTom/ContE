@@ -15,7 +15,7 @@ const registerUser = (req, res) => {
       if (err) {
         throw err;
       } 
-      console.log('connection as id' + connection.threadId)
+      
       connection.query(mess, (err, rows) => {
         if (!err) {
           if(!rows.length){

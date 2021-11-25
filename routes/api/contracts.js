@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.route('/').get(getAllContracts);
 router.route('/:id').get(getSingleContract).delete(deleteSingleContract);
-router.route('/ugovorklijent/:id').get(getSingleContractByClientId);
+router.route('/ugovorklijent').post(getSingleContractByClientId);
 router.route('/new').post(newContract);
 
 

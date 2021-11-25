@@ -17,6 +17,7 @@ import MeteringScreen from './screens/Metering/MeteringScreen';
 import NewMeteringScreen from './screens/Metering/NewMeteringScreen';
 import AllMeteringScreen from './screens/Metering/AllMeteringScreen';
 import MrezarinaScreen from './screens/MrezarinaScreen';
+import AllMrezarinaScreen from './screens/AllMrezarinaScreen';
 import FaktureScreen from './screens/Fakture/FaktureScreen';
 import NewFakturaScreen from './screens/Fakture/NewFakturaScreen';
 import BalansnaOdgovornostScreen from './screens/BalansnaOdgovrnost/BalansnaOdgovornostScreen';
@@ -27,6 +28,7 @@ import LandingScreen from './screens/LandingScreen';
 import FakturaZaKlijentaScreen from './screens/FakturaKlijent/FakturaZaKlijentaScreen';
 import RacuniKlijentaScreen from './screens/FakturaKlijent/RacuniKlijentaScreen';
 import BackUpFaktureScreen from './screens/IstorijatFaktura/BackUpFaktureScreen';
+import NewMrezarinaScreen from './screens/NewMrezarinaScreen';
 
 const App = () => {
   return (
@@ -52,7 +54,9 @@ const App = () => {
                 <ProtectedRoute exact path='/unosi/edit/:id' component={NewMeteringScreen} />
                 <ProtectedRoute exact path='/unosi/new' component={NewMeteringScreen} />
                 <ProtectedRoute exact path='/allmetering/:id' component={AllMeteringScreen} />
-                <ProtectedRoute exact path='/mrezarina' component={MrezarinaScreen} />
+                <ProtectedRoute exact path='/mrezarina' component={AllMrezarinaScreen} />
+                <ProtectedRoute exact path='/mrezarina/:id' component={MrezarinaScreen} />
+                <ProtectedRoute exact path='/mrezarine/new/:id' component={NewMrezarinaScreen} />
                 <ProtectedRoute exact path='/fakture' component={FaktureScreen} />
                 <ProtectedRoute exact path='/fakture/new/:id' component={NewFakturaScreen} />
                 <ProtectedRoute exact path='/balansna' component={BalansnaOdgovornostScreen} />

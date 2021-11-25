@@ -32,16 +32,17 @@ export const getAllMeters= () => async (dispatch) => {
       })
 
       const { data } = await axios.get(`/api/meters/racuni/${id}`)
-
+     
       dispatch({
         type: GET_ALL_METERS_BY_CLIENT_ID_SUCCESS,
         payload: data
       })
 
     } catch (error) {
+      console.log('greska koju smo uhvatili', error)
       dispatch({
         type: GET_ALL_METERS_BY_CLIENT_ID_FAIL,
-        payload: error.response && error.response.data.message ? error.response.data.message : error.message
+        payload: error
       })
     }
   }

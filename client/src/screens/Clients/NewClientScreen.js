@@ -56,7 +56,6 @@ const NewClientScreen = ({match, history}) => {
           
             if(!client || client.id != clientId){
               dispatch(getSingleClient(clientId))
-                console.log('EDIT MODE need to dispatch getSingleClient')
             } else{
                 setKlijent({...klijent,
                 nazivKlijenta: client.nazivKlijenta,
@@ -89,7 +88,6 @@ const NewClientScreen = ({match, history}) => {
             setValue('racunBanka', client.racunBanka)
             }  
         }
-        console.log('initial render for NEW MODE')
         
 
     },[dispatch, client ,clientId])
@@ -104,7 +102,6 @@ const NewClientScreen = ({match, history}) => {
     }
 
     const submitKlijent = async (data, e) => {
-      console.log(data)
       e.preventDefault()
         if(clientId){
             dispatch(noviKlijent({...klijent, ...check}, clientId))

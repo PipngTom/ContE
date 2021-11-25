@@ -10,7 +10,7 @@ const newClient = (req, res) => {
 
     } else {
         query = `INSERT INTO klijenti (nazivKlijenta, adresaKlijenta, postanskiBroj, opstina, kontaktMail, kontaktTelefon, pib, glavniPibUgovora, maticniBroj, pdv, nazivBanke, odgovornoLice, kontaktOsoba, racunBanka, sajt, firma, uBalansnojOdgovornosti, podUgovorom, zbirniRacun, tipPotrosaca) 
-        VALUES ('${nazivKlijenta}', '${adresaKlijenta}', '${postanskiBroj}', '${opstina}', '${kontaktMail}', '${kontaktTelefon}', '${pib}', '${glavniPibUgovora}','${maticniBroj}', '${pdv}','${nazivBanke}', '${odgovornoLice}', '${kontaktOsoba}','${racunBanka}', '${sajt}', ${firma}, ${balansOdg}, ${podUgovorom}, ${zbirniRacun}, '${tipPotrosaca}')`;
+        VALUES ('${nazivKlijenta}', '${adresaKlijenta}', '${postanskiBroj}', '${opstina}', '${kontaktMail}', '${kontaktTelefon}', '${pib}', '${glavniPibUgovora}','${maticniBroj}', '${pdv}','${nazivBanke}', '${odgovornoLice}', '${kontaktOsoba}','${racunBanka}', '${sajt}', ${firma}, ${balansOdg}, ${podUgovorom}, ${zbirniRacun}, ${tipPotrosaca})`;
     }
   
 

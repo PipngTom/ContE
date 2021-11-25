@@ -2,7 +2,7 @@ import db from '../db/db.js';
 
 const getAllMeters = (req, res) => {
       
-    const query = `SELECT b.id, k.nazivKlijenta, b.mestoMerenja, b.adresaMerenja, b.kategorija, b.vrstaSnabdevanja FROM brojila AS b
+    const query = `SELECT b.id, k.nazivKlijenta, b.mestoMerenja, b.adresaMerenja, b.kategorija, b.vrstaSnabdevanja, b.taksa FROM brojila AS b
                   LEFT JOIN klijenti AS k ON k.id = b.idKlijent`;
   
     db.getConnection((err, connection) => {
@@ -41,15 +41,16 @@ const getAllMeters = (req, res) => {
   }
 
   const newMeter = (req, res) => {
-    const { idKlijent, mestoMerenja, adresaMerenja, kategorija, vrstaSnabdevanja } = req.body
+    const { idKlijent, mestoMerenja, adresaMerenja, kategorija, vrstaSnabdevanja } = req.body.brojilo
+    const taksa  = req.body.taksa
       let query;
       if(req.body.id){
-          query = `UPDATE brojila SET idKlijent = '${idKlijent}', mestoMerenja = '${mestoMerenja}', adresaMerenja = '${adresaMerenja}', kategorija = '${kategorija}', vrstaSnabdevanja = '${vrstaSnabdevanja}'
+          query = `UPDATE brojila SET idKlijent = '${idKlijent}', mestoMerenja = '${mestoMerenja}', adresaMerenja = '${adresaMerenja}', kategorija = '${kategorija}', vrstaSnabdevanja = '${vrstaSnabdevanja}', taksa = ${taksa}
           WHERE brojila.id = ${req.body.id}`;
   
       } else {
-          query = `INSERT INTO brojila (idKlijent, mestoMerenja, adresaMerenja, kategorija, vrstaSnabdevanja) 
-          VALUES ('${idKlijent}', '${mestoMerenja}', '${adresaMerenja}', '${kategorija}', '${vrstaSnabdevanja}')`;
+          query = `INSERT INTO brojila (idKlijent, mestoMerenja, adresaMerenja, kategorija, vrstaSnabdevanja, taksa) 
+          VALUES ('${idKlijent}', '${mestoMerenja}', '${adresaMerenja}', '${kategorija}', '${vrstaSnabdevanja}', ${taksa})`;
       }
     
   

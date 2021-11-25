@@ -21,6 +21,7 @@ const BalansnaOdogovrnostScreen = () => {
     const [newRender, setNewRender] = useState(false)
     const [godina, setGodina] = useState(new Date().getFullYear())
     const [mesec, setMesec] = useState(new Date().getMonth())
+    const [selectedAllMeters, setSelectedAllMeters] = useState(false)
 
     const [profil, setProfil] = useState(null)
 
@@ -41,11 +42,39 @@ const BalansnaOdogovrnostScreen = () => {
     }, [dispatch, newRender])
 
     const handleTypeNazivKlijenta=(e)=>{
-        setsearchString(e.target.value)   
+        
+        setsearchString(e.target.value)  
+        setSelectedAllMeters(false) 
       }
 
       const handleTypeEdBroj=(e)=>{
+      //  setSelectedAllMeters(false)
         setsearchStringEdBroj(e.target.value)   
+      }
+
+      const checkAllHandler = (e) => {
+        if (e.target.checked) {
+            setSelectedAllMeters(true)
+            let objects = [];
+            meters.filter((el)=>(searchString==='' || el.nazivKlijenta.toUpperCase().includes(searchString.toUpperCase()))
+            && (searchStringEdBroj==='' || el.mestoMerenja.toUpperCase().includes(searchStringEdBroj.toUpperCase())))
+            .map((item)=>{
+                const tabela = nadjiTabeluPoKategoriji(item.kategorija)
+                objects.push(
+                    {
+                        id: item.id,
+                        tabela: tabela
+                    }
+                )
+                setSelectedMeters([...selectedMeters, ...objects])
+
+            })
+
+
+        } else {
+            setSelectedAllMeters(false)
+            setSelectedMeters([])
+        }
       }
 
       const checkHandler = (e, id) => {
@@ -58,13 +87,12 @@ const BalansnaOdogovrnostScreen = () => {
           }
       }
 
-    const handleChange = (e) => {
-        dispatch(getMeteringByMeterIds(selectedMeters))        
-    }
+    // const handleChange = (e) => {
+    //     dispatch(getMeteringByMeterIds(selectedMeters))        
+    // }
 
     const generateProfilHandler = () => {
         let arr;
-        console.log(meteringByAllIds)
         
             meteringByAllIds.forEach((met, index) => {
                 if(met.length!==0){
@@ -92,7 +120,6 @@ const BalansnaOdogovrnostScreen = () => {
                            
                         })
                 })
-                console.log(generisiProfilPotrosnje(merenje))
                 }
                 
             });
@@ -101,6 +128,7 @@ const BalansnaOdogovrnostScreen = () => {
         
        
     }
+   
 
     return (
         <div>
@@ -118,7 +146,6 @@ const BalansnaOdogovrnostScreen = () => {
                 onChange={(e)=>{
                     setGodina(e.target.value)
                     const datum = new Date(e.target.value, mesec, 16).toISOString().slice(0, 10)
-                    console.log(datum)
                     dispatch(getMeteringByMeterIds(selectedMeters, datum))  
                 }}>
                     <option value={2021}>2021</option>
@@ -131,7 +158,6 @@ const BalansnaOdogovrnostScreen = () => {
                 onChange={(e)=>{
                     setMesec(e.target.value)
                     const datum = new Date(godina, e.target.value, 16).toISOString().slice(0, 10)
-                    console.log(datum)
                     dispatch(getMeteringByMeterIds(selectedMeters, datum))  
                     }}>
                     <option value={0}>JANUAR</option>
@@ -180,12 +206,16 @@ const BalansnaOdogovrnostScreen = () => {
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
+                            <td>
+                                <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                                    <Form.Check type="checkbox" label="Cekiraj sve" checked={selectedAllMeters}  onChange={checkAllHandler}/>
+                                </Form.Group>
+                            </td>
                         </tr>
                         {meters.filter((el)=>(searchString==='' || el.nazivKlijenta.toUpperCase().includes(searchString.toUpperCase()))
                         && (searchStringEdBroj==='' || el.mestoMerenja.toUpperCase().includes(searchStringEdBroj.toUpperCase())))
-                        .map(item => (
-                            <tr key={item.id}>
+                        .map(item => {
+                            return <tr key={item.id}>
                                 <td>{item.nazivKlijenta}</td>
                                 <td>{item.mestoMerenja}</td>
                                 <td>{item.adresaMerenja}</td>
@@ -193,11 +223,11 @@ const BalansnaOdogovrnostScreen = () => {
                                 <td>{nadjiNazivVrsteSnabdevanja(item.vrstaSnabdevanja)}</td>
                                 <td>
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                    <Form.Check type="checkbox" label="Ubaci" onChange={(e)=>checkHandler(e, item.id)}/>
+                                    <Form.Check type="checkbox" checked={selectedMeters && selectedMeters.find((elem)=>elem.id ==item.id)} label="Cekiraj" onChange={(e)=>checkHandler(e, item.id)}/>
                                 </Form.Group>
                                 </td>
                             </tr>  
-                        ))}
+                    })}
                     </tbody>
                 </Table>
                 </>

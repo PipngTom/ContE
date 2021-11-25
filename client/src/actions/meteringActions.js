@@ -74,7 +74,7 @@ export const newMetering = (fields, meterId, tabela, id = 0) => async (dispatch)
 
   export const getMeteringByMeterIds = (selectedMeters, datum) => async (dispatch) => {
     const dataToSend = {selectedMeters, datum}
-    console.log(dataToSend)
+    
   try {
     dispatch({
       type: GET_METERING_BY_METER_IDS_REQUEST
@@ -102,8 +102,6 @@ export const newMetering = (fields, meterId, tabela, id = 0) => async (dispatch)
 }
 
 export const getFakturaMetering = (rezultatN, mesec, godina) => async (dispatch) => {
-  console.log(godina)
-  console.log(mesec)
   try {
     dispatch({
       type: FAKTURA_METERING_REQUEST

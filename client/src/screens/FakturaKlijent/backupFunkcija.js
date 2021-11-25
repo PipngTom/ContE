@@ -24,6 +24,7 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
         let sumE = 0
         let sumM = 0
         let sumN = 0
+       
         stavke = fMetering.map((item,index) => {
                 let sum1 = (item[0].vt ? (item[0].vt * ugovor.cenaVT) : 0) + (item[0].nt ? (item[0].nt * ugovor.cenaNT) : 0) + (item[0].jt ? (item[0].jt * ugovor.cenaJT) : 0)
                 sumE = sumE + sum1
@@ -124,7 +125,7 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
             {
                 col1: 'Taksa za javni medijski servis',
                 col2: '10',
-                col3: mrezarina.naknada_tv
+                col3: (brojila[0].taksa == 1) ? mrezarina.naknada_tv : 0
             },
             {
                 col1: 'Avans - osnovica',
@@ -149,7 +150,7 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
             {
                 col1: 'Ukupno za uplatu',
                 col2: '15=13+14+10',
-                col3: ((sumE + sumM + sumN) * 1.29) + mrezarina.naknada_tv
+                col3: ((sumE + sumM + sumN) * 1.29) + ((brojila[0].taksa == 1) ? mrezarina.naknada_tv : 0)
             }
         ]
         faktura['zbirniRacun'] = zbirniRacun
@@ -281,10 +282,10 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
                 col2: (sum1 + sum2 + sum3) * (mrezarina.akciza + 1) * mrezarina.pdv
             }, {
                 col1: 'Taksa za javni medijski servis',
-                col2: mrezarina.naknada_tv
+                col2: (brojila[0].taksa == 1) ? mrezarina.naknada_tv : 0
             }, {
                 col1: 'Ukupno za obracun',
-                col2: (sum1 + sum2 + sum3) * (mrezarina.akciza + 1) * ((mrezarina.pdv + 1) + mrezarina.naknada_tv)
+                col2: (sum1 + sum2 + sum3) * (mrezarina.akciza + 1) * ((mrezarina.pdv + 1) + ((brojila[0].taksa == 1) ? mrezarina.naknada_tv : 0))
             })
 
 

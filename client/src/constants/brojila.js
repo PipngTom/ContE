@@ -127,5 +127,6 @@ export const celaVrstaSnabdevanja = () => {
 }
 
 export const nadjiNazivVrsteSnabdevanja = (vrsta) => {
+   // console.log('unutar funkcije: ',vrsta)
     return vrsteSnabdevanja.find(item => item.sifra == vrsta).naziv
 }

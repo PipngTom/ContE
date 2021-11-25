@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { getAllClients, deleteSingleClient } from '../../actions/clientActions';
 import Loader from '../../components/Loader';
+import { GET_ALL_CLIENTS_RESET } from '../../constants/clientConstants';
 
 const ClientsScreen = ({history}) => {
 
@@ -20,6 +21,9 @@ const ClientsScreen = ({history}) => {
 
     useEffect(() => {
         dispatch(getAllClients())
+        return () => {
+            dispatch({type: GET_ALL_CLIENTS_RESET})
+        }
     }, [dispatch])
 
     const editHandler = (id) => {

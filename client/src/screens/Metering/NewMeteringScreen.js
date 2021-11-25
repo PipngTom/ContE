@@ -4,7 +4,7 @@ import FormContainer from '../../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { newMetering } from '../../actions/meteringActions';
 import { nadjiTabeluPoKategoriji, nadjiStavkePoSifri } from '../../constants/brojila';
-import { nadjiPocetakObracuna, nadjiKrajObracuna, transformDatum } from '../../constants/datum';
+import { nadjiPocetakObracuna, nadjiKrajObracuna, transformDatum, nadjiNazivMeseca } from '../../constants/datum';
 import { meteringSchema1, meteringSchema2, meteringSchema3 } from '../../validations/meteringValidations';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -96,13 +96,22 @@ const NewMeteringScreen = ({match, history}) => {
 
     const handleInput = (e) => {
         const copy = {...fields}
-        if(e.target.name == 'mesec' ){
+        if(e.target.name == 'mesec'){
+            let godina = Number(fields['godina'])
+            if (e.target.value == 11) {
+                godina = godina + 1
+            }
             copy['datumpoc'] = nadjiPocetakObracuna(e.target.value) + fields['godina']
-            copy['datumkr'] = nadjiKrajObracuna(e.target.value) + fields['godina']
+            copy['datumkr'] = nadjiKrajObracuna(e.target.value) + godina
         }
+
         if(e.target.name == 'godina'){
+            let godina = Number(e.target.value)
+           if (fields['mesec'] == 11) {
+                godina = godina + 1
+           }
             copy['datumpoc'] = nadjiPocetakObracuna(fields['mesec']) + e.target.value
-            copy['datumkr'] = nadjiKrajObracuna(fields['mesec']) + e.target.value
+            copy['datumkr'] = nadjiKrajObracuna(fields['mesec']) + godina
 
         }
         copy[e.target.name] = e.target.value
@@ -181,14 +190,14 @@ const NewMeteringScreen = ({match, history}) => {
             <Row>
                 <Col xs={3}></Col>
                 <Col xs={3}>
-                    <Button type='submit' variant='info' size='lg'>
+                    <Button type='submit' variant='primary' size='lg'>
                     Sačuvaj
                     </Button>
                 </Col>
                 <Col xs={3}>
-                    {/* <Button type='submit' variant='primary' onClick={()=>history.push({pathname: `/allmetering/${idBrojila}`})}>
+                    <Button type='submit' variant='primary' size='lg' onClick={()=>history.push({pathname: `/allmetering/${idBrojila}`})}>
                     Nazad
-                    </Button> */}
+                    </Button>
                 </Col>
                 <Col xs={3}></Col>
             </Row>

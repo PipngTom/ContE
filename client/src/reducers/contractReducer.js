@@ -1,6 +1,6 @@
 import { 
-    GET_ALL_CONTRACTS_REQUEST, GET_ALL_CONTRACTS_SUCCESS, GET_ALL_CONTRACTS_FAIL, ALL_CONTRACTS_UPDATE,
-    GET_SINGLE_CONTRACT_REQUEST, GET_SINGLE_CONTRACT_SUCCESS, GET_SINGLE_CONTRACT_RESET, GET_SINGLE_CONTRACT_FAIL, GET_SINGLE_CONTRACT_BY_CLIENT_ID_REQUEST, GET_SINGLE_CONTRACT_BY_CLIENT_ID_SUCCESS, GET_SINGLE_CONTRACT_BY_CLIENT_ID_FAIL } from '../constants/contractConstants';
+    GET_ALL_CONTRACTS_REQUEST, GET_ALL_CONTRACTS_SUCCESS, GET_ALL_CONTRACTS_RESET, GET_ALL_CONTRACTS_FAIL, ALL_CONTRACTS_UPDATE,
+    GET_SINGLE_CONTRACT_REQUEST, GET_SINGLE_CONTRACT_SUCCESS, GET_SINGLE_CONTRACT_RESET, GET_SINGLE_CONTRACT_FAIL, GET_SINGLE_CONTRACT_BY_CLIENT_ID_REQUEST, GET_SINGLE_CONTRACT_BY_CLIENT_ID_SUCCESS, GET_SINGLE_CONTRACT_BY_CLIENT_ID_FAIL, CONTRACT_SAVE_REQUEST, CONTRACT_SAVE_SUCCESS, CONTRACT_SAVE_FAIL } from '../constants/contractConstants';
 
     export const allContractsReducer = (state = { contracts: []}, action) => {
         switch (action.type) {
@@ -13,6 +13,11 @@ import {
             return {
               loading: false,
               contracts: action.payload
+            }
+          case GET_ALL_CONTRACTS_RESET:
+            return {
+              loading: true,
+              contracts: []
             }
           case ALL_CONTRACTS_UPDATE:
             return {
@@ -75,5 +80,29 @@ import {
           }
         default:
           return state;
+      }
+    }
+
+    export const saveContractReducer = (state = { contract: null, error: null }, action) => {
+      switch (action.type) {
+        case CONTRACT_SAVE_REQUEST:
+          return {
+            loading: true,
+            contract: null,
+            error: null
+          }
+        case CONTRACT_SAVE_SUCCESS:
+          return {
+            loading: false,
+            contract: action.payload,
+            error: null
+          }
+        case CONTRACT_SAVE_FAIL:
+          return {
+            loading: false,
+            error: action.payload
+          }
+        default:
+          return state
       }
     }

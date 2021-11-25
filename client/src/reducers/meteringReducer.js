@@ -2,7 +2,7 @@ import {
     METERING_SAVE_REQUEST, METERING_SAVE_SUCCESS, METERING_SAVE_FAIL,
     GET_ALL_METERING_BY_METERID_REQUEST, GET_ALL_METERING_BY_METERID_SUCCESS, GET_ALL_METERING_BY_METERID_FAIL, GET_ALL_METERING_BY_METERID_UPDATE,
     GET_METERING_BY_METER_IDS_REQUEST, 
-    GET_METERING_BY_METER_IDS_SUCCESS, GET_METERING_BY_METER_IDS_FAIL , FAKTURA_METERING_REQUEST, FAKTURA_METERING_SUCCESS, FAKTURA_METERING_FAIL, METERING_SAVE_RESET} from '../constants/meteringConstants';
+    GET_METERING_BY_METER_IDS_SUCCESS, GET_METERING_BY_METER_IDS_FAIL , FAKTURA_METERING_REQUEST, FAKTURA_METERING_SUCCESS, FAKTURA_METERING_FAIL, METERING_SAVE_RESET, FAKTURA_METERING_RESET} from '../constants/meteringConstants';
 
 export const meteringReducer = (state = {}, action) => {
     switch (action.type) {
@@ -92,6 +92,11 @@ export const meteringReducer = (state = {}, action) => {
         return {
           loading: false,
           fakturaMetering: action.payload
+        }
+      case FAKTURA_METERING_RESET:
+        return {
+          loading: true,
+          fakturaMetering: []
         }
       case FAKTURA_METERING_FAIL:
         return {

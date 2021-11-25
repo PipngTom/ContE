@@ -1,5 +1,5 @@
 import { CLIENT_SAVE_REQUEST, CLIENT_SAVE_SUCCESS, CLIENT_SAVE_FAIL, 
-    GET_ALL_CLIENTS_REQUEST, GET_ALL_CLIENTS_SUCCESS, GET_ALL_CLIENTS_FAIL, ALL_CLIENTS_UPDATE,
+    GET_ALL_CLIENTS_REQUEST, GET_ALL_CLIENTS_SUCCESS, GET_ALL_CLIENTS_RESET, GET_ALL_CLIENTS_FAIL, ALL_CLIENTS_UPDATE,
     GET_SINGLE_CLIENT_REQUEST, GET_SINGLE_CLIENT_RESET, GET_SINGLE_CLIENT_SUCCESS, GET_SINGLE_CLIENT_FAIL } from '../constants/clientConstants';
 
 
@@ -37,6 +37,11 @@ export const clientReducer = (state = {}, action) => {
         return {
           loading: false,
           clients: action.payload
+        }
+      case GET_ALL_CLIENTS_RESET:
+        return {
+          loading: true,
+          clients: []
         }
       case ALL_CLIENTS_UPDATE:
         return {

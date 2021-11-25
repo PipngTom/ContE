@@ -53,8 +53,6 @@ const newMetering = (req, res) => {
         if (!err) {
           res.send(rows)
         } else {
-          console.log(err.sqlMessage)
-         // res.status(404)
           res.json({err: err.sqlMessage})
         }
       })
@@ -76,7 +74,6 @@ const newMetering = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
-          console.log(rows)
           res.send(rows)
         } else {
           console.log(err)
@@ -133,8 +130,7 @@ const newMetering = (req, res) => {
 
   const fakturaMetering = (req, res) => {
     const { rezultatN, mesec, godina } = req.body
-    console.log('mesec: ', mesec)
-    console.log('godina: ', godina)
+   
     const queryPromises = rezultatN.map((item)=>{
       const query = `SELECT t.*, DATE_FORMAT(t.datumpoc, '%d.%m.%Y') AS datumpoc, DATE_FORMAT(t.datumkr, '%d.%m.%Y') AS datumkr, b.kategorija
       FROM ${item.tabela} as t
@@ -151,14 +147,13 @@ const newMetering = (req, res) => {
     })
     try{
       Promise.all(queryPromises).then((values)=>{
-        console.log(values)
-        res.send(values)
+        const results = values.filter(item => item.length !== 0)
+        res.send(results)
       })
 
     }catch(error){
       console.log(error)
     }
-    console.log(rezultatN, mesec, godina)
   }
 
   const deleteSingleMetering = (req, res) => {

@@ -70,12 +70,17 @@ const AllMeteringScreen = ({match, history}) => {
     return (
         <div>
             <h2>ED broj: {meter && meter.mestoMerenja}</h2>
-            <Nav.Link onClick={newHandler}>Novo merenje</Nav.Link>
+            <br/>
              {loading ? (
                 <Loader/>
             ) : (<>
                 
-                <Table striped bordered hover variante='dark'>
+                    <div>
+                        <h4>Unesite merenja za ovo brojilo</h4>
+                        <br/>
+                        <Button variant='primary' type='button' onClick={newHandler}>Novo merenje</Button>
+                    </div> 
+                    { metering.length !== 0 && <Table striped bordered hover variante='dark'>
                     <thead>
                         <tr>
                             {metering[0] && Object.keys(metering[0]).filter((item)=>!(item=='id' || item=='idBrojilo')).map((item)=>(
@@ -89,7 +94,6 @@ const AllMeteringScreen = ({match, history}) => {
                        {metering.map(item => (
                             <tr key={item.id}>
                                 {Object.keys(item).filter((elem)=>!(elem=='id'|| elem=='idBrojilo')).map((el)=>{
-                                    console.log(el)
                                     if(el == 'mesec'){
                                         return <td>{nadjiNazivMeseca(item[el])}</td>
                                     }
@@ -103,7 +107,8 @@ const AllMeteringScreen = ({match, history}) => {
                             </tr>  
                         ))}
                     </tbody>
-                </Table>
+                </Table>}
+                
                 </>
             )} 
              <Modal

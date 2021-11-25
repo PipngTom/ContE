@@ -2,7 +2,7 @@ import db from '../db/db.js';
 
 const getAllContracts = (req, res) => {
       
-    const query = `SELECT b.id, k.nazivKlijenta, b.datumSklapanja, b.datumIsteka, b.cenaVT, b.cenaNT, b.cenaJT FROM ugovori AS b
+    const query = `SELECT b.id, k.nazivKlijenta, DATE_FORMAT(b.datumSklapanja, '%Y-%m-%d') AS datumSklapanja, DATE_FORMAT(b.datumIsteka, '%Y-%m-%d') AS datumIsteka, b.brojUgovora, b.cenaVT, b.cenaNT, b.cenaJT FROM ugovori AS b
                   LEFT JOIN klijenti AS k ON k.id = b.idKlijent`;
   
     db.getConnection((err, connection) => {
@@ -21,16 +21,21 @@ const getAllContracts = (req, res) => {
   }
 
   const newContract = (req, res) => {
-    const { idKlijent, datumSklapanja, datumIsteka, cenaVT, cenaNT, cenaJT } = req.body
+    const { idKlijent, datumSklapanja, datumIsteka, brojUgovora, cenaVT, cenaNT, cenaJT } = req.body
+    console.log(datumIsteka)
       let query;
       if(req.body.id){
-          query = `UPDATE ugovori SET idKlijent = '${idKlijent}', datumSklapanja = '${datumSklapanja}', datumIsteka = '${datumIsteka}', cenaVT = '${cenaVT}', cenaNT = '${cenaNT}', cenaJT = '${cenaJT}'
+          query = `UPDATE ugovori SET idKlijent = '${idKlijent}', datumSklapanja = '${datumSklapanja}', datumIsteka = '${datumIsteka}', brojUgovora = '${brojUgovora}', cenaVT = '${cenaVT}', cenaNT = '${cenaNT}', cenaJT = '${cenaJT}'
           WHERE ugovori.id = ${req.body.id}`;
   
       } else {
-          query = `INSERT INTO ugovori (idKlijent, datumSklapanja, datumIsteka, cenaVT, cenaNT, cenaJT) 
-          VALUES ('${idKlijent}', '${datumSklapanja}', '${datumIsteka}', '${cenaVT}', '${cenaNT}', '${cenaJT}')`;
+            query = `INSERT INTO ugovori (idKlijent, datumSklapanja, datumIsteka, brojUgovora, cenaVT, cenaNT, cenaJT) 
+           SELECT '${idKlijent}', '${datumSklapanja}', '${datumIsteka}', '${brojUgovora}', '${cenaVT}', '${cenaNT}', '${cenaJT}' 
+           FROM dual
+           WHERE (SELECT max(datumIsteka)  FROM ugovori WHERE idKlijent = ${idKlijent}) <'${datumSklapanja}';` 
+           
       }
+      console.log(query)
     
   
     db.getConnection((err, connection) => {
@@ -53,7 +58,7 @@ const getAllContracts = (req, res) => {
 
     const id = req.params.id
       
-    const query = `SELECT * FROM ugovori WHERE ugovori.id = ${id}`;
+    const query = `SELECT *, DATE_FORMAT(datumSklapanja, '%Y-%m-%d') AS datumSklapanja, DATE_FORMAT(datumIsteka, '%Y-%m-%d') AS datumIsteka FROM ugovori WHERE ugovori.id = ${id}`;
   
     db.getConnection((err, connection) => {
       if (err) {
@@ -71,10 +76,10 @@ const getAllContracts = (req, res) => {
   }
 
   const getSingleContractByClientId = (req, res) => {
-    const id = req.params.id
-
-    const query = `SELECT * FROM ugovori WHERE idKlijent = ${id}`
-
+    const {clientId, datum} = req.body
+  
+        const query = `SELECT *, DATE_FORMAT(datumSklapanja, '%d.%m.%Y') AS datumSklapanja, DATE_FORMAT(datumIsteka, '%d.%m.%Y') AS datumIsteka FROM ugovori WHERE datumSklapanja < '${datum}' AND datumIsteka > '${datum}' AND idKlijent = ${clientId}`
+      console.log(query)
     db.getConnection((err, connection) => {
       if (err) {
         throw err;
@@ -82,6 +87,7 @@ const getAllContracts = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          console.log(rows)
           res.send(rows)
         } else {
           console.log(err)

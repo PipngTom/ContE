@@ -1,15 +1,16 @@
 import React, {useState, useEffect} from 'react'
-import {Form, Button, Row, Col} from 'react-bootstrap'
+import {Form, Button, Row, Col, Modal} from 'react-bootstrap'
 import FormContainer from '../../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { noviUgovor, getSingleContract } from '../../actions/contractActions';
 import { ugovorSchema } from '../../validations/ugovorValidation';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GET_SINGLE_CONTRACT_RESET} from '../../constants/contractConstants';
+import { GET_SINGLE_CONTRACT_RESET, GET_ALL_CONTRACTS_RESET} from '../../constants/contractConstants';
 
 
 const NewContractScreen = ({match, history}) => {
+    const [showModal, setShowModal] = useState(false)
 
     const { register, handleSubmit, formState: { errors }, setValue   } = useForm(
         {
@@ -26,10 +27,14 @@ const NewContractScreen = ({match, history}) => {
     const allClients = useSelector(state => state.allClients)
     const {loading: loadingClients, error: errorClients, clients} = allClients
 
+    const savedContract = useSelector(state => state.savedContract)
+    const { error: savedContractError } = savedContract
+
     
 
     const [ugovor, setUgovor] = useState({
         idKlijent: '',
+        brojUgovora: '',
         datumSklapanja: '',
         datumIsteka: '',
         cenaVT: '',
@@ -46,6 +51,7 @@ const NewContractScreen = ({match, history}) => {
             } else{
                 setUgovor({...ugovor,
                 idKlijent: contract.idKlijent,
+                brojUgovora: contract.brojUgovora,
                 datumSklapanja: contract.datumSklapanja.slice(0,10),
                 datumIsteka: contract.datumIsteka.slice(0,10),
                 cenaVT: contract.cenaVT,
@@ -59,8 +65,10 @@ const NewContractScreen = ({match, history}) => {
             }  
         }
         
+       
+        
 
-    },[dispatch, contract, contractId])
+    },[dispatch, contract, contractId, savedContractError])
 
     const handleInput = (e) => {
     
@@ -76,8 +84,19 @@ const NewContractScreen = ({match, history}) => {
             dispatch(noviUgovor(ugovor))
         }
         dispatch({type: GET_SINGLE_CONTRACT_RESET})
-        history.push({pathname: `/contracts`}) 
+        //dispatch({type: GET_ALL_CONTRACTS_RESET})
+        setShowModal(true)
+      //      history.push({pathname: `/contracts`})
+    
+        
 
+    }
+
+    const handleDeleteClose = () => {
+        if(!savedContractError){
+            history.push({pathname: `/contracts`})
+        }
+        setShowModal(false)
     }
   
 
@@ -85,7 +104,23 @@ const NewContractScreen = ({match, history}) => {
         <>
         <div>   
             <h2>Ugovor</h2>
+            
         </div>
+        <Modal
+                show={showModal}
+                onHide={handleDeleteClose}
+            >
+                <Modal.Header>
+                    <Modal.Title>Obavestenje</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {savedContractError ? savedContractError : 'Uspesno ste kreirali nov ugovor'}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant='success' onClick={handleDeleteClose}>U redu</Button>
+                </Modal.Footer>
+
+            </Modal>
         <FormContainer>
             <Form onSubmit={handleSubmit(submitUgovor)}>
             <Form.Group controlId='nazivKlijenta'>
@@ -96,6 +131,12 @@ const NewContractScreen = ({match, history}) => {
                     {clients && clients.map((item)=>(
                         <option value={item.id}>{item.nazivKlijenta}</option>
                     ))}
+                </Form.Control>
+            </Form.Group>
+            <Form.Group controlId='brojUgovora'>
+                <Form.Label>Broj ugovora</Form.Label>
+                <Form.Control type='text' name='brojUgovora' value={ugovor.brojUgovora} placeholder='Broj ugovora'
+                onChange={handleInput}>
                 </Form.Control>
             </Form.Group>
             <Form.Group controlId='datumSklapanja'>

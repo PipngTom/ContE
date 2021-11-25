@@ -8,17 +8,17 @@ import { getSingleContractByClientId } from '../../actions/contractActions';
 import { getFakturaMetering } from '../../actions/meteringActions';
 import { backupFaktura } from '../../actions/backupFakturaActions';
 import { nadjiTabeluPoKategoriji, nadjiNazivPoKategoriji, nadjiNazivVrsteSnabdevanja } from '../../constants/brojila';
-import { nadjiPocetakObracuna, nadjiKrajObracuna, nadjiNazivMeseca } from '../../constants/datum';
+import { nadjiPocetakObracuna, nadjiKrajObracuna, nadjiNazivMeseca, nadjiVazeciUgovor} from '../../constants/datum';
 import { dajPunNaziv, dajMeru } from '../Fakture/pomocnaFunkcija';
 import { backupFunkcija } from './backupFunkcija';
 import FormContainer from '../../components/FormContainer';
 import { imgData } from './img'; 
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import { FAKTURA_METERING_RESET } from '../../constants/meteringConstants';
 
 const RacuniKlijentaScreen = ({ match }) => {
     
-
     const clientId = match.params.id
 
     const dispatch = useDispatch()
@@ -42,12 +42,16 @@ const RacuniKlijentaScreen = ({ match }) => {
     const singleContractByClient = useSelector(state => state.singleContractByClient)
     const { singleContractByClient: contract } = singleContractByClient
 
+
     useEffect(() => {
-        if (clientId)
-        dispatch(getAllMetersByClientId(clientId))
-        dispatch(getSingleClient(clientId))
-        dispatch(getMrezarina())
-        dispatch(getSingleContractByClientId(clientId))
+        if (clientId){
+            dispatch(getAllMetersByClientId(clientId))
+            dispatch(getSingleClient(clientId))
+            dispatch(getMrezarina())
+            dispatch({type: FAKTURA_METERING_RESET})
+        }
+        
+        
     }, [dispatch, clientId])
 
     const mesecHandler = (e) => {
@@ -57,7 +61,6 @@ const RacuniKlijentaScreen = ({ match }) => {
     const godinaHandler = (e) => {
         setGodinaMerenja(e.target.value)
     }
-
 
     const createPdfHandler = () => {
 
@@ -188,7 +191,11 @@ const RacuniKlijentaScreen = ({ match }) => {
            }
        })
        setShow(true)
+      // const datumUgovora = nadjiVazeciUgovor(mesecMerenja) + godinaMerenja
+      const datumUgovora = godinaMerenja + '-' + (Number(mesecMerenja)+1).toString() + '-15'
+       dispatch(getSingleContractByClientId(clientId, datumUgovora))
        dispatch(getFakturaMetering(rezultatNiza, mesecMerenja, godinaMerenja))
+       console.log(datumUgovora)
     }
     const numberWithDots = (x) => {
         return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
@@ -256,7 +263,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                           <td>{metersByClientId[0] && nadjiNazivVrsteSnabdevanja(metersByClientId[0].vrstaSnabdevanja)}</td>  
                     </tr>
                     <tr>
-                        <td>Period obracuna:</td>
+                        <td>Period obračuna:</td>
                         <td>{nadjiPocetakObracuna(mesecMerenja) + godinaMerenja}{' - '}{nadjiKrajObracuna(mesecMerenja) + godinaMerenja}</td>
                     </tr>
                     <tr>
@@ -301,7 +308,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                     let sumMrezarina = 0;
                     let sumNaknada = 0;
 
-                    return  <> <h5>1. ZBIRNI OBRACUN PO MESTIMA MERENJA</h5>
+                    return  <> <h5>1. ZBIRNI OBRAČUN PO MESTIMA MERENJA</h5>
                     <Table id='zbirnatabelax' striped bordered collapse hover variante='dark'>
                         <thead>
                         <tr>
@@ -342,15 +349,15 @@ const RacuniKlijentaScreen = ({ match }) => {
                         let sumEN = (item[0].vt ? item[0].vt : 0) + (item[0].nt ? item[0].nt : 0) + (item[0].jt ? item[0].jt : 0)
                         
 
-                        let sum1 = (item[0].vt ? (item[0].vt * contract.cenaVT) : 0) + (item[0].nt ? (item[0].nt * contract.cenaNT) : 0) + (item[0].jt ? (item[0].jt * contract.cenaJT) : 0)
+                        let sum1 = (item[0].vt ? (item[0].vt * (contract && contract.cenaVT)) : 0) + (item[0].nt ? (item[0].nt * (contract && contract.cenaNT)) : 0) + (item[0].jt ? (item[0].jt * (contract && contract.cenaJT)) : 0)
                         sumEnergija = sumEnergija + sum1
                         let sum3 = sumEN * ((mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_ee) + (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_oie))
                         sumNaknada = sumNaknada + sum3
                          
                         return       <tr>
                                     <td>{index+1}</td>
-                                    <td>{metersByClientId.find(el => el.id == item[0].idBrojilo).mestoMerenja}</td>
-                                    <td>{metersByClientId.find(el => el.id == item[0].idBrojilo).adresaMerenja}</td>
+                                    <td>{metersByClientId.length !==0 && metersByClientId.find(el => el.id == item[0].idBrojilo).mestoMerenja}</td>
+                                    <td>{metersByClientId.length !==0 && metersByClientId.find(el => el.id == item[0].idBrojilo).adresaMerenja}</td>
                                     <td>{numberWithDots(sum1.toFixed(2))}</td>
                                     <td>{numberWithDots(sum2.toFixed(2))}</td>
                                     <td>{numberWithDots(sum3.toFixed(2))}</td>
@@ -415,11 +422,13 @@ const RacuniKlijentaScreen = ({ match }) => {
                                     <td>9=8*0.20</td>
                                     <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 0.215).toFixed(2))}</td>
                                 </tr>
-                                <tr>
+                                 <tr>
                                     <td>Taksa za javni medijski servis</td>
                                     <td>10</td>
-                                    <td>{mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv}</td>
-                                </tr>
+                                    <td>{metersByClientId && metersByClientId.reduce((acc, curr) => {
+                                        return acc + curr.taksa
+                                    }, 0 ) * (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv)}</td>
+                                </tr> 
                                 <tr>
                                     <td>Avans - osnovica</td>
                                     <td>11</td>
@@ -443,7 +452,9 @@ const RacuniKlijentaScreen = ({ match }) => {
                                 <tr>
                                     <td>Ukupno za uplatu</td>
                                     <td>15=13+14+10</td>
-                                    <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 1.29 + (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv)).toFixed(2))}</td>
+                                    <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 1.29 + (metersByClientId && metersByClientId.reduce((acc, curr) => {
+                                        return acc + curr.taksa
+                                    }, 0 ) * (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv))).toFixed(2))}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -453,6 +464,7 @@ const RacuniKlijentaScreen = ({ match }) => {
             
         
             {fakMetering && fakMetering.map((item, index)=>{
+                
 
                 let sum2 = 0;
                 
@@ -460,7 +472,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                 let sumEN = (item[0].vt ? item[0].vt : 0) + (item[0].nt ? item[0].nt : 0) + (item[0].jt ? item[0].jt : 0)
                 
 
-                let sum1 = (item[0].vt ? (item[0].vt * contract.cenaVT) : 0) + (item[0].nt ? (item[0].nt * contract.cenaNT) : 0) + (item[0].jt ? (item[0].jt * contract.cenaJT) : 0)
+                let sum1 = (item[0].vt ? (item[0].vt *(contract && contract.cenaVT)) : 0) + (item[0].nt ? (item[0].nt * (contract && contract.cenaNT)) : 0) + (item[0].jt ? (item[0].jt * (contract && contract.cenaJT)) : 0)
                 
                 let sum3 = sumEN * ((mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_ee) + (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_oie))
 
@@ -482,7 +494,8 @@ const RacuniKlijentaScreen = ({ match }) => {
                     </tr>
                     <tr>
                         <td>Vrsta snabdevanja:</td>
-                        <td>{nadjiNazivVrsteSnabdevanja(metersByClientId.find(el => el.id == item[0].idBrojilo).vrstaSnabdevanja)}</td>
+                        <td>{metersByClientId.length !== 0 && nadjiNazivVrsteSnabdevanja(metersByClientId.find(el => {
+                            return el.id == item[0].idBrojilo}).vrstaSnabdevanja)}</td>
                     </tr>
                     <tr>
                         <td>Odobrena snaga</td>
@@ -494,11 +507,11 @@ const RacuniKlijentaScreen = ({ match }) => {
                     </tr>
                     <tr>
                         <td>Mesto merenja:</td>
-                        <td>{metersByClientId.find(el => el.id == item[0].idBrojilo).mestoMerenja}</td>
+                        <td>{metersByClientId.length !==0 && metersByClientId.find(el => el.id == item[0].idBrojilo).mestoMerenja}</td>
                     </tr>
                     <tr>
                         <td>Adresa merenja:</td>
-                        <td>{metersByClientId.find((el)=>el.id == item[0].idBrojilo).adresaMerenja}</td>
+                        <td>{metersByClientId.length !==0 && metersByClientId.find((el)=>el.id == item[0].idBrojilo).adresaMerenja}</td>
                     </tr>
                 </tbody>
             </Table>
@@ -545,9 +558,9 @@ const RacuniKlijentaScreen = ({ match }) => {
                             </thead>
                             <tbody>
                                 
-                                {(item[0].vt || item[0].vt === 0) ? <tr><td>Visa tarifa</td><td>kWh</td><td>{item[0].vt}</td><td>{contract.cenaVT}</td><td>{numberWithDots((contract.cenaVT * item[0].vt).toFixed(2))}</td></tr> : ''}
-                                {(item[0].nt || item[0].nt === 0) ? <tr><td>Niza tarifa</td><td>kWh</td><td>{item[0].nt}</td><td>{contract.cenaNT}</td><td>{numberWithDots((contract.cenaNT * item[0].nt).toFixed(2))}</td></tr> : ''}
-                                {(item[0].jt || item[0].jt === 0) ? <tr><td>Jedinstvena tarifa</td><td>kWh</td><td>{item[0].jt}</td><td>{contract.cenaJT}</td><td>{numberWithDots((contract.cenaJT * item[0].jt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].vt || item[0].vt === 0) ? <tr><td>Visa tarifa</td><td>kWh</td><td>{item[0].vt}</td><td>{contract && contract.cenaVT}</td><td>{numberWithDots(((contract && contract.cenaVT) * item[0].vt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].nt || item[0].nt === 0) ? <tr><td>Niza tarifa</td><td>kWh</td><td>{item[0].nt}</td><td>{contract && contract.cenaNT}</td><td>{numberWithDots(((contract && contract.cenaNT) * item[0].nt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].jt || item[0].jt === 0) ? <tr><td>Jedinstvena tarifa</td><td>kWh</td><td>{item[0].jt}</td><td>{contract && contract.cenaJT}</td><td>{numberWithDots(((contract && contract.cenaJT) * item[0].jt).toFixed(2))}</td></tr> : ''}
                                 <tr>
                                     <td></td>
                                     <td></td>
@@ -585,15 +598,15 @@ const RacuniKlijentaScreen = ({ match }) => {
                                     } else {
                                         
                                         const prop = nadjiTabeluPoKategoriji(item[0].kategorija).replace('merenja_', '') + '_' + it
-                                        sum2 = sum2 + item[0][it] *  mrezarinaZaFakturu[prop]
+                                        sum2 = sum2 + item[0][it] *  (mrezarinaZaFakturu && mrezarinaZaFakturu[prop])
                                         return (
                                             <>
                                             <tr>
                                                 <td>{dajPunNaziv(it)}</td>
                                                 <td>{dajMeru(it)}</td>
                                                 <td>{numberWithDots(item[0][it])}</td>
-                                                <td>{mrezarinaZaFakturu[prop]}</td>
-                                                <td>{numberWithDots((mrezarinaZaFakturu[prop] * item[0][it]).toFixed(2))}</td>
+                                                <td>{mrezarinaZaFakturu && mrezarinaZaFakturu[prop]}</td>
+                                                <td>{numberWithDots(((mrezarinaZaFakturu && mrezarinaZaFakturu[prop]) * item[0][it]).toFixed(2))}</td>
                                                 
                                             </tr>
                                             </>
@@ -690,11 +703,11 @@ const RacuniKlijentaScreen = ({ match }) => {
                                 </tr>
                                 <tr>
                                    <td>Taksa za javni medijski servis</td>
-                                   <td>{(mrezarinaZaFakturu && (mrezarinaZaFakturu.naknada_tv)).toFixed(2)}</td>
+                                   <td>{(metersByClientId.length !== 0 && (metersByClientId.find(br => br.id == item[0].idBrojilo).taksa == 1)) ? (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv) : 0}</td>
                                 </tr>
                                 <tr>
-                                   <td>Ukupno za obracun</td>
-                                   <td>{numberWithDots((((sum1 + sum2 + sum3) * (mrezarinaZaFakturu && (mrezarinaZaFakturu.akciza + 1))* (mrezarinaZaFakturu && (mrezarinaZaFakturu.pdv + 1)))+(mrezarinaZaFakturu && (mrezarinaZaFakturu.naknada_tv))).toFixed(2))}</td>
+                                    <td>Ukupno za obracun</td>
+                                    <td>{numberWithDots(((sum1 + sum2 + sum3) * (mrezarinaZaFakturu && (mrezarinaZaFakturu.akciza + 1)) * (mrezarinaZaFakturu && (mrezarinaZaFakturu.pdv)) + ((metersByClientId.length !== 0 && (metersByClientId.find(br => br.id == item[0].idBrojilo).taksa == 1)) ? (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv) : 0)).toFixed(2))}</td>
                                 </tr>
                     </tbody>
                         </Table>

@@ -73,6 +73,69 @@ const mesec = [
     }
 ]
 
+const validnostUgovora = [
+    {
+        sifra: '0',
+        datum: '15.01.',
+        naziv: 'januar'
+    },
+    {
+        sifra: '1',
+        datum: '15.02.',
+        naziv: 'februar'
+    },
+    {
+        sifra: '2',
+        datum: '15.03.',
+        naziv: 'mart'
+    },
+    {
+        sifra: '3',
+        datum: '15.04',
+        naziv: 'april'
+    },
+    {
+        sifra: '4',
+        datum: '15.05.',
+        naziv: 'maj'
+    },
+    {
+        sifra: '5',
+        datum: '15.06.',
+        naziv: 'jun'
+    },
+    {
+        sifra: '6',
+        datum: '15.07.',
+        naziv: 'jul'
+    },
+    {
+        sifra: '7',
+        datum: '15.08.',
+        naziv: 'avgust'
+    },
+    {
+        sifra: '8',
+        datum: '15.09.',
+        naziv: 'septembar'
+    },
+    {
+        sifra: '9',
+        datum: '15.10.',
+        naziv: 'oktobar'
+    },
+    {
+        sifra: '10',
+        datum: '15.11.',
+        naziv: 'novembar'
+    },
+    {
+        sifra: '11',
+        datum: '15.12.',
+        naziv: 'decembar'
+    }
+]
+
 export const nadjiPocetakObracuna = (mes) => {
     return mesec.find(item => item.sifraMes == mes).datumpoc
 }
@@ -82,15 +145,25 @@ export const nadjiKrajObracuna = (mes) => {
 }
 
 export const transformDatum = (datum) => {
-    console.log(datum)
     const godina = datum.substring(6,10)
     const mesec = datum.substring(3,5)
     const dan = datum.substring(0,2)
     const rezultat =  godina + '-' + mesec + '-' + dan
-    console.log(rezultat)
     return rezultat;
 }
 
 export const nadjiNazivMeseca = (sifraMeseca) => {
     return mesec.find(item => item.sifraMes == sifraMeseca).naziv
+}
+
+export const nadjiVazeciUgovor = (sifra) => {
+    return validnostUgovora.find(item => item.sifra == sifra).datum
+}
+
+export const kreirajDatum = (datum) => {
+    const pom = datum.split('-')
+    const godina = pom[2]
+    const mesec = pom[1]
+    const dan = pom[0]
+    return new Date(godina, Number(mesec) - 1, dan)
 }

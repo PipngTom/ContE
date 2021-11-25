@@ -4,9 +4,9 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { userRegisterReducer, userLoginReducer, unosReducer } from './reducers/userReducer';
 import { clientReducer, allClientsReducer, singleClientReducer } from './reducers/clientReducer';
 import { allMetersReducer, singleMeterReducer, allMetersByClientIdReducer } from './reducers/meterReducer';
-import { allContractsReducer, singleContractReducer, singleContractByClientReducer } from './reducers/contractReducer';
+import { allContractsReducer, singleContractReducer, singleContractByClientReducer, saveContractReducer } from './reducers/contractReducer';
 import { meteringReducer, allMeteringByMeterIdReducer, allMeteringByMeterIdsReducer, fakturaMeteringReducer } from './reducers/meteringReducer';
-import { mrezarinaReducer } from './reducers/mrezarinaReducer';
+import { mrezarinaReducer, allMrezarineReducer, newMrezarinaReducer } from './reducers/mrezarinaReducer';
 import { backupFakturaReducer, getBackUpFaktureReducer } from './reducers/backupFakturaReducer';
 
 const reducer = combineReducers({
@@ -21,12 +21,15 @@ const reducer = combineReducers({
   allMetersByClientId: allMetersByClientIdReducer,
   allContracts: allContractsReducer,
   singleContract: singleContractReducer,
+  savedContract: saveContractReducer,
   singleContractByClient: singleContractByClientReducer,
   metering: meteringReducer,
   allMeteringByMeterId: allMeteringByMeterIdReducer,
   allMeteringByMeterIds: allMeteringByMeterIdsReducer,
   fakturaMetering: fakturaMeteringReducer,
+  allMrezarine: allMrezarineReducer,
   mrezarina: mrezarinaReducer,
+  novaMrezarina: newMrezarinaReducer,
   bFaktura: backupFakturaReducer,
   fakture: getBackUpFaktureReducer
 

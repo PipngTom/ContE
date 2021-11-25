@@ -27,7 +27,7 @@ export const getAllContracts= () => async (dispatch) => {
 
   export const noviUgovor = (ugovor, id = 0) => async (dispatch) => {
     console.log(ugovor)
-    try {
+    
         let contract
         contract = id ? {...ugovor, id} : {...ugovor}
 
@@ -42,18 +42,19 @@ export const getAllContracts= () => async (dispatch) => {
       }
   
       const { data } = await axios.post('/api/contracts/new', contract, config) 
+
+      if (data.affectedRows !== 0) {
+        dispatch({
+          type: CONTRACT_SAVE_SUCCESS,
+          payload: data
+        })
+      } else {
+        dispatch({
+          type: CONTRACT_SAVE_FAIL,
+          payload: 'Ugovor za taj datum je vec skopljen...'
+        })
+      }
   
-      dispatch({
-        type: CONTRACT_SAVE_SUCCESS,
-        payload: data
-      })
-  
-    } catch (error) {
-      dispatch({
-        type: CONTRACT_SAVE_FAIL,
-        payload: error.response && error.response.data.message ? error.response.data.message : error.message
-      })
-    }
   }
 
   export const getSingleContract= (id) => async (dispatch) => {
@@ -98,13 +99,20 @@ export const getSingleContractByMeterId= (meterId) => async (dispatch) => {
   }
 }
 
-export const getSingleContractByClientId = (clientId) => async (dispatch) => {
-  try {
+export const getSingleContractByClientId = (clientId, datum) => async (dispatch) => {
+    try {
     dispatch({
       type: GET_SINGLE_CONTRACT_BY_CLIENT_ID_REQUEST
     })
 
-    const { data } = await axios.get(`/api/contracts/ugovorklijent/${clientId}`)
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    const {data}  = await axios.post(`/api/contracts/ugovorklijent`, {clientId, datum}, config)
+    console.log(data)
     dispatch({
       type: GET_SINGLE_CONTRACT_BY_CLIENT_ID_SUCCESS,
       payload: data[0]

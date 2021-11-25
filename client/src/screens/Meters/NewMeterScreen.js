@@ -27,6 +27,9 @@ const NewMeterScreen = ({match, history}) => {
         vrstaSnabdevanja: ''
     })
 
+    const [taksa, setTaksa] = useState(false)
+
+
     useEffect(() => {
         if(meterId)//EDIT MODE
         {
@@ -40,6 +43,7 @@ const NewMeterScreen = ({match, history}) => {
                 kategorija: meter.kategorija,
                 vrstaSnabdevanja: meter.vrstaSnabdevanja
             })
+            setTaksa(meter.taksa)
             }  
         }
         
@@ -52,11 +56,15 @@ const NewMeterScreen = ({match, history}) => {
         setBrojilo({...brojilo, [e.target.name] : e.target.value})
       }
 
+    const handleCheck = (e) => {
+        setTaksa(e.target.checked)
+    }
+
     const submitBrojilo = () => {
         if(meterId){
-            dispatch(novoBrojilo(brojilo, meterId))
+            dispatch(novoBrojilo({brojilo, taksa}, meterId))
         } else {
-            dispatch(novoBrojilo(brojilo))
+            dispatch(novoBrojilo({brojilo, taksa}))
         }
         
         history.push({pathname: `/meters`})
@@ -109,6 +117,10 @@ const NewMeterScreen = ({match, history}) => {
                         <option value={item.sifra}>{item.naziv}</option>
                     ))}
                 </Form.Control>
+            </Form.Group>
+            <br/>
+            <Form.Group>
+                <Form.Check type='checkbox' label='Taksa za javni medijski servis' checked={taksa} onChange={handleCheck} ></Form.Check>
             </Form.Group>
             <br/>
             

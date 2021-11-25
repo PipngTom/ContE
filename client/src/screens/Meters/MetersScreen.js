@@ -2,9 +2,11 @@ import React , {useState, useEffect} from 'react';
 import {Table, Button, Nav, Modal, Form} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
-import { getAllMeters, deleteSingleMeter } from '../../actions/meterActions';
+import { getAllMeters, deleteSingleMeter, getSingleMeter } from '../../actions/meterActions';
+import { getAllClients } from '../../actions/clientActions';
 import Loader from '../../components/Loader';
 import { nadjiNazivPoKategoriji, nadjiNazivVrsteSnabdevanja } from '../../constants/brojila';
+import { GET_ALL_METERS_RESET } from '../../constants/meterConstants';
 
 const MetersScreen = ({history}) => {
 
@@ -24,10 +26,15 @@ const MetersScreen = ({history}) => {
 
     useEffect(() => {
         dispatch(getAllMeters())
+        dispatch(getAllClients())
+        return () => {
+            dispatch({type: GET_ALL_METERS_RESET})
+        }
     }, [dispatch])
 
     const editHandler = (id) => {
         history.push({pathname: `/meters/edit/${id}`})
+        dispatch(getSingleMeter(id))
     }
 
     const novoBrojilo = () => {
