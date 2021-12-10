@@ -77,7 +77,7 @@ const MetersScreen = ({history}) => {
                     <thead>
                         <tr>
                             <th>Naziv klijenta</th>
-                            <th>Sifra mernog mesta</th>
+                            <th>Šifra mernog mesta</th>
                             <th>Adresa mernog mesta</th>
                             <th>Kategorija</th>
                             <th>Vrsta snabdevanja</th>
@@ -125,7 +125,7 @@ const MetersScreen = ({history}) => {
                     <Modal.Title>Brisanje brojila</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Da li ste sigurni da zelite da obrisete brojilo?
+                    Da li ste sigurni da zelite da obrišete brojilo?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant='success' onClick={handleDeleteClose}>Nazad</Button>

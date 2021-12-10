@@ -2,7 +2,7 @@ import { nadjiTabeluPoKategoriji, nadjiNazivVrsteSnabdevanja, nadjiNazivPoKatego
 import { nadjiPocetakObracuna, nadjiKrajObracuna } from '../../constants/datum';
 import { dajMeru, dajPunNaziv } from "../Fakture/pomocnaFunkcija";
 
-export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, mesec, godina) => {
+export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, namet,mesec, godina) => {
     let faktura = {}
     let zbirniRacun = {}
     let stavke = []
@@ -54,7 +54,7 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
 
                 let sum3 = 0
                 let sumEn = ((item[0].vt ? item[0].vt : 0) + (item[0].nt ? item[0].nt : 0) + (item[0].jt ? item[0].jt : 0))
-                sum3 = sumEn * (mrezarina.naknada_ee + mrezarina.naknada_oie)
+                sum3 = sumEn * (namet.naknadaEe + namet.naknadaOie)
                 sumN = sumN + sum3
 
                return {
@@ -125,7 +125,9 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
             {
                 col1: 'Taksa za javni medijski servis',
                 col2: '10',
-                col3: (brojila[0].taksa == 1) ? mrezarina.naknada_tv : 0
+                col3: brojila.reduce((acc, cur)=>{
+                    return acc + cur.taksa
+                }, 0) *  namet.naknadaTv
             },
             {
                 col1: 'Avans - osnovica',
@@ -150,7 +152,9 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
             {
                 col1: 'Ukupno za uplatu',
                 col2: '15=13+14+10',
-                col3: ((sumE + sumM + sumN) * 1.29) + ((brojila[0].taksa == 1) ? mrezarina.naknada_tv : 0)
+                col3: ((sumE + sumM + sumN) * 1.29) + brojila.reduce((acc, cur)=>{
+                    return acc + cur.taksa
+                }, 0) *  namet.naknadaTv
             }
         ]
         faktura['zbirniRacun'] = zbirniRacun
@@ -160,7 +164,7 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
             let sum2 = 0;
             let sum1 = (item[0].vt ? (item[0].vt * ugovor.cenaVT) : 0) + (item[0].nt ? (item[0].nt * ugovor.cenaNT) : 0) + (item[0].jt ? (item[0].jt * ugovor.cenaJT) : 0)
             let sumEN = (item[0].vt ? item[0].vt : 0) + (item[0].nt ? item[0].nt : 0) + (item[0].jt ? item[0].jt : 0)
-            let sum3 = sumEN * (mrezarina.naknada_ee + mrezarina.naknada_oie)
+            let sum3 = sumEN * (namet.naknadaEe + namet.naknadaOie)
 
             const tabela1 = []
 
@@ -237,14 +241,14 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
                 col1: 'Naknada za podsticaj povlascenih proizvodjaca el. energije',
                 col2: 'kWh',
                 col3: sumEN,
-                col4: mrezarina.naknada_oie,
-                col5: sumEN * mrezarina.naknada_oie
+                col4: namet.naknadaOie,
+                col5: sumEN * namet.naknadaOie
             }, {
                 col1: 'Naknada za unapredjenje energetske efikasnosti',
                 col2: 'kWh',
                 col3: sumEN,
-                col4: mrezarina.naknada_ee,
-                col5: sumEN * mrezarina.naknada_ee
+                col4: namet.naknadaEe,
+                col5: sumEN * namet.naknadaEe
             }, {
                 col1: '',
                 col2: '',
@@ -264,28 +268,28 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, m
                 col2: sum2
             }, {
                 col1: 'Naknada za podsticaj povlascenih proizvodjaca el. energije',
-                col2: sumEN * mrezarina.naknada_oie
+                col2: sumEN * namet.naknadaOie
             }, {
                 col1: 'Naknada za unapredjenje energetske efikasnosti',
-                col2: sumEN * mrezarina.naknada_ee
+                col2: sumEN * namet.naknadaEe
             }, {
                 col1: 'Osnova za obracun akcize',
                 col2: sum1 + sum2 + sum3
             }, {
-                col1: `Iznos obracunate akcize stopa ${mrezarina.akciza * 100}%`,
-                col2: (sum1 + sum2 + sum3) * mrezarina.akciza
+                col1: `Iznos obracunate akcize stopa ${namet.akciza * 100}%`,
+                col2: (sum1 + sum2 + sum3) * namet.akciza
             }, {
                 col1: 'Osnovica za PDV',
-                col2: (sum1 + sum2 + sum3) * (mrezarina.akciza + 1)
+                col2: (sum1 + sum2 + sum3) * (namet.akciza + 1)
             }, {
                 col1: 'Porez na dodatu vrednost',
-                col2: (sum1 + sum2 + sum3) * (mrezarina.akciza + 1) * mrezarina.pdv
+                col2: (sum1 + sum2 + sum3) * (namet.akciza + 1) * namet.pdv
             }, {
                 col1: 'Taksa za javni medijski servis',
-                col2: (brojila[0].taksa == 1) ? mrezarina.naknada_tv : 0
+                col2: (brojila.find(br => br.id == item[0].idBrojilo).taksa == 1) ? namet.naknadaTv : 0
             }, {
                 col1: 'Ukupno za obracun',
-                col2: (sum1 + sum2 + sum3) * (mrezarina.akciza + 1) * ((mrezarina.pdv + 1) + ((brojila[0].taksa == 1) ? mrezarina.naknada_tv : 0))
+                col2: (sum1 + sum2 + sum3) * (namet.akciza + 1) * (namet.pdv + 1) + ((brojila.find(br => br.id == item[0].idBrojilo).taksa == 1) ? namet.naknadaTv : 0)
             })
 
 

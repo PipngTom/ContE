@@ -80,6 +80,8 @@ const AllMeteringScreen = ({match, history}) => {
                         <br/>
                         <Button variant='primary' type='button' onClick={newHandler}>Novo merenje</Button>
                     </div> 
+                    <br/>
+                    <br/>
                     { metering.length !== 0 && <Table striped bordered hover variante='dark'>
                     <thead>
                         <tr>
@@ -108,7 +110,9 @@ const AllMeteringScreen = ({match, history}) => {
                         ))}
                     </tbody>
                 </Table>}
-                
+                <br/>
+                <br/>
+                <Button variant='primary' type='button' onClick={() => history.push('/unosi')}>Nazad</Button>
                 </>
             )} 
              <Modal
@@ -119,7 +123,7 @@ const AllMeteringScreen = ({match, history}) => {
                     <Modal.Title>Brisanje merenja</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Da li ste sigurni da zelite da obrisete merenje?
+                    Da li ste sigurni da zelite da obrišete merenje?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant='success' onClick={handleDeleteClose}>Nazad</Button>

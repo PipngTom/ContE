@@ -4,13 +4,23 @@ import {
     GET_SINGLE_METER_REQUEST, GET_SINGLE_METER_SUCCESS, GET_SINGLE_METER_FAIL, METER_DELETE_REQUEST, METER_DELETE_FAIL} from '../constants/meterConstants';
 import axios from 'axios';
 
-export const getAllMeters= () => async (dispatch) => {
+export const getAllMeters= () => async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_ALL_METERS_REQUEST
       })
 
-      const { data } = await axios.get('/api/meters') 
+      const {
+        userLogin: { userInfo },
+      } = getState()
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        }
+      }
+
+      const { data } = await axios.get('/api/meters', config) 
   
       dispatch({
         type: GET_ALL_METERS_SUCCESS,
@@ -25,13 +35,23 @@ export const getAllMeters= () => async (dispatch) => {
     }
   }
 
-  export const getAllMetersByClientId = (id) => async (dispatch) => {
+  export const getAllMetersByClientId = (id) => async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_ALL_METERS_BY_CLIENT_ID_REQUEST
       })
 
-      const { data } = await axios.get(`/api/meters/racuni/${id}`)
+      const {
+        userLogin: { userInfo },
+      } = getState()
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        }
+      }
+
+      const { data } = await axios.get(`/api/meters/racuni/${id}`, config)
      
       dispatch({
         type: GET_ALL_METERS_BY_CLIENT_ID_SUCCESS,
@@ -77,13 +97,23 @@ export const getAllMeters= () => async (dispatch) => {
     }
   }
 
-  export const getSingleMeter= (id) => async (dispatch) => {
+  export const getSingleMeter= (id) => async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_SINGLE_METER_REQUEST
       })
 
-      const { data } = await axios.get(`/api/meters/${id}`) 
+      const {
+        userLogin: { userInfo }
+      } = getState()
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        }
+      }
+
+      const { data } = await axios.get(`/api/meters/${id}`, config) 
   
       dispatch({
         type: GET_SINGLE_METER_SUCCESS,

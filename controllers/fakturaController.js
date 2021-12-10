@@ -1,8 +1,11 @@
 import db from '../db/db.js';
+import { log } from '../middleware/logFunkcija.js';
 
 const getContractByMeterId = (req, res) => {
 
     const id = req.params.id
+
+    //const { name, email } = req
       
     const query = `SELECT * FROM ugovori WHERE idKlijent IN (SELECT idKlijent FROM brojila WHERE brojila.id = ${id})`;
   
@@ -13,6 +16,7 @@ const getContractByMeterId = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+         // log(name, email, 'GET CONTRACT BY METERID', rows)
           res.send(rows)
         } else {
           console.log(err)
@@ -42,6 +46,9 @@ const getContractByMeterId = (req, res) => {
 
   const getRezervnaFaktura = (req, res) => {
     const {idKlijenta, mesec, godina} = req.query
+
+    const { name, email } = req
+
     const query = `SELECT bfaktura FROM faktura 
     WHERE  idKlijenta = ${idKlijenta} AND mesec = ${mesec} AND godina = ${godina}`
 
@@ -52,6 +59,7 @@ const getContractByMeterId = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'GET R FAKTURA', rows[0].bfaktura)
           const rezultat = JSON.parse(rows[0].bfaktura)
           
           res.send(rezultat)

@@ -21,12 +21,7 @@ const mrezarinaSchema = yup.object().shape({
     sp_domacinstvo_odosnaga: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
     sp_jednotarifno_jt: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
     sp_jednotarifno_odosnaga: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
-    jr_jt: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
-    pdv: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
-    akciza: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
-    naknada_tv: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
-    naknada_ee: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required(),
-    naknada_oie: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required()
+    jr_jt: yup.number().typeError('Unesite brojčanu vrednost...').positive('Unesite pozitivnu vrednost...').required()
 })
 
 export { mrezarinaSchema }

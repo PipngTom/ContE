@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table, Form, Button } from 'react-bootstrap';
 import { getBackupFakture } from '../../actions/backupFakturaActions';
 import { nadjiNazivMeseca } from '../../constants/datum';
-import { imgData } from '../FakturaKlijent/img';
+import { imgData1 } from '../FakturaKlijent/img';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import * as DejaVuSans from '../FakturaKlijent/DejaVuSans-normal';
 import FormContainer from '../../components/FormContainer';
 import { getSingleClient } from '../../actions/clientActions';
 
@@ -18,9 +19,6 @@ const BackUpFaktureScreen = ({match}) => {
     const [mesecMerenja, setMesecMerenja] = useState(new Date().getMonth())
     const [godinaMerenja, setGodinaMerenja] = useState(new Date().getFullYear())
     const [show, setShow] = useState(false)
-
-    // const allClients = useSelector(state => state.allClients)
-    // const {clients} = allClients
 
     const singleClient = useSelector(state => state.singleClient)
     const { client } = singleClient
@@ -45,20 +43,21 @@ const BackUpFaktureScreen = ({match}) => {
     const createPdfHandler = () => {
 
         var doc = new jsPDF('p','pt', 'a4')
+        doc.setFont('DejaVuSans', 'normal')
 
         var y= 30
             doc.setLineWidth(2)
-            doc.text(150, y = y + 30, `Racun za elektricnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
+            doc.text(150, y = y + 30, `Račun za električnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
     
             
     
-            doc.addImage(imgData, 'JPEG', 20, 10, 550, 30)
+            doc.addImage(imgData1, 'JPEG', 20, 10, 129, 32)
     
             doc.autoTable({
                 html: '#tabelaglavna',
                 theme: 'striped',
                 startY: 70,
-                styles: { fontSize: 6 },
+                styles: { fontSize: 6, font: 'DejaVuSans' },
                 bodyStyles: { cellWidth: 100 }
             })
             doc.setFontSize(8)
@@ -72,21 +71,21 @@ const BackUpFaktureScreen = ({match}) => {
             doc.text(400, 120, `${client.kontaktMail}`)
 
         doc.setFontSize(12)
-            doc.text('1. Zbirni obracun po mestima merenja', 40, doc.autoTable.previous.finalY + 15)
+            doc.text('1. Zbirni obračun po mestima merenja', 40, doc.autoTable.previous.finalY + 15)
             doc.autoTable({
                 html: `#zbirnatabelax`,
                 theme: 'grid',
-                styles: { cellPadding: 4 },
+                styles: { cellPadding: 4, font: 'DejaVuSans' },
                 headStyles:  { halign: 'center', valign: 'middle'} ,
                 columnStyles: { 0: { halign: 'center', valign: 'middle' }, 1: { halign: 'right', cellWidth: 80 }, 2: { halign: 'right', cellWidth: 100 }, 3: { halign: 'right'}, 4: { halign: 'right' }, 5: { halign: 'right', cellWidth: '100' }}
             })
 
             doc.setFontSize(12)
-            doc.text('2. Rekapitulacija zbirnog racuna', 40, doc.autoTable.previous.finalY + 15)
+            doc.text('2. Rekapitulacija zbirnog računa', 40, doc.autoTable.previous.finalY + 15)
             doc.autoTable({
                 html: `#zbirnatabelay`,
                 theme: 'grid',
-                styles: { cellPadding: 4 },
+                styles: { cellPadding: 4, font: 'DejaVuSans' },
                 headStyles:  { halign: 'center', valign: 'middle'} ,
                 columnStyles: { 1: { halign: 'right', cellWidth: 70 }, 2: { halign: 'right', cellWidth: 110 }}
             })
@@ -95,17 +94,17 @@ const BackUpFaktureScreen = ({match}) => {
             rFakture.pojedinacniRacuni.forEach((_, index)=>{
             var y= 30
             doc.setLineWidth(2)
-            doc.text(150, y = y + 30, `Racun za eletricnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
+            doc.text(150, y = y + 30, `Račun za eletričnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
     
             
     
-            doc.addImage(imgData, 'JPEG', 20, 10, 550, 30)
+            doc.addImage(imgData1, 'JPEG', 20, 10, 129, 32)
     
             doc.autoTable({
                 html: `#tabelay${index+1}`,
                 theme: 'striped',
                 startY: 70,
-                styles: { fontSize: 6 },
+                styles: { fontSize: 6, font: 'DejaVuSans' },
                 bodyStyles: { cellWidth: 100 }
             })
             doc.setFontSize(8)
@@ -119,38 +118,38 @@ const BackUpFaktureScreen = ({match}) => {
             doc.text(400, 120, `${client.kontaktMail}`)
 
     
-            doc.setFontSize(12)
-            doc.text('1. Obracun za isporucenu energiju', 40, doc.autoTable.previous.finalY + 15)
+            doc.setFontSize(10)
+            doc.text('1. Obračun za isporučenu energiju', 40, doc.autoTable.previous.finalY + 15)
             doc.autoTable({
                 html: `#tabela${index+1}-1`,
                 theme: 'grid',
-                styles: { cellPadding: 2 },
+                styles: { cellPadding: 2, font: 'DejaVuSans' },
                 headStyles:  { halign: 'center', valign: 'middle'} ,
                 columnStyles: { 1: { halign: 'center', cellWidth: 50 }, 2: { halign: 'right', cellWidth: 80 }, 3: { halign: 'right', cellWidth: 90 }, 4: { halign: 'right'}}
             })
-            doc.setFontSize(12)
-            doc.text('2. Obracun za pristup sistemu za prenos/distribuciju elektricne energije', 40, doc.autoTable.previous.finalY + 15)
+            doc.setFontSize(10)
+            doc.text('2. Obračun za pristup sistemu za prenos/distribuciju električne energije', 40, doc.autoTable.previous.finalY + 15)
              doc.autoTable({
                 html: `#tabela${index+1}-2`, 
                 theme: 'grid',
-                styles: {cellPadding: 2},
+                styles: {cellPadding: 2, font: 'DejaVuSans'},
                 headStyles: { halign: 'center', valign: 'middle'} ,
                 columnStyles: {1: {halign: 'center', cellWidth: 50}, 2: {halign: 'right', cellWidth: 80}, 3: { halign: 'right', cellWidth: 80 }, 4: {halign: 'right'}}
             }) 
-            doc.setFontSize(12)
-            doc.text('3. Obracun naknada za podsticaj povl. proizvodjaca el. energije i unapredjenje energetske efikasnosti', 40, doc.autoTable.previous.finalY + 15)
+            doc.setFontSize(10)
+            doc.text('3. Obračun naknada za podsticaj povl. proizvođača el. energije i unapređenje energetske efikasnosti', 40, doc.autoTable.previous.finalY + 15)
             doc.autoTable({
                 html: `#tabela${index+1}-3`, theme: 'grid',
-                styles: {cellPadding: 2},
+                styles: {cellPadding: 2, font: 'DejaVuSans'},
                 headStyles: { halign: 'center'} ,
                 columnStyles: { 0: { cellWidth: 300 }, 1: { halign: 'center', cellWidth: 60 }, 2: { halign: 'right' }, 3: { halign: 'right' }, 4: {halign: 'right'}  } 
             }) 
-            doc.setFontSize(12)
+            doc.setFontSize(10)
             doc.text('4. Rekapitulacija', 40, doc.autoTable.previous.finalY + 15)
             doc.autoTable({
                 html: `#tabela${index+1}-4`,
                 theme: 'grid',
-                styles: {cellPadding: 2},
+                styles: {cellPadding: 2, font: 'DejaVuSans'},
                 columnStyles: { 1: { halign: 'right' } }
             })
             if (index < rFakture.pojedinacniRacuni.length - 1)
@@ -231,11 +230,11 @@ const BackUpFaktureScreen = ({match}) => {
                           <td>{rFakture && rFakture.zbirniRacun.vrstaSnabdevanja}</td>  
                     </tr>
                     <tr>
-                        <td>Period obracuna:</td>
+                        <td>Period obračuna:</td>
                         <td>{rFakture && rFakture.zbirniRacun.periodObracuna}</td>
                     </tr>
                     <tr>
-                        <td>Broj pojedinacnih obracuna:</td>
+                        <td>Broj pojedinačnih obračuna:</td>
                         <td>{rFakture && rFakture.zbirniRacun.brojPojedinacnihObracuna}</td>
                     </tr>
                 </tbody>
@@ -249,7 +248,7 @@ const BackUpFaktureScreen = ({match}) => {
                         <td>{rFakture && rFakture.zbirniRacun.pib}</td>
                     </tr>
                     <tr>
-                        <td>Maticni broj:</td>
+                        <td>Matični broj:</td>
                         <td>{rFakture && rFakture.zbirniRacun.maticniBroj}</td>
                     </tr>
                     <tr>
@@ -270,14 +269,14 @@ const BackUpFaktureScreen = ({match}) => {
             </Row>}
             <br/>
             <br/>
-               {rFakture && <><h5>1. ZBIRNI OBRACUN PO MESTIMA MERENJA</h5>
+               {rFakture && <><h5>1. ZBIRNI OBRAČUN PO MESTIMA MERENJA</h5>
                 <Table id='zbirnatabelax' striped bordered collapse hover variante='dark'>
                     <thead>
                         <tr>
                         <th>Redni broj</th>
                             <th>Broj mesta merenja</th>
                             <th>Naziv mesta merenja</th>
-                            <th>Za isporucenu aktivnu EE</th>
+                            <th>Za isporučenu aktivnu EE</th>
                             <th>Za pristup sistemu dis. EE</th>
                             <th>Za naknadu za povl. proiz. EE i unap. EE</th>
                         </tr>
@@ -298,7 +297,7 @@ const BackUpFaktureScreen = ({match}) => {
                 </Table></>}
                 <br/>
                 <br/>
-                {rFakture && <><h5>2. REKAPITULACIJA ZBIRNOG RACUNA</h5>
+                {rFakture && <><h5>2. REKAPITULACIJA ZBIRNOG RAČUNA</h5>
                 <Table id='zbirnatabelay' striped bordered collapse hover variante='dark'>
                     <tbody>
                         {rFakture && rFakture.zbirniRacun.tabela2.map(item => {
@@ -315,7 +314,7 @@ const BackUpFaktureScreen = ({match}) => {
                         <>
                         <br/>
                         <br/>
-                        <h3>Racun broj {index+1}</h3>
+                        <h3>Račun broj {index+1}</h3>
                         <br/>
                         <Row>
                         <Col>
@@ -338,7 +337,7 @@ const BackUpFaktureScreen = ({match}) => {
                                         <td>{item.odSnaga}{' '}kW</td>
                                     </tr>
                                     <tr>
-                                        <td>Period obracuna:</td>
+                                        <td>Period obračuna:</td>
                                         <td>{item.periodOb}</td>
                                     </tr>
                                     <tr>
@@ -360,7 +359,7 @@ const BackUpFaktureScreen = ({match}) => {
                                         <td>{item.pib}</td>
                                     </tr>
                                     <tr>
-                                        <td>Maticni broj:</td>
+                                        <td>Matični broj:</td>
                                         <td>{item.maticniB}</td>
                                     </tr>
                                     <tr>
@@ -380,14 +379,14 @@ const BackUpFaktureScreen = ({match}) => {
                         </Col>
                         </Row>
                         <br/>
-                        <h5>1. Obracun za isporucenu energiju</h5>
+                        <h5>1. Obračun za isporučenu energiju</h5>
                     <Table id={'tabela'+(index+1).toString()+'-1'} striped bordered collapse hover variante='dark'>
                         <thead>
                         <tr>
                             <th>Naziv</th>
                             <th>Jed. mere</th>
-                            <th>Isporucena kolicina</th>
-                            <th>Jedinicna cena</th>
+                            <th>Isporučena količina</th>
+                            <th>Jedinična cena</th>
                             <th>Iznos</th>
                         </tr>
                     </thead>
@@ -408,14 +407,16 @@ const BackUpFaktureScreen = ({match}) => {
                     </tbody>
                 </Table>
                 <br/>
-                <h5>2. Obracun za pristup sistemu za prenos/distribuciju elektricne energije</h5>
+                <h5>2. Obračun za pristup sistemu za prenos/distribuciju električne energije</h5>
                 <Table id={'tabela'+(index+1).toString()+'-2'}  striped bordered hover variante='dark'>
                     <thead>
+                        <tr>
                         <th>Naziv tarife</th>
-                        <th>Obrac. velicina</th>
-                        <th>Kolicina za obracun</th>
-                        <th>Jedinicna cena</th>
+                        <th>Obrač. veličina</th>
+                        <th>Količina za obračun</th>
+                        <th>Jedinična cena</th>
                         <th>Iznos</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {item.tabela2.map(it => (
@@ -430,14 +431,16 @@ const BackUpFaktureScreen = ({match}) => {
                     </tbody>
                 </Table>
                 <br/>
-                <h5>3. Obracun naknada za podsticaj povlascenih proizvodjaca el. energije i unapredjenje energetske efikasnosti</h5>
+                <h5>3. Obračun naknada za podsticaj povlašćenih proizvođača el. energije i unapređenje energetske efikasnosti</h5>
                 <Table id={'tabela'+(index+1).toString()+'-3'}  striped bordered hover variante='dark'>
                     <thead>
+                        <tr>
                         <th>Naziv</th>
                         <th>Velicina</th>
-                        <th>Kolicina</th>
+                        <th>Količina</th>
                         <th>Jed. cena</th>
                         <th>Iznos</th> 
+                        </tr>
                     </thead> 
                     <tbody>
                         {item.tabela3.map(it => (
@@ -452,7 +455,7 @@ const BackUpFaktureScreen = ({match}) => {
                     </tbody>  
                 </Table>
                 <br/>
-                <h5>4. Rekapitulacija obracuna</h5>
+                <h5>4. Rekapitulacija obračuna</h5>
                 <Table id={'tabela'+(index+1).toString()+'-4'}  striped bordered hover variante='dark'>
                     <thead>
                         <tr>

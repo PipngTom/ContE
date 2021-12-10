@@ -50,7 +50,7 @@ const MeteringScreen = ({history}) => {
                     <thead>
                         <tr>
                             <th>Naziv klijenta</th>
-                            <th>Sifra mernog mesta</th>
+                            <th>Šifra mernog mesta</th>
                             <th>Adresa mernog mesta</th>
                             <th>Kategorija</th>
                             <th>Vrsta snabdevanja</th>

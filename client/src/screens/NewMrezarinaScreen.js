@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Form, Card, Row, Col, Button } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { Form, Card, Row, Col, Button, Modal } from 'react-bootstrap';
 import { mrezarinaSchema } from '../validations/mrezarinaValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -10,9 +10,12 @@ const NewMrezarinaScreen = ({ history, match }) => {
 
     const dispatch = useDispatch()
 
+    const nMrezarina = useSelector(state => state.novaMrezarina)
+    const {  error } = nMrezarina
+
     const idZadnje = match.params.id
 
-    
+    const [ showModal, setShowModal ] = useState(false)
 
     const [mrezarina, setMrezarina] = useState({
         datum: '',
@@ -36,12 +39,7 @@ const NewMrezarinaScreen = ({ history, match }) => {
         sp_domacinstvo_odosnaga: '',
         sp_jednotarifno_jt: '',
         sp_jednotarifno_odosnaga: '',
-        jr_jt: '',
-        pdv: '',
-        akciza: '',
-        naknada_tv: '',
-        naknada_ee: '',
-        naknada_oie: ''
+        jr_jt: ''
     })
 
 
@@ -55,19 +53,39 @@ const NewMrezarinaScreen = ({ history, match }) => {
         setMrezarina({...mrezarina, [e.target.name]: e.target.value})
     }
 
-    const submitMrezarina = () => {
+    const handleCloseModal = () => {
+        if (!error) {
+            history.push('/mrezarina')
+        }
+        setShowModal(false)
+    }
+
+    const submitMrezarina = (data, e) => {
+        e.preventDefault()
         dispatch(saveNewMrezarina(mrezarina, idZadnje))
-        history.push('/mrezarina')
+        setShowModal(true)
     }
 
     return (
       <>
       {/* <h1>New mrezarina</h1> */}
             <Form onSubmit={handleSubmit(submitMrezarina)}>
+            <Modal show={showModal} onHide={handleCloseModal} >
+                <Modal.Header>
+                    <Modal.Title>Obaveštenje</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {error ? error : 'Uspesno ste kreirali novu mrezarinu...'}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant='success' onClick={handleCloseModal}>U redu</Button>
+                </Modal.Footer>
+
+            </Modal>
             <Row>
             <Col xs={5}>
             <Form.Group>
-                <h3>Vazi Od</h3>
+                <h3>Važi Od</h3>
                     <Form.Control type='date' name='datum' placeholder='Vazi Od' value={mrezarina.datum} onChange={handleInput} ></Form.Control>
             </Form.Group>
             </Col>
@@ -78,7 +96,7 @@ const NewMrezarinaScreen = ({ history, match }) => {
                     <Row>
                         <Col>
                             <Form.Group controlId='srednji_napon_vt'>
-                                <Form.Label>Visa tarifa</Form.Label>
+                                <Form.Label>Viša tarifa</Form.Label>
                                 <Form.Control isInvalid={errors.srednji_napon_vt?.message ? true : false} type='name' name='srednji_napon_vt' placeholder='Visa tarifa' value={mrezarina.srednji_napon_vt} {...register('srednji_napon_vt')}
                                 onChange={handleInput}></Form.Control>
                                 <Form.Control.Feedback type='invalid'>{errors.srednji_napon_vt?.message}</Form.Control.Feedback>
@@ -104,7 +122,7 @@ const NewMrezarinaScreen = ({ history, match }) => {
                     <Row>
                         <Col>
                             <Form.Group controlId='srednji_napon_nt'>
-                                <Form.Label>Niza tarifa</Form.Label>
+                                <Form.Label>Niža tarifa</Form.Label>
                                 <Form.Control isInvalid={errors.srednji_napon_nt?.message ? true : false} type='name' name='srednji_napon_nt' placeholder='Niza tarifa' value={mrezarina.srednji_napon_nt} {...register('srednji_napon_nt')}
                                 onChange={handleInput}></Form.Control>
                                 <Form.Control.Feedback type='invalid'>{errors.srednji_napon_nt?.message}</Form.Control.Feedback>
@@ -136,7 +154,7 @@ const NewMrezarinaScreen = ({ history, match }) => {
                     <Row>
                         <Col>
                             <Form.Group controlId='niski_napon_vt'>
-                                <Form.Label>Visa tarifa</Form.Label>
+                                <Form.Label>Viša tarifa</Form.Label>
                                 <Form.Control isInvalid={errors.niski_napon_vt?.message ? true : false} type='name' name='niski_napon_vt' placeholder='Visa tarifa' value={mrezarina.niski_napon_vt} {...register('niski_napon_vt')}
                                 onChange={handleInput}></Form.Control>
                                 <Form.Control.Feedback type='invalid'>{errors.niski_napon_vt?.message}</Form.Control.Feedback>
@@ -162,7 +180,7 @@ const NewMrezarinaScreen = ({ history, match }) => {
                     <Row>
                         <Col>
                             <Form.Group controlId='niski_napon_nt'>
-                                <Form.Label>Niza tarifa</Form.Label>
+                                <Form.Label>Niža tarifa</Form.Label>
                                 <Form.Control isInvalid={errors.niski_napon_nt?.message ? true : false} type='name' name='niski_napon_nt' placeholder='Niza tarifa' value={mrezarina.niski_napon_nt} {...register('niski_napon_nt')}
                                 onChange={handleInput}></Form.Control>
                                 <Form.Control.Feedback type='invalid'>{errors.niski_napon_nt?.message}</Form.Control.Feedback>
@@ -195,7 +213,7 @@ const NewMrezarinaScreen = ({ history, match }) => {
                     <Row>
                         <Col>
                             <Form.Group controlId='sp_dvotarifno_vt'>
-                                <Form.Label>Visa tarifa</Form.Label>
+                                <Form.Label>Viša tarifa</Form.Label>
                                 <Form.Control isInvalid={errors.sp_dvotarifno_vt?.message ? true : false} type='name' name='sp_dvotarifno_vt' placeholder='Visa tarifa' value={mrezarina.sp_dvotarifno_vt} {...register('sp_dvotarifno_vt')}
                                 onChange={handleInput}></Form.Control>
                                 <Form.Control.Feedback type='invalid'>{errors.sp_dvotarifno_vt?.message}</Form.Control.Feedback>
@@ -203,7 +221,7 @@ const NewMrezarinaScreen = ({ history, match }) => {
                         </Col>
                         <Col>
                             <Form.Group controlId='sp_dvotarifno_nt'>
-                                <Form.Label>Niza tarifa</Form.Label>
+                                <Form.Label>Niža tarifa</Form.Label>
                                 <Form.Control isInvalid={errors.sp_dvotarifno_nt?.message ? true : false} type='name' name='sp_dvotarifno_nt' placeholder='Niza tarifa' value={mrezarina.sp_dvotarifno_nt} {...register('sp_dvotarifno_nt')}
                                 onChange={handleInput}></Form.Control>
                                 <Form.Control.Feedback type='invalid'>{errors.sp_dvotarifno_nt?.message}</Form.Control.Feedback>
@@ -223,11 +241,11 @@ const NewMrezarinaScreen = ({ history, match }) => {
             </Card>
             <Card style={{ width: '100%', marginTop: '10px'}} border='success'>
                 <Card.Body>
-                    <Card.Title>Upravljana potrosnja</Card.Title>
+                    <Card.Title>Upravljana potrošnja</Card.Title>
                     <Row>
                         <Col>
                             <Form.Group controlId='sp_domacinstvo_vt'>
-                                <Form.Label>Visa tarifa</Form.Label>
+                                <Form.Label>Viša tarifa</Form.Label>
                                 <Form.Control isInvalid={errors.sp_domacinstvo_vt?.message ? true : false} type='name' name='sp_domacinstvo_vt' placeholder='Visa tarifa' value={mrezarina.sp_domacinstvo_vt} {...register('sp_domacinstvo_vt')}
                                 onChange={handleInput}></Form.Control>
                                 <Form.Control.Feedback type='invalid'>{errors.sp_domacinstvo_vt?.message}</Form.Control.Feedback>
@@ -235,7 +253,7 @@ const NewMrezarinaScreen = ({ history, match }) => {
                         </Col>
                         <Col>
                             <Form.Group controlId='sp_domacinstvo_nt'>
-                                <Form.Label>Niza tarifa</Form.Label>
+                                <Form.Label>Niža tarifa</Form.Label>
                                 <Form.Control isInvalid={errors.sp_domacinstvo_nt?.message ? true : false} type='name' name='sp_domacinstvo_nt' placeholder='Niza tarifa' value={mrezarina.sp_domacinstvo_nt} {...register('sp_domacinstvo_nt')}
                                 onChange={handleInput}></Form.Control>
                                 <Form.Control.Feedback type='invalid'>{errors.sp_domacinstvo_nt?.message}</Form.Control.Feedback>
@@ -297,54 +315,6 @@ const NewMrezarinaScreen = ({ history, match }) => {
                     </Card>
                 </Col>
             </Row>
-            <Card style={{ width: '100%', marginTop: '10px'}} border='success'>
-                <Card.Body>
-                    <Card.Title>Upravljana potrosnja</Card.Title>
-                    <Row>
-                        <Col>
-                            <Form.Group controlId='pdv'>
-                                <Form.Label>PDV</Form.Label>
-                                <Form.Control isInvalid={errors.pdv?.message ? true : false} type='name' name='pdv' placeholder='PDV' value={mrezarina.pdv} {...register('pdv')}
-                                onChange={handleInput}></Form.Control>
-                                <Form.Control.Feedback type='invalid'>{errors.pdv?.message}</Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group controlId='akciza'>
-                                <Form.Label>Akciza</Form.Label>
-                                <Form.Control isInvalid={errors.akciza?.message ? true : false} type='name' name='akciza' placeholder='Akciza' value={mrezarina.akciza} {...register('akciza')}
-                                onChange={handleInput}></Form.Control>
-                                <Form.Control.Feedback type='invalid'>{errors.akciza?.message}</Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group controlId='naknada_tv'>
-                                <Form.Label>TV naknada</Form.Label>
-                                <Form.Control isInvalid={errors.naknada_tv?.message ? true : false} type='name' name='naknada_tv' placeholder='TV naknada' value={mrezarina.naknada_tv} {...register('naknada_tv')}
-                                onChange={handleInput}></Form.Control>
-                                <Form.Control.Feedback type='invalid'>{errors.naknada_tv?.message}</Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group controlId='naknada_ee'>
-                                <Form.Label>Naknada za energetsku efikasnost</Form.Label>
-                                <Form.Control isInvalid={errors.naknada_ee?.message ? true : false} type='name' name='naknada_ee' placeholder='EE naknada' value={mrezarina.naknada_ee} {...register('naknada_ee')}
-                                onChange={handleInput}></Form.Control>
-                                <Form.Control.Feedback type='invalid'>{errors.naknada_ee?.message}</Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group controlId='naknada_oie'>
-                                <Form.Label>Naknada za povl. proizvodjace</Form.Label>
-                                <Form.Control isInvalid={errors.naknada_oie?.message ? true : false} type='name' name='naknada_oie' placeholder='OIE naknada' value={mrezarina.naknada_oie} {...register('naknada_oie')}
-                                onChange={handleInput}/>
-                                <Form.Control.Feedback type='invalid'>{errors.naknada_oie?.message}</Form.Control.Feedback> 
-                            </Form.Group>
-                        </Col>
-                    </Row>
-
-            </Card.Body>
-            </Card>
             <br/>
             <br/>
             <Row>

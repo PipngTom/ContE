@@ -68,7 +68,12 @@ const Header = () => {
               </LinkContainer>}
               {userInfo && <LinkContainer to="/mrezarina">
                 <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Mrezarina
+                  <i className="fas fa-user-plus"></i> Mrežarina
+                </Nav.Link>
+              </LinkContainer>}
+              {userInfo && <LinkContainer to="/nameti">
+                <Nav.Link>
+                  <i className="fas fa-user-plus"></i> Nameti
                 </Nav.Link>
               </LinkContainer>}
               {userInfo && <LinkContainer to="/fakture">
@@ -79,6 +84,11 @@ const Header = () => {
               {userInfo && <LinkContainer to="/balansna">
                 <Nav.Link>
                   <i className="fas fa-user-plus"></i> Balansna odgovornost
+                </Nav.Link>
+              </LinkContainer>}
+              {userInfo && <LinkContainer to="/ems">
+                <Nav.Link>
+                  <i className="fas fa-user-plus"></i> EMS
                 </Nav.Link>
               </LinkContainer>}
               {userInfo && <LinkContainer to="/fakturaklijent">

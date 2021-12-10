@@ -134,7 +134,7 @@ const BalansnaOdogovrnostScreen = () => {
         <div>
             <h1>Balansna odgovornost</h1>
             <Button type='submit' variant='primary' onClick={generateProfilHandler}>
-                    Generisi profil
+                    Generiši profil
             </Button>
             <Form>
             <Form.Group controlId='selectedMetering'>
@@ -188,7 +188,7 @@ const BalansnaOdogovrnostScreen = () => {
                     <thead>
                         <tr>
                             <th>Naziv klijenta</th>
-                            <th>Sifra mernog mesta</th>
+                            <th>Šifra mernog mesta</th>
                             <th>Adresa mernog mesta</th>
                             <th>Kategorija</th>
                             <th>Vrsta snabdevanja</th>
@@ -208,7 +208,7 @@ const BalansnaOdogovrnostScreen = () => {
                             <td></td>
                             <td>
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                    <Form.Check type="checkbox" label="Cekiraj sve" checked={selectedAllMeters}  onChange={checkAllHandler}/>
+                                    <Form.Check type="checkbox" label="Čekiraj sve" checked={selectedAllMeters}  onChange={checkAllHandler}/>
                                 </Form.Group>
                             </td>
                         </tr>
@@ -223,7 +223,7 @@ const BalansnaOdogovrnostScreen = () => {
                                 <td>{nadjiNazivVrsteSnabdevanja(item.vrstaSnabdevanja)}</td>
                                 <td>
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                    <Form.Check type="checkbox" checked={selectedMeters && selectedMeters.find((elem)=>elem.id ==item.id)} label="Cekiraj" onChange={(e)=>checkHandler(e, item.id)}/>
+                                    <Form.Check type="checkbox" checked={selectedMeters && selectedMeters.find((elem)=>elem.id ==item.id)} label="Čekiraj" onChange={(e)=>checkHandler(e, item.id)}/>
                                 </Form.Group>
                                 </td>
                             </tr>  

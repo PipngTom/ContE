@@ -169,7 +169,7 @@ const ContractsScreen = ({history}) => {
                     <Modal.Title>Brisanje ugovora</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Da li ste sigurni da zelite da obrisete ugovor?
+                    Da li ste sigurni da zelite da obrišete ugovor?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant='success' onClick={handleDeleteClose}>Nazad</Button>

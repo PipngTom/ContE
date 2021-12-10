@@ -4,13 +4,23 @@ import {
     GET_SINGLE_CONTRACT_REQUEST, GET_SINGLE_CONTRACT_SUCCESS, GET_SINGLE_CONTRACT_FAIL, GET_SINGLE_CONTRACT_BY_CLIENT_ID_REQUEST, GET_SINGLE_CONTRACT_BY_CLIENT_ID_SUCCESS, GET_SINGLE_CONTRACT_BY_CLIENT_ID_FAIL, CONTRACT_DELETE_REQUEST, CONTRACT_DELETE_FAIL} from '../constants/contractConstants';
 import axios from 'axios';
 
-export const getAllContracts= () => async (dispatch) => {
+export const getAllContracts= () => async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_ALL_CONTRACTS_REQUEST
       })
 
-      const { data } = await axios.get('/api/contracts') 
+      const {
+        userLogin: { userInfo },
+      } = getState()
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        }
+      }
+
+      const { data } = await axios.get('/api/contracts', config) 
   
       dispatch({
         type: GET_ALL_CONTRACTS_SUCCESS,
@@ -57,13 +67,24 @@ export const getAllContracts= () => async (dispatch) => {
   
   }
 
-  export const getSingleContract= (id) => async (dispatch) => {
+  export const getSingleContract= (id) => async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_SINGLE_CONTRACT_REQUEST
       })
 
-      const { data } = await axios.get(`/api/contracts/${id}`) 
+      const {
+        userLogin: { userInfo },
+      } = getState()
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        }
+      }
+
+
+      const { data } = await axios.get(`/api/contracts/${id}`, config) 
   
       dispatch({
         type: GET_SINGLE_CONTRACT_SUCCESS,
@@ -84,7 +105,8 @@ export const getSingleContractByMeterId= (meterId) => async (dispatch) => {
       type: GET_SINGLE_CONTRACT_REQUEST
     })
 
-    const { data } = await axios.get((`/api/fakture/${meterId}`)) 
+
+    const { data } = await axios.get(`/api/fakture/${meterId}`) 
 
     dispatch({
       type: GET_SINGLE_CONTRACT_SUCCESS,
@@ -112,7 +134,7 @@ export const getSingleContractByClientId = (clientId, datum) => async (dispatch)
     }
 
     const {data}  = await axios.post(`/api/contracts/ugovorklijent`, {clientId, datum}, config)
-    console.log(data)
+    
     dispatch({
       type: GET_SINGLE_CONTRACT_BY_CLIENT_ID_SUCCESS,
       payload: data[0]

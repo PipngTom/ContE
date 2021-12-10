@@ -1,14 +1,24 @@
 import { GET_MREZARINA_REQUEST, GET_MREZARINA_SUCCESS, GET_MREZARINA_FAIL, GET_MREZARINA_RESET, MREZARINA_UPDATE_REQUEST, MREZARINA_UPDATE_SUCCESS, MREZARINA_UPDATE_FAIL, GET_ALL_MREZARINA_REQUEST, GET_ALL_MREZARINA_FAIL, GET_ALL_MREZARINA_SUCCESS, NEW_MREZARINA_REQUEST, NEW_MREZARINA_FAIL, NEW_MREZARINA_SUCCESS } from '../constants/mrezarinaConstants';
 import axios from 'axios';
 
-export const getAllMrezarina = () => async (dispatch) => {
+export const getAllMrezarina = () => async (dispatch, getState) => {
   try {
     dispatch({
       type: GET_ALL_MREZARINA_REQUEST
     })
 
-    const {data} = await axios.get('/api/mrezarina/sve')
-    console.log(data)
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      }
+    }
+
+    const {data} = await axios.get('/api/mrezarina', config)
+ 
     dispatch({
       type: GET_ALL_MREZARINA_SUCCESS,
       payload: data
@@ -21,7 +31,7 @@ export const getAllMrezarina = () => async (dispatch) => {
   }
 }
 
-export const getMrezarina= () => async (dispatch, getState) => {
+export const getMrezarina= (id) => async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_MREZARINA_REQUEST
@@ -37,7 +47,7 @@ export const getMrezarina= () => async (dispatch, getState) => {
         }
       }
 
-      const { data } = await axios.get(`/api/mrezarina`, config) 
+      const { data } = await axios.get(`/api/mrezarina/${id}`, config) 
   
       dispatch({
         type: GET_MREZARINA_SUCCESS,
@@ -52,7 +62,30 @@ export const getMrezarina= () => async (dispatch, getState) => {
     }
 }
 
-export const updateMrezarina = (mrezarina) => async (dispatch) => {
+export const getMrezarinaPoDatumu = (datum) => async (dispatch, getState) => {
+  try {
+    dispatch({type: GET_MREZARINA_REQUEST})
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    
+    const {data} = await axios.get('/api/mrezarina/faktura/podatumu', {params : {datum: datum}, headers: {Authorization: `Bearer ${userInfo.token}`}})
+    
+    dispatch({
+      type: GET_MREZARINA_SUCCESS,
+      payload: data[0]
+    })
+  } catch (err) {
+    dispatch({
+      type: GET_MREZARINA_FAIL,
+      payload: err
+    })
+  }
+}
+
+export const updateMrezarina = (mrezarina, id) => async (dispatch) => {
     try {
       
 
@@ -66,8 +99,8 @@ export const updateMrezarina = (mrezarina) => async (dispatch) => {
         }
       }
   
-      const { data } = await axios.post('/api/mrezarina', mrezarina, config) 
-      console.log(data)
+      const { data } = await axios.post('/api/mrezarina/update', {mrezarina: mrezarina, idpret: id}, config) 
+      
       if(data.affectedRows==1){
         dispatch({
             type: GET_MREZARINA_RESET
@@ -88,7 +121,6 @@ export const updateMrezarina = (mrezarina) => async (dispatch) => {
   }
 
   export const saveNewMrezarina = (mrezarina, idZadnje) => async (dispatch) => {
-    try {
 
       const pack = {...mrezarina, idZadnje}
       dispatch({
@@ -102,14 +134,18 @@ export const updateMrezarina = (mrezarina) => async (dispatch) => {
       }
 
       const { data } = await axios.post('/api/mrezarina/new', pack, config)
-      dispatch({
-        type: NEW_MREZARINA_SUCCESS,
-        payload: data[0]
-      })
-    } catch (error) {
-      dispatch({
-        type: NEW_MREZARINA_FAIL,
-        payload: error
-      })
-    }
+      
+
+      if (data.affectedRows != 0) {
+        dispatch({
+          type: NEW_MREZARINA_SUCCESS,
+          payload: data[0]
+        })
+      } else {
+        dispatch({
+          type: NEW_MREZARINA_FAIL,
+          payload: 'Mrezarina vec postoji za taj datum'
+        })
+      }
+    
   }

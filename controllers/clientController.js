@@ -1,7 +1,10 @@
 import db from '../db/db.js';
+import { log } from '../middleware/logFunkcija.js';
 
 const newClient = (req, res) => {
-  console.log(req.body)
+
+  const { name, email } = req
+  
   const { nazivKlijenta, adresaKlijenta, postanskiBroj, opstina, kontaktMail, kontaktTelefon, pib, glavniPibUgovora, maticniBroj, pdv, nazivBanke, racunBanka, odgovornoLice, kontaktOsoba, sajt, firma, balansOdg, podUgovorom, zbirniRacun, tipPotrosaca } = req.body
     let query;
     if(req.body.id){
@@ -21,6 +24,12 @@ const newClient = (req, res) => {
     connection.query(query, (err, rows) => {
       connection.release()
       if (!err) {
+        if(req.body.id) {
+          log(name, email, 'UPDATE CLIENT', req.body)
+        } else {
+          log(name, email, 'NEW CLIENT', req.body)
+        }
+
         res.send(rows)
       } else {
         console.log(err)
@@ -31,6 +40,8 @@ const newClient = (req, res) => {
 }
 
 const getAllClients = (req, res) => {
+
+    const { name, email } = req
       
     const query = `SELECT * FROM klijenti`;
   
@@ -41,6 +52,7 @@ const getAllClients = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'GET ALL CLIENTS', rows)
           res.send(rows)
         } else {
           console.log(err)
@@ -50,6 +62,8 @@ const getAllClients = (req, res) => {
   }
 
   const getSingleClient = (req, res) => {
+
+    const {name, email} = req
 
     const id = req.params.id
       
@@ -62,6 +76,7 @@ const getAllClients = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'GET SINGLE CLIENT', rows)
           res.send(rows)
         } else {
           console.log(err)
@@ -73,6 +88,8 @@ const getAllClients = (req, res) => {
   const getSingleClientByMeterId = (req, res) => {
     const id = req.params.id
 
+    const { name, email } = req
+
     const query = `SELECT * FROM users.klijenti WHERE id in (SELECT idKlijent FROM users.brojila WHERE id=${id})`
 
     db.getConnection((err, connection) => {
@@ -82,6 +99,7 @@ const getAllClients = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'GET CLIENT BY METERID', rows)
           res.send(rows)
         } else {
           console.log(err)

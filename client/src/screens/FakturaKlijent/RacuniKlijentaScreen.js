@@ -3,18 +3,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Table, Form, Button } from 'react-bootstrap';
 import { getAllMetersByClientId } from '../../actions/meterActions';
 import { getSingleClient } from '../../actions/clientActions';
-import { getMrezarina } from '../../actions/mrezarinaActions';
+import { getMrezarinaPoDatumu } from '../../actions/mrezarinaActions';
+import { getNametiPoDatumu } from '../../actions/nametiActions';
 import { getSingleContractByClientId } from '../../actions/contractActions';
 import { getFakturaMetering } from '../../actions/meteringActions';
 import { backupFaktura } from '../../actions/backupFakturaActions';
+import { kursEura } from '../../actions/kursEuraActions';
 import { nadjiTabeluPoKategoriji, nadjiNazivPoKategoriji, nadjiNazivVrsteSnabdevanja } from '../../constants/brojila';
-import { nadjiPocetakObracuna, nadjiKrajObracuna, nadjiNazivMeseca, nadjiVazeciUgovor} from '../../constants/datum';
+import { nadjiPocetakObracuna, nadjiKrajObracuna, nadjiNazivMeseca } from '../../constants/datum';
 import { dajPunNaziv, dajMeru } from '../Fakture/pomocnaFunkcija';
 import { backupFunkcija } from './backupFunkcija';
 import FormContainer from '../../components/FormContainer';
-import { imgData } from './img'; 
+import { imgData1 } from './img'; 
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import * as DejaVuSans from './DejaVuSans-normal';
 import { FAKTURA_METERING_RESET } from '../../constants/meteringConstants';
 
 const RacuniKlijentaScreen = ({ match }) => {
@@ -42,12 +45,14 @@ const RacuniKlijentaScreen = ({ match }) => {
     const singleContractByClient = useSelector(state => state.singleContractByClient)
     const { singleContractByClient: contract } = singleContractByClient
 
+    const trenutniNameti = useSelector(state => state.jNamet)
+    const { namet } = trenutniNameti
+
 
     useEffect(() => {
         if (clientId){
             dispatch(getAllMetersByClientId(clientId))
             dispatch(getSingleClient(clientId))
-            dispatch(getMrezarina())
             dispatch({type: FAKTURA_METERING_RESET})
         }
         
@@ -65,20 +70,21 @@ const RacuniKlijentaScreen = ({ match }) => {
     const createPdfHandler = () => {
 
         var doc = new jsPDF('p','pt', 'a4')
+        doc.setFont('DejaVuSans', 'normal');
 
         var y= 30
             doc.setLineWidth(2)
-            doc.text(150, y = y + 30, `Racun za elektricnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
+            doc.text(150, y = y + 30, `Račun za električnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
     
             
     
-            doc.addImage(imgData, 'JPEG', 20, 10, 550, 30)
+            doc.addImage(imgData1, 'PNG', 20, 10, 129, 32)
     
             doc.autoTable({
                 html: '#tabelaglavna',
                 theme: 'striped',
                 startY: 70,
-                styles: { fontSize: 6 },
+                styles: { fontSize: 6, font: 'DejaVuSans' },
                 bodyStyles: { cellWidth: 100 }
             })
             doc.setFontSize(8)
@@ -92,21 +98,21 @@ const RacuniKlijentaScreen = ({ match }) => {
             doc.text(400, 120, `${client.kontaktMail}`)
 
         doc.setFontSize(12)
-            doc.text('1. Zbirni obracun po mestima merenja', 40, doc.autoTable.previous.finalY + 15)
+            doc.text('1. Zbirni obračun po mestima merenja', 40, doc.autoTable.previous.finalY + 15)
             doc.autoTable({
                 html: `#zbirnatabelax`,
                 theme: 'grid',
-                styles: { cellPadding: 4 },
+                styles: { cellPadding: 4, font: 'DejaVuSans' },
                 headStyles:  { halign: 'center', valign: 'middle'} ,
                 columnStyles: { 0: { halign: 'center', valign: 'middle' }, 1: { halign: 'right', cellWidth: 80 }, 2: { halign: 'right', cellWidth: 100 }, 3: { halign: 'right'}, 4: { halign: 'right' }, 5: { halign: 'right', cellWidth: '100' }}
             })
 
             doc.setFontSize(12)
-            doc.text('2. Rekapitulacija zbirnog racuna', 40, doc.autoTable.previous.finalY + 15)
+            doc.text('2. Rekapitulacija zbirnog računa', 40, doc.autoTable.previous.finalY + 15)
             doc.autoTable({
                 html: `#zbirnatabelay`,
                 theme: 'grid',
-                styles: { cellPadding: 4 },
+                styles: { cellPadding: 4, font: 'DejaVuSans' },
                 headStyles:  { halign: 'center', valign: 'middle'} ,
                 columnStyles: { 1: { halign: 'right', cellWidth: 70 }, 2: { halign: 'right', cellWidth: 110 }}
             })
@@ -115,17 +121,17 @@ const RacuniKlijentaScreen = ({ match }) => {
         fakMetering.forEach((_, index)=>{
             var y= 30
             doc.setLineWidth(2)
-            doc.text(150, y = y + 30, `Racun za eletricnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
+            doc.text(150, y = y + 30, `Račun za eletričnu energiju - ${nadjiNazivMeseca(mesecMerenja.toString()).toUpperCase()}${' '}${godinaMerenja}`)
     
             
     
-            doc.addImage(imgData, 'JPEG', 20, 10, 550, 30)
+            doc.addImage(imgData1, 'JPEG', 20, 10, 129, 32)
     
             doc.autoTable({
                 html: `#tabelay${index+1}`,
                 theme: 'striped',
                 startY: 70,
-                styles: { fontSize: 6 },
+                styles: { fontSize: 6, font: 'DejaVuSans' },
                 bodyStyles: { cellWidth: 100 }
             })
             doc.setFontSize(8)
@@ -139,46 +145,48 @@ const RacuniKlijentaScreen = ({ match }) => {
             doc.text(400, 120, `${client.kontaktMail}`)
 
     
-            doc.setFontSize(12)
-            doc.text('1. Obracun za isporucenu energiju', 40, doc.autoTable.previous.finalY + 15)
+            doc.setFontSize(10)
+            doc.text('1. Obračun za isporučenu energiju', 40, doc.autoTable.previous.finalY + 15)
+            
             doc.autoTable({
                 html: `#tabela${index+1}-1`,
                 theme: 'grid',
-                styles: { cellPadding: 2 },
+                styles: { cellPadding: 2, font: 'DejaVuSans' },
                 headStyles:  { halign: 'center', valign: 'middle'} ,
                 columnStyles: { 1: { halign: 'center', cellWidth: 50 }, 2: { halign: 'right', cellWidth: 80 }, 3: { halign: 'right', cellWidth: 90 }, 4: { halign: 'right'}}
             })
-            doc.setFontSize(12)
-            doc.text('2. Obracun za pristup sistemu za prenos/distribuciju elektricne energije', 40, doc.autoTable.previous.finalY + 15)
+            doc.setFontSize(10)
+            doc.text('2. Obračun za pristup sistemu za prenos/distribuciju električne energije', 40, doc.autoTable.previous.finalY + 15)
              doc.autoTable({
                 html: `#tabela${index+1}-2`, 
                 theme: 'grid',
-                styles: {cellPadding: 2},
+                styles: {cellPadding: 2, font: 'DejaVuSans'},
                 headStyles: { halign: 'center', valign: 'middle'} ,
                 columnStyles: {1: {halign: 'center', cellWidth: 50}, 2: {halign: 'right', cellWidth: 80}, 3: { halign: 'right', cellWidth: 80 }, 4: {halign: 'right'}}
             }) 
-            doc.setFontSize(12)
-            doc.text('3. Obracun naknada za podsticaj povl. proizvodjaca el. energije i unapredjenje energetske efikasnosti', 40, doc.autoTable.previous.finalY + 15)
+            doc.setFontSize(10)
+            doc.text('3. Obračun naknada za podsticaj povl. proizvodjača el. energije i unapređenje energetske efikasnosti', 40, doc.autoTable.previous.finalY + 15)
             doc.autoTable({
                 html: `#tabela${index+1}-3`, theme: 'grid',
-                styles: {cellPadding: 2},
+                styles: {cellPadding: 2, font: 'DejaVuSans'},
                 headStyles: { halign: 'center'} ,
                 columnStyles: { 0: { cellWidth: 300 }, 1: { halign: 'center', cellWidth: 60 }, 2: { halign: 'right' }, 3: { halign: 'right' }, 4: {halign: 'right'}  } 
             }) 
-            doc.setFontSize(12)
+            doc.setFontSize(10)
             doc.text('4. Rekapitulacija', 40, doc.autoTable.previous.finalY + 15)
             doc.autoTable({
                 html: `#tabela${index+1}-4`,
                 theme: 'grid',
-                styles: {cellPadding: 2},
+                styles: {cellPadding: 2, font: 'DejaVuSans'},
                 columnStyles: { 1: { halign: 'right' } }
             })
             if (index < fakMetering.length - 1)
             doc.addPage() 
         })
        
-        const faktura = backupFunkcija(client, fakMetering, contract, metersByClientId, mrezarinaZaFakturu, mesecMerenja, godinaMerenja)
+        const faktura = backupFunkcija(client, fakMetering, contract, metersByClientId, mrezarinaZaFakturu, namet, mesecMerenja, godinaMerenja)
         dispatch(backupFaktura(faktura))
+        
         doc.save('Faktura proba.pdf')
     }
 
@@ -194,8 +202,10 @@ const RacuniKlijentaScreen = ({ match }) => {
       // const datumUgovora = nadjiVazeciUgovor(mesecMerenja) + godinaMerenja
       const datumUgovora = godinaMerenja + '-' + (Number(mesecMerenja)+1).toString() + '-15'
        dispatch(getSingleContractByClientId(clientId, datumUgovora))
+       dispatch(getMrezarinaPoDatumu(datumUgovora))
+       dispatch(getNametiPoDatumu(datumUgovora))
+       dispatch(kursEura(datumUgovora))
        dispatch(getFakturaMetering(rezultatNiza, mesecMerenja, godinaMerenja))
-       console.log(datumUgovora)
     }
     const numberWithDots = (x) => {
         return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
@@ -267,7 +277,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                         <td>{nadjiPocetakObracuna(mesecMerenja) + godinaMerenja}{' - '}{nadjiKrajObracuna(mesecMerenja) + godinaMerenja}</td>
                     </tr>
                     <tr>
-                        <td>Broj pojedinacnih obracuna:</td>
+                        <td>Broj pojedinačnih obračuna:</td>
                         <td>{fakMetering && fakMetering.length}</td>
                     </tr>
                 </tbody>
@@ -281,7 +291,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                         <td>{client && client.pib}</td>
                     </tr>
                     <tr>
-                        <td>Maticni broj:</td>
+                        <td>Matični broj:</td>
                         <td>{client && client.maticniBroj}</td>
                     </tr>
                     <tr>
@@ -315,7 +325,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                             <th>Redni broj</th>
                             <th>Broj mesta merenja</th>
                             <th>Naziv mesta merenja</th>
-                            <th>Za isporucenu aktivnu EE</th>
+                            <th>Za isporučenu aktivnu EE</th>
                             <th>Za pristup sistemu dis. EE</th>
                             <th>Za naknadu za povl. proiz. EE i unap. EE</th>
                         </tr>
@@ -351,7 +361,8 @@ const RacuniKlijentaScreen = ({ match }) => {
 
                         let sum1 = (item[0].vt ? (item[0].vt * (contract && contract.cenaVT)) : 0) + (item[0].nt ? (item[0].nt * (contract && contract.cenaNT)) : 0) + (item[0].jt ? (item[0].jt * (contract && contract.cenaJT)) : 0)
                         sumEnergija = sumEnergija + sum1
-                        let sum3 = sumEN * ((mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_ee) + (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_oie))
+                        
+                        let sum3 = sumEN * ((namet && namet.naknadaEe) + (namet && namet.naknadaOie))
                         sumNaknada = sumNaknada + sum3
                          
                         return       <tr>
@@ -375,10 +386,10 @@ const RacuniKlijentaScreen = ({ match }) => {
                         </tbody>
                         </Table>
                         <Table id='zbirnatabelay' striped bordered collapse hover variante='dark'>
-                            <h5>2. REKAPITULACIJA ZBIRNOG RACUNA</h5>
+                            <h5>2. REKAPITULACIJA ZBIRNOG RAČUNA</h5>
                             <tbody>
                                 <tr>
-                                    <td>Isporucena elektricna energija</td>
+                                    <td>Isporučena električna energija</td>
                                     <td>1</td>
                                     <td>{numberWithDots(sumEnergija.toFixed(2))}</td>
                                 </tr>
@@ -388,27 +399,27 @@ const RacuniKlijentaScreen = ({ match }) => {
                                     <td>0,00</td>
                                 </tr>
                                 <tr>
-                                    <td>Pristup sistemu za prenos/distribuciju eletricne energije</td>
+                                    <td>Pristup sistemu za prenos/distribuciju eletrične energije</td>
                                     <td>3</td>
                                     <td>{numberWithDots(sumMrezarina.toFixed(2))}</td>
                                 </tr>
                                 <tr>
-                                    <td>Naknada za podsticaj povlascenih proizvodjaca el. energije i unapredjenje EE</td>
+                                    <td>Naknada za podsticaj povlašćenih proizvodjača el. energije i unapređenje EE</td>
                                     <td>4</td>
                                     <td>{numberWithDots(sumNaknada.toFixed(2))}</td>
                                 </tr>
                                 <tr>
-                                    <td>Osnovica za obracun akcize</td>
+                                    <td>Osnovica za obračun akcize</td>
                                     <td>5=1+2+3+4</td>
                                     <td>{numberWithDots((sumEnergija + sumMrezarina + sumNaknada).toFixed(2))}</td>
                                 </tr>
                                 <tr>
-                                    <td>Iznos obracunate akcize</td>
+                                    <td>Iznos obračunate akcize</td>
                                     <td>6=5*0.075</td>
                                     <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 0.075).toFixed(2))}</td>
                                 </tr>
                                 <tr>
-                                    <td>Oslobodjen placanja akcize u skladu sa clanom 40lj stav 1 Zakona o akcizama</td>
+                                    <td>Oslobođen plaćanja akcize u skladu sa članom 40lj stav 1 Zakona o akcizama</td>
                                     <td>7</td>
                                     <td>0,00</td>
                                 </tr>
@@ -427,7 +438,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                                     <td>10</td>
                                     <td>{metersByClientId && metersByClientId.reduce((acc, curr) => {
                                         return acc + curr.taksa
-                                    }, 0 ) * (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv)}</td>
+                                    }, 0 ) * (namet && namet.naknadaTv)}</td>
                                 </tr> 
                                 <tr>
                                     <td>Avans - osnovica</td>
@@ -454,7 +465,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                                     <td>15=13+14+10</td>
                                     <td>{numberWithDots(((sumEnergija + sumMrezarina + sumNaknada) * 1.29 + (metersByClientId && metersByClientId.reduce((acc, curr) => {
                                         return acc + curr.taksa
-                                    }, 0 ) * (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv))).toFixed(2))}</td>
+                                    }, 0 ) * (namet && namet.naknadaTv))).toFixed(2))}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -474,12 +485,12 @@ const RacuniKlijentaScreen = ({ match }) => {
 
                 let sum1 = (item[0].vt ? (item[0].vt *(contract && contract.cenaVT)) : 0) + (item[0].nt ? (item[0].nt * (contract && contract.cenaNT)) : 0) + (item[0].jt ? (item[0].jt * (contract && contract.cenaJT)) : 0)
                 
-                let sum3 = sumEN * ((mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_ee) + (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_oie))
+                let sum3 = sumEN * ((namet && namet.naknadaEe) + (namet && namet.naknadaOie))
 
                 return <><div style={{backgroundColor: '#e6f2ff', marginTop: '20px', padding: '30px', boxShadow: "1px 3px 1px #9E9E9E"}}>{item.length !== 0 &&
                     <>
                     
-                    <h3>Racun broj {index+1}</h3>
+                    <h3>Račun broj {index+1}</h3>
                     <Row>
             <Col>
             <Table id={'tabelay' + (index+1).toString()} collapse hover variante='dark'>
@@ -502,7 +513,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                         <td>{item[0].odosnaga}{' '}kW</td>
                     </tr>
                     <tr>
-                        <td>Period obracuna</td>
+                        <td>Period obračuna</td>
                         <td>{item[0].datumpoc}{' - '}{item[0].datumkr}</td>
                     </tr>
                     <tr>
@@ -524,7 +535,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                         <td>{client && client.pib}</td>
                     </tr>
                     <tr>
-                        <td>Maticni broj:</td>
+                        <td>Matični broj:</td>
                         <td>{client && client.maticniBroj}</td>
                     </tr>
                     <tr>
@@ -545,21 +556,21 @@ const RacuniKlijentaScreen = ({ match }) => {
             </Row> 
             <br/>
             <br/>
-                <h5>1. Obracun za isporucenu energiju</h5>
+                <h5>1. Obračun za isporučenu energiju</h5>
                 <Table id={'tabela'+(index+1).toString()+'-1'} striped bordered hover variante='dark'>
                             <thead>
                                 <tr>
                                     <th>Naziv</th>
                                     <th>Jed. mere</th>
-                                    <th>Isporucena kolicina</th>
-                                    <th>Jedinicna cena</th>
+                                    <th>Isporučena količina</th>
+                                    <th>Jedinična cena</th>
                                     <th>Iznos</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 
-                                {(item[0].vt || item[0].vt === 0) ? <tr><td>Visa tarifa</td><td>kWh</td><td>{item[0].vt}</td><td>{contract && contract.cenaVT}</td><td>{numberWithDots(((contract && contract.cenaVT) * item[0].vt).toFixed(2))}</td></tr> : ''}
-                                {(item[0].nt || item[0].nt === 0) ? <tr><td>Niza tarifa</td><td>kWh</td><td>{item[0].nt}</td><td>{contract && contract.cenaNT}</td><td>{numberWithDots(((contract && contract.cenaNT) * item[0].nt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].vt || item[0].vt === 0) ? <tr><td>Viša tarifa</td><td>kWh</td><td>{item[0].vt}</td><td>{contract && contract.cenaVT}</td><td>{numberWithDots(((contract && contract.cenaVT) * item[0].vt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].nt || item[0].nt === 0) ? <tr><td>Niža tarifa</td><td>kWh</td><td>{item[0].nt}</td><td>{contract && contract.cenaNT}</td><td>{numberWithDots(((contract && contract.cenaNT) * item[0].nt).toFixed(2))}</td></tr> : ''}
                                 {(item[0].jt || item[0].jt === 0) ? <tr><td>Jedinstvena tarifa</td><td>kWh</td><td>{item[0].jt}</td><td>{contract && contract.cenaJT}</td><td>{numberWithDots(((contract && contract.cenaJT) * item[0].jt).toFixed(2))}</td></tr> : ''}
                                 <tr>
                                     <td></td>
@@ -574,14 +585,16 @@ const RacuniKlijentaScreen = ({ match }) => {
                         </Table>
                         <br/>
                         <br/>
-                         <h5>2. Obracun za pristup sistemu za prenos/distribuciju elektricne energije</h5>
+                         <h5>2. Obračun za pristup sistemu za prenos/distribuciju električne energije</h5>
                         <Table id={'tabela'+(index+1).toString()+'-2'}  striped bordered hover variante='dark'>
                             <thead>
+                                <tr>
                                 <th>Naziv tarife</th>
-                                <th>Obrac. velicina</th>
-                                <th>Kolicina za obracun</th>
-                                <th>Jedinicna cena</th>
+                                <th>Obrač. veličina</th>
+                                <th>Količina za obračun</th>
+                                <th>Jedinična cena</th>
                                 <th>Iznos</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {Object.keys(item[0]).map(it => {
@@ -625,29 +638,31 @@ const RacuniKlijentaScreen = ({ match }) => {
                         </Table> 
                         <br/>
                         <br/>
-                        <h5>3. Obracun naknada za podsticaj povlascenih proizvodjaca el. energije i unapredjenje energetske efikasnosti</h5>
+                        <h5>3. Obračun naknada za podsticaj povlašćenih proizvođača el. energije i unapređenje energetske efikasnosti</h5>
                         <Table id={'tabela'+(index+1).toString()+'-3'}  striped bordered hover variante='dark'>
                             <thead>
+                                <tr>
                                 <th>Naziv</th>
-                                <th>Velicina</th>
-                                <th>Kolicina</th>
+                                <th>Veličina</th>
+                                <th>Količina</th>
                                 <th>Jed. cena</th>
                                  <th>Iznos</th> 
+                                </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Naknada za podsticaj povlascenih proizvodjaca el. energije</td>
+                                    <td>Naknada za podsticaj povlašćenih proizvođača el. energije</td>
                                     <td>kWh</td>
                                     <td>{numberWithDots(sumEN.toFixed(2))}</td>
-                                    <td>{mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_oie}</td>
-                                    <td>{numberWithDots((sumEN * (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_oie)).toFixed(2))}</td> 
+                                    <td>{namet && namet.naknadaOie}</td>
+                                    <td>{numberWithDots((sumEN * (namet && namet.naknadaOie)).toFixed(2))}</td> 
                                     </tr>
                                     <tr>
-                                        <td>Naknada za unapredjenje energetske efikasnosti</td>
+                                        <td>Naknada za unapređenje energetske efikasnosti</td>
                                         <td>kWh</td>
                                         <td>{numberWithDots(sumEN.toFixed(2))}</td>
-                                        <td>{mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_ee}</td>
-                                        <td>{numberWithDots((sumEN * (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_ee)).toFixed(2))}</td>
+                                        <td>{namet && namet.naknadaEe}</td>
+                                        <td>{numberWithDots((sumEN * (namet && namet.naknadaEe)).toFixed(2))}</td>
                                     </tr>
                                     <tr>
                                         <td></td>
@@ -660,7 +675,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                         </Table>
                         <br/>
                         <br/>
-                        <h5>4. Rekapitulacija obracuna</h5>
+                        <h5>4. Rekapitulacija obračuna</h5>
                         <Table id={'tabela'+(index+1).toString()+'-4'}  striped bordered hover variante='dark'>
                             <thead>
                                 <tr>
@@ -670,45 +685,46 @@ const RacuniKlijentaScreen = ({ match }) => {
                             </thead>
                             <tbody>
                                 <tr>
-                                   <td>Isporucena elektricna energija</td>
+                                   <td>Isporučena električna energija</td>
                                    <td>{numberWithDots(sum1.toFixed(2))}</td>
                                 </tr>
                                 <tr>
-                                   <td>Pristup sistemu za prenos/distribuciju elektricne energije</td>
+                                   <td>Pristup sistemu za prenos/distribuciju električne energije</td>
                                    <td>{numberWithDots(sum2.toFixed(2))}</td>
                                 </tr>
                                 <tr>
-                                   <td>Naknada za podsticaj povlascenih proizvodjaca el. energije</td>
-                                   <td>{numberWithDots((sumEN * (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_oie)).toFixed(2))}</td>
+                                   <td>Naknada za podsticaj povlašćenih proizvođača el. energije</td>
+                                   <td>{numberWithDots((sumEN * (namet && namet.naknadaOie)).toFixed(2))}</td>
                                 </tr>
                                 <tr>
-                                   <td>Naknada za unapredjenje energetske efikasnosti</td>
-                                   <td>{numberWithDots((sumEN * (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_ee)).toFixed(2))}</td>
+                                   <td>Naknada za unapređenje energetske efikasnosti</td>
+                                   <td>{numberWithDots((sumEN * (namet && namet.naknadaEe)).toFixed(2))}</td>
                                 </tr>
                                 <tr>
-                                   <td>Osnova za obracun akcize</td>
+                                   <td>Osnova za obračun akcize</td>
                                    <td>{numberWithDots((sum1 + sum2 + sum3).toFixed(2))}</td>
                                 </tr>
                                 <tr>
-                                   <td>Iznos obracunate akcize stopa {mrezarinaZaFakturu && mrezarinaZaFakturu.akciza * 100}%</td>
-                                   <td>{numberWithDots(((sum1 + sum2 + sum3) * (mrezarinaZaFakturu && mrezarinaZaFakturu.akciza)).toFixed(2))}</td>
+                                   <td>Iznos obračunate akcize stopa {namet && namet.akciza * 100}%</td>
+                                   <td>{numberWithDots(((sum1 + sum2 + sum3) * (namet && namet.akciza)).toFixed(2))}</td>
                                 </tr>
                                 <tr>
                                    <td>Osnovica za PDV</td>
-                                   <td>{numberWithDots(((sum1 + sum2 + sum3) * (mrezarinaZaFakturu && (mrezarinaZaFakturu.akciza + 1))).toFixed(2))}</td>
+                                   <td>{numberWithDots(((sum1 + sum2 + sum3) * (namet && (namet.akciza + 1))).toFixed(2))}</td>
                                 </tr>
                                 <tr>
                                    <td>Porez na dodatu vrednost</td>
-                                   <td>{numberWithDots(((sum1 + sum2 + sum3) * (mrezarinaZaFakturu && (mrezarinaZaFakturu.akciza + 1)) * (mrezarinaZaFakturu && (mrezarinaZaFakturu.pdv))).toFixed(2))}</td>
+                                   <td>{numberWithDots(((sum1 + sum2 + sum3) * (namet && (namet.akciza + 1)) * (namet && (namet.pdv))).toFixed(2))}</td>
                                 </tr>
                                 <tr>
                                    <td>Taksa za javni medijski servis</td>
-                                   <td>{(metersByClientId.length !== 0 && (metersByClientId.find(br => br.id == item[0].idBrojilo).taksa == 1)) ? (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv) : 0}</td>
+                                   <td>{(metersByClientId.length !== 0 && (metersByClientId.find(br => br.id == item[0].idBrojilo).taksa == 1)) ? (namet && namet.naknadaTv) : 0}</td>
                                 </tr>
                                 <tr>
-                                    <td>Ukupno za obracun</td>
-                                    <td>{numberWithDots(((sum1 + sum2 + sum3) * (mrezarinaZaFakturu && (mrezarinaZaFakturu.akciza + 1)) * (mrezarinaZaFakturu && (mrezarinaZaFakturu.pdv)) + ((metersByClientId.length !== 0 && (metersByClientId.find(br => br.id == item[0].idBrojilo).taksa == 1)) ? (mrezarinaZaFakturu && mrezarinaZaFakturu.naknada_tv) : 0)).toFixed(2))}</td>
+                                    <td>Ukupno za obračun</td>
+                                    <td>{numberWithDots(((sum1 + sum2 + sum3) * (namet && (namet.akciza + 1)) * (namet && (namet.pdv + 1)) + (metersByClientId.length !== 0 && metersByClientId.find(br => br.id == item[0].idBrojilo).taksa == 1 ? (namet && namet.naknadaTv) : 0)).toFixed(2))}</td>
                                 </tr>
+                                
                     </tbody>
                         </Table>
                         </>}

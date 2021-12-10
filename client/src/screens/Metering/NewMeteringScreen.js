@@ -129,9 +129,6 @@ const NewMeteringScreen = ({match, history}) => {
         } else {
             dispatch(newMetering(polja, idBrojila, tabela))
         }
-      /*   if(meteringId)  {
-            history.push({pathname: `/allmetering/${idBrojila}`}) 
-        } */
         
         
 

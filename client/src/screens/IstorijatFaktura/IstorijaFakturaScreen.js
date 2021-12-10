@@ -47,7 +47,7 @@ const IstorijaFakturaScreen = ({history}) => {
                         <th>Kontakt mail</th>
                         <th>Telefon</th>
                         <th>PIB</th>
-                        <th>Maticni broj</th>
+                        <th>Matični broj</th>
                         <th></th>
                     </tr>
                 </thead>

@@ -4,10 +4,10 @@ const kategorija = [
         obracun: 'dvotarifno_merenje',
         kategorija: 'privreda_preko_1kv',
         sifra: 1,
-        naziv: 'Potrosnja na srednjem naponu',
+        naziv: 'Potrošnja na srednjem naponu',
         stavke: [
-            {kolona: 'vt', naziv: 'Visa tarifa'},
-            {kolona: 'nt', naziv: 'Niza tarifa'},
+            {kolona: 'vt', naziv: 'Viša tarifa'},
+            {kolona: 'nt', naziv: 'Niža tarifa'},
             {kolona: 'reak', naziv: 'Reaktivna energija'},
             {kolona: 'prereak', naziv: 'Prekomerna reaktivna energija'},
             {kolona: 'odosnaga', naziv: 'Odobrena snaga'},
@@ -20,10 +20,10 @@ const kategorija = [
         obracun: 'dvotarifno_merenje',
         kategorija: 'privreda_do_1kv_sa_merenjem_snage',
         sifra: 2,
-        naziv: 'Potrosnja na niskom naponu',
+        naziv: 'Potrošnja na niskom naponu',
         stavke: [
-            {kolona: 'vt', naziv: 'Visa tarifa'},
-            {kolona: 'nt', naziv: 'Niza tarifa'},
+            {kolona: 'vt', naziv: 'Viša tarifa'},
+            {kolona: 'nt', naziv: 'Niža tarifa'},
             {kolona: 'reak', naziv: 'Reaktivna energija'},
             {kolona: 'prereak', naziv: 'Prekomerna reaktivna energija'},
             {kolona: 'odosnaga', naziv: 'Odobrena snaga'},
@@ -36,10 +36,10 @@ const kategorija = [
         obracun: 'dvotarifno_merenje',
         kategorija: 'privreda_do_1kv_bez_merenja_snage',
         sifra: 3,
-        naziv: 'Siroka potrosnja - dvotarifno brojilo',
+        naziv: 'Široka potrošnja - dvotarifno brojilo',
         stavke: [
-            {kolona: 'vt', naziv: 'Visa tarifa'},
-            {kolona: 'nt', naziv: 'Niza tarifa'},
+            {kolona: 'vt', naziv: 'Viša tarifa'},
+            {kolona: 'nt', naziv: 'Niža tarifa'},
             {kolona: 'odosnaga', naziv: 'Odobrena snaga'}
         ]
     },
@@ -48,7 +48,7 @@ const kategorija = [
         obracun: 'jednotarifno_merenje',
         kategorija: 'privreda_do_1kv_bez_merenja_snage',
         sifra: 4,
-        naziv: 'Siroka potrosnja - jednotarifno brojilo',
+        naziv: 'Široka potrošnja - jednotarifno brojilo',
         stavke: [{kolona: 'jt', naziv: 'Jedinstvena tarifa'},
                 {kolona: 'odosnaga', naziv: 'Odobrena snaga'}
     ]
@@ -66,10 +66,10 @@ const kategorija = [
         obracun: 'dvotarifno_merenje',
         kategorija: 'domacinstvo',
         sifra: 6,
-        naziv: 'Siroka potrosnja - domacinstvo',
+        naziv: 'Široka potrošnja - domaćinstvo',
         stavke: [
-            {kolona: 'vt', naziv: 'Visa tarifa'},
-            {kolona: 'nt', naziv: 'Niza tarifa'},
+            {kolona: 'vt', naziv: 'Viša tarifa'},
+            {kolona: 'nt', naziv: 'Niža tarifa'},
             {kolona: 'odosnaga', naziv: 'Odobrena snaga'}
         ]
     }

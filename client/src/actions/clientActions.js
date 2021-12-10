@@ -3,7 +3,7 @@ import { CLIENT_SAVE_REQUEST, CLIENT_SAVE_SUCCESS, CLIENT_SAVE_FAIL,
     GET_SINGLE_CLIENT_REQUEST, GET_SINGLE_CLIENT_SUCCESS, GET_SINGLE_CLIENT_FAIL, CLIENT_DELETE_REQUEST } from '../constants/clientConstants';
 import axios from 'axios';
 
-export const noviKlijent = (klijent, id = 0) => async (dispatch) => {
+export const noviKlijent = (klijent, id = 0) => async (dispatch, getState) => {
     try {
         let client
         client = id ? {...klijent, id} : {...klijent}
@@ -11,10 +11,16 @@ export const noviKlijent = (klijent, id = 0) => async (dispatch) => {
       dispatch({
         type: CLIENT_SAVE_REQUEST
       })
+
+      const {
+        userLogin: { userInfo }
+      } = getState()
   
       const config = {
         headers: {
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${userInfo.token}`,
+          'Content-Type': 'application/json',
+          
         }
       }
   
@@ -33,13 +39,23 @@ export const noviKlijent = (klijent, id = 0) => async (dispatch) => {
     }
   }
 
-  export const getAllClients= () => async (dispatch) => {
+  export const getAllClients= () => async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_ALL_CLIENTS_REQUEST
       })
 
-      const { data } = await axios.get('/api/clients') 
+      const {
+        userLogin: { userInfo },
+      } = getState()
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        }
+      }
+
+      const { data } = await axios.get('/api/clients', config) 
   
       dispatch({
         type: GET_ALL_CLIENTS_SUCCESS,
@@ -49,18 +65,28 @@ export const noviKlijent = (klijent, id = 0) => async (dispatch) => {
     } catch (error) {
       dispatch({
         type: GET_ALL_CLIENTS_FAIL,
-        payload: error.response && error.response.data.message ? error.response.data.message : error.message
+        payload: error
       })
     }
   }
 
-  export const getSingleClient= (id) => async (dispatch) => {
+  export const getSingleClient= (id) => async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_SINGLE_CLIENT_REQUEST
       })
 
-      const { data } = await axios.get(`/api/clients/${id}`) 
+      const {
+        userLogin: { userInfo },
+      } = getState()
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        }
+      }
+
+      const { data } = await axios.get(`/api/clients/${id}`, config) 
   
       dispatch({
         type: GET_SINGLE_CLIENT_SUCCESS,
@@ -75,13 +101,23 @@ export const noviKlijent = (klijent, id = 0) => async (dispatch) => {
     }
 }
 
-export const getSingleClientByMeterId = (id) => async (dispatch) => {
+export const getSingleClientByMeterId = (id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: GET_SINGLE_CLIENT_REQUEST
     })
 
-    const { data } = await axios.get(`/api/clients/meterid/${id}`) 
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      }
+    }
+
+    const { data } = await axios.get(`/api/clients/meterid/${id}`, config) 
 
     dispatch({
       type: GET_SINGLE_CLIENT_SUCCESS,

@@ -64,12 +64,12 @@ export const mrezarinaReducer = (state = { mrezarina: null}, action) => {
     }
   }
 
-  export const newMrezarinaReducer = (state = { novaMrezarina: {} }, action) => {
+  export const newMrezarinaReducer = (state = { novaMrezarina: null }, action) => {
       switch (action.type) {
         case NEW_MREZARINA_REQUEST:
           return {
             loading: true,
-            novaMrezarina: {}
+            novaMrezarina: null
           }
         case NEW_MREZARINA_SUCCESS:
           return {

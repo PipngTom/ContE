@@ -89,7 +89,7 @@ const NewMeterScreen = ({match, history}) => {
                 </Form.Control>
             </Form.Group>
             <Form.Group controlId='mestoMerenja'>
-                <Form.Label>Sifra mernog mesta</Form.Label>
+                <Form.Label>Šifra mernog mesta</Form.Label>
                 <Form.Control type='name' name='mestoMerenja' placeholder='Sifra mernog mesta' value={brojilo.mestoMerenja}
                 onChange={handleInput}></Form.Control>
             </Form.Group>

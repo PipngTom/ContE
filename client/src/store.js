@@ -8,6 +8,9 @@ import { allContractsReducer, singleContractReducer, singleContractByClientReduc
 import { meteringReducer, allMeteringByMeterIdReducer, allMeteringByMeterIdsReducer, fakturaMeteringReducer } from './reducers/meteringReducer';
 import { mrezarinaReducer, allMrezarineReducer, newMrezarinaReducer } from './reducers/mrezarinaReducer';
 import { backupFakturaReducer, getBackUpFaktureReducer } from './reducers/backupFakturaReducer';
+import { allEmsReducer, emsReducer, emsSaveReducer } from './reducers/emsReducer';
+import { allNametiReducer, nametiReducer, newNametiReducer } from './reducers/nametiReducer';
+import { kursEuraReducer } from './reducers/kursEuraReducer';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -31,8 +34,14 @@ const reducer = combineReducers({
   mrezarina: mrezarinaReducer,
   novaMrezarina: newMrezarinaReducer,
   bFaktura: backupFakturaReducer,
-  fakture: getBackUpFaktureReducer
-
+  fakture: getBackUpFaktureReducer,
+  allEms: allEmsReducer,
+  emsSave: emsSaveReducer,
+  singleEms: emsReducer,
+  allNameti: allNametiReducer,
+  jNamet: nametiReducer,
+  newNameti: newNametiReducer,
+  kursE: kursEuraReducer 
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null

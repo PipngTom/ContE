@@ -111,7 +111,7 @@ const NewContractScreen = ({match, history}) => {
                 onHide={handleDeleteClose}
             >
                 <Modal.Header>
-                    <Modal.Title>Obavestenje</Modal.Title>
+                    <Modal.Title>Obaveštenje</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {savedContractError ? savedContractError : 'Uspesno ste kreirali nov ugovor'}
@@ -150,7 +150,7 @@ const NewContractScreen = ({match, history}) => {
                 onChange={handleInput}></Form.Control>
             </Form.Group>
             <Form.Group controlId='cenaVT'>
-                <Form.Label>Cena vise tarife</Form.Label>
+                <Form.Label>Cena više tarife</Form.Label>
                 <Form.Control isInvalid={errors.cenaVT?.message ? true : false}  type='text' name='cenaVT' placeholder='VT Cena' value={ugovor.cenaVT} {...register('cenaVT')}
                 onChange={handleInput}></Form.Control>
                 <Form.Control.Feedback type='invalid'>
@@ -158,7 +158,7 @@ const NewContractScreen = ({match, history}) => {
                 </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId='cenaNT'>
-                <Form.Label>Cena nize tarife</Form.Label>
+                <Form.Label>Cena niže tarife</Form.Label>
                 <Form.Control isInvalid={errors.cenaNT?.message ? true : false} type='text' name='cenaNT' placeholder='NT Cena' value={ugovor.cenaNT} {...register('cenaNT')}
                 onChange={handleInput}></Form.Control>
                  <Form.Control.Feedback type='invalid'>

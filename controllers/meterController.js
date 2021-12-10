@@ -1,6 +1,9 @@
 import db from '../db/db.js';
+import { log } from '../middleware/logFunkcija.js'
 
 const getAllMeters = (req, res) => {
+
+  const { name, email } = req
       
     const query = `SELECT b.id, k.nazivKlijenta, b.mestoMerenja, b.adresaMerenja, b.kategorija, b.vrstaSnabdevanja, b.taksa FROM brojila AS b
                   LEFT JOIN klijenti AS k ON k.id = b.idKlijent`;
@@ -12,6 +15,7 @@ const getAllMeters = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'GET ALL METERS', rows)
           res.send(rows)
         } else {
           console.log(err)
@@ -23,6 +27,8 @@ const getAllMeters = (req, res) => {
   const getAllMetersByKlijentId = (req, res) => {
     const id = req.params.id
 
+    const { name, email } = req
+
     const query = `SELECT * FROM brojila WHERE idKlijent = ${id}`
 
     db.getConnection((err, connection) => {
@@ -32,6 +38,7 @@ const getAllMeters = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'GET ALL METERS BY CLIENT ID', rows)
           res.send(rows)
         } else {
           console.log(err)
@@ -72,6 +79,8 @@ const getAllMeters = (req, res) => {
 
   const getSingleMeter = (req, res) => {
 
+    const { name, email } = req
+
     const id = req.params.id
       
     const query = `SELECT * FROM brojila WHERE brojila.id = ${id}`;
@@ -83,6 +92,7 @@ const getAllMeters = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'GET SINGLE METER', rows)
           res.send(rows)
         } else {
           console.log(err)

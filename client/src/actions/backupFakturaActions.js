@@ -28,13 +28,18 @@ export const backupFaktura = ( faktura ) => async ( dispatch)  => {
     }
 }
 
-export const getBackupFakture = (idKlijenta, mesec, godina) => async (dispatch) => {
+export const getBackupFakture = (idKlijenta, mesec, godina) => async (dispatch, getState) => {
     try {
         dispatch({
             type: GET_BACK_UP_FAKTURE_REQUEST
         })
 
-        const rez = await axios.get('/api/fakture/bfaktura', {params: { idKlijenta: idKlijenta, mesec: mesec, godina: godina }})
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const rez = await axios.get('/api/fakture/bfaktura', {params: { idKlijenta: idKlijenta, mesec: mesec, godina: godina }, 
+        headers: { Authorization: `Bearer ${userInfo.token}` }})
         dispatch({
             type: GET_BACK_UP_FAKTURE_SUCCESS,
             payload: rez.data

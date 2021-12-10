@@ -72,7 +72,7 @@ const ClientsScreen = ({history}) => {
                             <th>Kontakt mail</th>
                             <th>Telefon</th>
                             <th>PIB</th>
-                            <th>Maticni broj</th>
+                            <th>Matični broj</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -115,7 +115,7 @@ const ClientsScreen = ({history}) => {
                     <Modal.Title>Brisanje klijenta</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Da li ste sigurni da zelite da obrisete klijenta?
+                    Da li ste sigurni da zelite da obrišete klijenta?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant='success' onClick={handleDeleteClose}>Nazad</Button>

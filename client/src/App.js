@@ -29,6 +29,12 @@ import FakturaZaKlijentaScreen from './screens/FakturaKlijent/FakturaZaKlijentaS
 import RacuniKlijentaScreen from './screens/FakturaKlijent/RacuniKlijentaScreen';
 import BackUpFaktureScreen from './screens/IstorijatFaktura/BackUpFaktureScreen';
 import NewMrezarinaScreen from './screens/NewMrezarinaScreen';
+import EMSScreen from './screens/BalansnaOdgovrnost/EMSScreen';
+import AllEMSScreen from './screens/BalansnaOdgovrnost/AllEMSScreen';
+import EditEMSScreen from './screens/BalansnaOdgovrnost/EditEMSScreen';
+import NewNametiScreen from './screens/Nameti/NewNametiScreen';
+import NametiScreen from './screens/Nameti/NametiScreen';
+import AllNametiScreen from './screens/Nameti/AllNametiScreen';
 
 const App = () => {
   return (
@@ -55,7 +61,7 @@ const App = () => {
                 <ProtectedRoute exact path='/unosi/new' component={NewMeteringScreen} />
                 <ProtectedRoute exact path='/allmetering/:id' component={AllMeteringScreen} />
                 <ProtectedRoute exact path='/mrezarina' component={AllMrezarinaScreen} />
-                <ProtectedRoute exact path='/mrezarina/:id' component={MrezarinaScreen} />
+                <ProtectedRoute exact path='/mrezarina/:id/:idpret' component={MrezarinaScreen} />
                 <ProtectedRoute exact path='/mrezarine/new/:id' component={NewMrezarinaScreen} />
                 <ProtectedRoute exact path='/fakture' component={FaktureScreen} />
                 <ProtectedRoute exact path='/fakture/new/:id' component={NewFakturaScreen} />
@@ -64,6 +70,12 @@ const App = () => {
                 <ProtectedRoute exact path='/fakturaklijent/racuni/:id' component={RacuniKlijentaScreen} />
                 <ProtectedRoute exact path='/istorijafaktura' component={IstorijaFakturaScreen} />
                 <ProtectedRoute exact path='/istorijafaktura/:id' component={BackUpFaktureScreen} />
+                <ProtectedRoute exact path='/ems/new' component={EMSScreen} />
+                <ProtectedRoute exact path='/ems/detalji/:id' component={EditEMSScreen} />
+                <ProtectedRoute exact path='/ems' component={AllEMSScreen} />
+                <ProtectedRoute exact path='/nameti' component={AllNametiScreen} />
+                <ProtectedRoute exact path='/nameti/:id/:idpret' component={NametiScreen} />
+                <ProtectedRoute exact path='/namet/new/:id' component={NewNametiScreen} />
             </Container>
           </main>
         <Footer />

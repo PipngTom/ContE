@@ -108,9 +108,10 @@ const NewClientScreen = ({match, history}) => {
         } else {
             dispatch(noviKlijent({...klijent, ...check}))
         }
-        dispatch({type: GET_SINGLE_CLIENT_RESET})
+        
         
         history.push({pathname: `/clients`})
+        dispatch({type: GET_SINGLE_CLIENT_RESET})
 
     }
 
@@ -132,12 +133,12 @@ const NewClientScreen = ({match, history}) => {
   </Row>
   <Row className="mb-3">
     <Form.Group as={Col} controlId="formGridEmail1">
-      <Form.Label>Postanski broj</Form.Label>
+      <Form.Label>Poštanski broj</Form.Label>
       <Form.Control type="text" name='postanskiBroj' value={klijent.postanskiBroj} onChange={handleInput} />
     </Form.Group>
 
     <Form.Group as={Col} controlId="formGridPassword2">
-      <Form.Label>Opstina</Form.Label>
+      <Form.Label>Opština</Form.Label>
       <Form.Control type="text" name='opstina' value={klijent.opstina} onChange={handleInput} />
     </Form.Group>
   </Row>
@@ -167,7 +168,7 @@ const NewClientScreen = ({match, history}) => {
     </Form.Group>
 
     <Form.Group as={Col} controlId="formGridZip">
-      <Form.Label>Maticni broj</Form.Label>
+      <Form.Label>Matični broj</Form.Label>
       <Form.Control type='text' name='maticniBroj' value={klijent.maticniBroj} onChange={handleInput} />
     </Form.Group>
   </Row>
@@ -180,7 +181,7 @@ const NewClientScreen = ({match, history}) => {
       </Row>
       <Row className='mb-3'>
   <Form.Group as={Col} controlId="formGridAddress2">
-    <Form.Label>Racun</Form.Label>
+    <Form.Label>Račun</Form.Label>
     <Form.Control isInvalid={errors.racunBanka?.message ? true : false} type='text' name='racunBanka' value={klijent.racunBanka} {...register('racunBanka')} onChange={handleInput} />
     <Form.Control.Feedback type='invalid'>{errors.racunBanka?.message}</Form.Control.Feedback>
   </Form.Group>
@@ -223,7 +224,7 @@ const NewClientScreen = ({match, history}) => {
     </Row>
     <Row className='mb-3'>
  <Form.Group id="formGridCheckbox" >
-    <Form.Check type="checkbox" label="Zbirni racun" name='zbirniRacun' checked={check.zbirniRacun} onChange={handleCheck}  />
+    <Form.Check type="checkbox" label="Zbirni račun" name='zbirniRacun' checked={check.zbirniRacun} onChange={handleCheck}  />
   </Form.Group> 
   
     </Row>
@@ -235,7 +236,7 @@ const NewClientScreen = ({match, history}) => {
     </Row>
     <Row className='mb-3'>
     <Form.Group controlId="formGridState">
-      <Form.Label>Tip potrosaca</Form.Label>
+      <Form.Label>Tip potrosača</Form.Label>
       <Form.Control as='select' name='tipPotrosaca' value={klijent.tipPotrosaca} onChange={handleInput}>
         <option>1</option>
         <option>2</option>

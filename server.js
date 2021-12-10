@@ -7,6 +7,9 @@ import contractRoutes from './routes/api/contracts.js';
 import meteringRoutes from './routes/api/metering.js';
 import mrezarinaRoutes from './routes/api/mrezarina.js';
 import faktureRoutes from './routes/api/fakture.js';
+import emsRoutes from './routes/api/ems.js';
+import nametiRoutes from './routes/api/nameti.js';
+import euroRoutes from './routes/api/euro.js';
 
 dotenv.config()
 
@@ -23,6 +26,9 @@ app.use('/api/contracts', contractRoutes)
 app.use('/api/metering', meteringRoutes)
 app.use('/api/mrezarina', mrezarinaRoutes)
 app.use('/api/fakture', faktureRoutes)
+app.use('/api/ems', emsRoutes)
+app.use('/api/nameti', nametiRoutes)
+app.use('/api/kurs', euroRoutes)
 
 const PORT = process.env.PORT || 5000;
 
