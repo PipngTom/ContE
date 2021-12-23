@@ -68,7 +68,7 @@ export const getSinglePodatakEms = (id) => async (dispatch, getState) => {
     }
 }
 
-export const snimiPodatkeZaEms = (podaci, dan, mesec, godina, id = 0) => async (dispatch) => {
+export const snimiPodatkeZaEms = (podaci, dan, mesec, godina, id = 0) => async (dispatch, getState) => {
     try {
         const pack = {...podaci, dan, mesec, godina, id}
         
@@ -76,8 +76,13 @@ export const snimiPodatkeZaEms = (podaci, dan, mesec, godina, id = 0) => async (
             type: SAVE_PODACI_ZA_EMS_REQUEST
         })
 
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
         const config = {
             headers: {
+                Authorization: `Bearer ${userInfo.token}`,
                 'Content-Type': 'application/json',
 
             }

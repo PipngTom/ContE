@@ -27,6 +27,9 @@ const getContractByMeterId = (req, res) => {
 
   const rezervnaFaktura = (req, res) => {
     const faktura  = req.body
+
+    const { name, email } = req
+
     const query = `INSERT INTO faktura (idKlijenta, bFaktura, mesec, godina) VALUES ( '${faktura.zbirniRacun.idKlijenta}', '${JSON.stringify(faktura)}', '${faktura.zbirniRacun.mesec}', '${faktura.zbirniRacun.godina}')`
 
     db.getConnection((err, connection) => {
@@ -36,6 +39,7 @@ const getContractByMeterId = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'REZERVNA FAKTURA', req.body)
           res.send(rows)
         } else {
           console.log(err)

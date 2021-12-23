@@ -50,6 +50,8 @@ const saveEms = (req, res) => {
     
     const pack = req.body
     const id = req.body.id
+
+    const { name, email } = req
    
     //console.log(req.body)
 
@@ -79,6 +81,11 @@ const saveEms = (req, res) => {
         connection.query(query, (err, rows) => {
             connection.release()
             if (!err) {
+                if (id == 0) {
+                    log(name, email, 'NEW EMS', req.body)
+                } else {
+                    log(name, email, 'UPDATE EMS', req.body)
+                }
                 res.send(rows)
             } else {
                 res.send(err)

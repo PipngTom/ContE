@@ -6,6 +6,6 @@ const router = express.Router()
 
 router.route('/').get(protect, getAllEms)
 router.route('/single/:id').get(protect, getEms)
-router.route('/new').post(saveEms)
+router.route('/new').post(protect, saveEms)
 
 export default router;

@@ -2,14 +2,17 @@ import { BACK_UP_FAKTURA_REQUEST, BACK_UP_FAKTURA_SUCCESS, BACK_UP_FAKTURA_FAIL,
 import axios from 'axios';
 
 
-export const backupFaktura = ( faktura ) => async ( dispatch)  => {
+export const backupFaktura = ( faktura ) => async ( dispatch, getState)  => {
     try {
         dispatch({
             type: BACK_UP_FAKTURA_REQUEST
         })
 
+        const { userLogin: { userInfo } } = getState()
+
         const config = {
             headers: {
+                Authorization: `Bearer ${userInfo.token}`,
                 'Content-Type': 'application/json'
             }
         }

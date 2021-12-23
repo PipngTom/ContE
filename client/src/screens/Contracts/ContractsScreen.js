@@ -8,6 +8,7 @@ import Loader from '../../components/Loader'
 import { GET_ALL_CONTRACTS_RESET } from '../../constants/contractConstants';
 import './contracts.css';
 
+//Component for rendering all contracts 
 const ContractsScreen = ({history}) => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -18,6 +19,7 @@ const ContractsScreen = ({history}) => {
 
     const dispatch = useDispatch()
 
+    //Selecting a state from reducer for displaying values from reducer in template
     const allContracts = useSelector(state => state.allContracts)
     
 
@@ -26,44 +28,54 @@ const ContractsScreen = ({history}) => {
 
 
     useEffect(() => {
+        //Loading reducer with all clients and all contracts on first rendering of component
         dispatch(getAllClients())
         dispatch(getAllContracts())
         return () => {
+            //Clearing all contracts from state on exiting from component
             dispatch({type: GET_ALL_CONTRACTS_RESET})
         }
     }, [dispatch])
 
 
+    //Navigating to edit contract component with specify id
     const editHandler = (id) => {
         history.push({pathname: `/contracts/edit/${id}`})
     }
 
+    //Navigating to new contract component
     const noviUgovor = () => {
         history.push({pathname: `/contracts/new`})
     }
 
+    //Delete handler with specify id and close modal handler
     const deleteHandler = (id) => {
         setSelectedId(id)
         setShowDeleteModal(true)
     }
 
+    //Close modal handler with local state hook
     const handleDeleteClose = () => {
         setShowDeleteModal(false)
     }
 
+    //Completed delete single contract with unique id 
     const handleDeleteAccept = () => {
         dispatch(deleteSingleContract(selectedId))
         setShowDeleteModal(false)
     }
 
+    //handler for filtering of a client name
     const nazivKlijentaHandler = (e) => {
         setSearchString(e.target.value)
     }
 
+    //handler for filtering of a contract number
     const brojUgovoraHandler = (e) => {
         setSearchBroj(e.target.value)
     }
 
+    //handler for filtering of expired contracts
     const istekliUgovoriHandler = (e) => {
         setIstekliUgovori(e.target.checked)
     }
@@ -119,20 +131,24 @@ const ContractsScreen = ({history}) => {
                             <td></td>
                             <td></td>
                         </tr>
+                        {/* Filtering contracts for name of client, number of contract and expired contracts */}
                         {contracts.filter((el) => {
 
+                        {/* Converted date from backend for comparing date values in order to get expired contracts */}
                         const datum = el.datumIsteka.slice(0,10)
                         let partsPoc = datum.split('-')
                         let dateConverted = new Date(partsPoc[0], partsPoc[1]-1, partsPoc[2])
 
-
+                            {/* Ternary operator for showing expired contracts questioning local state boolean and if it is true it shows contracts which date is lower than current date */}
                          return   (searchString === '' || el.nazivKlijenta.toUpperCase().includes(searchString.toUpperCase())) 
                             && (searchBroj === '' || el.brojUgovora.toUpperCase().includes(searchBroj.toUpperCase())) && (istekliUgovori === true ? dateConverted < new Date() : true)
 
                         })
                         .map(item => {
+                            {/* Iterating through contracts to show items of contracts from redux */}
                             let color;
 
+                            {/* Converted date from backend for comparing date values in order to get specify color in a case when contract expires */}
                             const datum = item.datumIsteka.slice(0,10)
                             let partsPoc = datum.split('-')
                             let dateConverted = new Date(partsPoc[0], partsPoc[1]-1, partsPoc[2])

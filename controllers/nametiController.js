@@ -75,6 +75,8 @@ const getNametePoDatumu = (req, res) => {
 const updateNamete = async (req, res) => {
   const { nameti, idPret } = req.body
 
+  const { name, email } = req
+
   const query1 = `UPDATE nameti SET vaziOd = '${nameti.vaziOd}', pdv = '${nameti.pdv}', akciza = '${nameti.akciza}', naknadaTv = '${nameti.naknada_tv}',
     naknadaEe = '${nameti.naknada_ee}', naknadaOie = '${nameti.naknada_oie}' WHERE id = ${nameti.id}`
 
@@ -108,6 +110,7 @@ const updateNamete = async (req, res) => {
      const promise1 = await queryPromise1()
      if(promise1.affectedRows == 1) {
          promise2 = await queryPromise2()
+         log(name, email, 'UPDATE NAMETI', req.body)
          res.send(promise2)
      } else {
        res.send(promise1)
@@ -125,6 +128,8 @@ const updateNamete = async (req, res) => {
 
 const saveNameti = async (req, res) => {
     const {vaziOd, pdv, akciza, naknada_tv, naknada_ee, naknada_oie, id} = req.body
+
+    const { name, email } = req
     
     const query1 = `INSERT INTO nameti ( vaziOd, pdv, naknadaTv, naknadaEe, naknadaOie, akciza )
     SELECT '${vaziOd}', '${pdv}', '${naknada_tv}', '${naknada_ee}', '${naknada_oie}', '${akciza}' 
@@ -160,6 +165,7 @@ const saveNameti = async (req, res) => {
        const promise1 = await queryPromise1()
        if(promise1.affectedRows == 1) {
            promise2 = await queryPromise2()
+           log(name, email, 'SAVE NAMETI', req.body)
            res.send(promise2)
        } else {
          res.send(promise1)

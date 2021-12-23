@@ -49,7 +49,11 @@ const getAllMeters = (req, res) => {
 
   const newMeter = (req, res) => {
     const { idKlijent, mestoMerenja, adresaMerenja, kategorija, vrstaSnabdevanja } = req.body.brojilo
+
     const taksa  = req.body.taksa
+
+    const { name, email } = req
+
       let query;
       if(req.body.id){
           query = `UPDATE brojila SET idKlijent = '${idKlijent}', mestoMerenja = '${mestoMerenja}', adresaMerenja = '${adresaMerenja}', kategorija = '${kategorija}', vrstaSnabdevanja = '${vrstaSnabdevanja}', taksa = ${taksa}
@@ -68,6 +72,11 @@ const getAllMeters = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          if (req.body.id) {
+            log(name, email, 'UPDATE METER', req.body)
+          } else {
+            log(name, email, 'NEW METER', req.body)
+          }
           res.send(rows)
         } else {
           console.log(err)
@@ -104,6 +113,8 @@ const getAllMeters = (req, res) => {
   const deleteSingleMeter = (req, res) => {
 
     const id = req.params.id
+
+    const { name, email } = req
       
     const query = `DELETE FROM brojila WHERE brojila.id = ${id}`;
   
@@ -114,6 +125,7 @@ const getAllMeters = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'DELETE SINGLE METER', 'Uspešno je obrisano ovo brojilo...')
           res.send(rows)
         } else {
           console.log(err)

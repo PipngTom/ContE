@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import db from '../db/db.js';
 import generateToken from "../utils/generateToken.js";
 const saltRounds = 10;
+import { log } from "../middleware/logFunkcija.js";
 
 
 
@@ -23,6 +24,7 @@ const registerUser = (req, res) => {
             connection.query(query, (err, rows) => {
               connection.release()
               if (!err) {
+                log(name, email, 'REGISTER', {name , email})
                 res.send(rows)
   
               } else {
@@ -48,6 +50,8 @@ const registerUser = (req, res) => {
 const userLogin = (req, res) => {
   const { email, password } = req.body;
 
+  //const { name } = req
+
   const query = `SELECT * FROM user WHERE email = '${email}'` 
   db.getConnection((err, connection) => {
     if (err) {
@@ -59,7 +63,7 @@ const userLogin = (req, res) => {
         bcrypt.compare(password, rows[0].password, (error, response) => {
           if (response) {
             const id = rows[0].id
-            
+            log('Korisnik se uspešno loginovao...', email, 'LOGIN', {email})
             res.send({data: rows, token: generateToken(id)})
 
           } else {
@@ -73,25 +77,72 @@ const userLogin = (req, res) => {
   })
 }
 
-const unosRacuna = (req, res) => {
-  const { maxSnaga, odSnaga, prekSnaga, akEnergijaV, akEnergijaN, reaktEnergija, prekReaktEnergija, datumpStanja, datumkStanja } = req.body
+const getAllUsers = (req, res) => {
 
-  const query = `INSERT INTO racuni (maxSnaga, odSnaga, prekSnaga, akEnergijaV, akEnergijaN, reaktEnergija, prekReaktEnergija, datumpStanja, datumkStanja) VALUES ('${maxSnaga}', '${odSnaga}', '${prekSnaga}', '${akEnergijaV}', '${akEnergijaN}', '${reaktEnergija}', '${prekReaktEnergija}', '${datumpStanja}', '${datumkStanja}')`;
+  const { name, email } = req
 
-  db.getConnection((err, connection) => {
-    if (err) {
-      throw err
+  const query = `SELECT * FROM user`
+
+  db.getConnection((error, connection) => {
+    if (error) {
+      throw error
     }
     connection.query(query, (err, rows) => {
       connection.release()
       if (!err) {
+        log(name, email, 'GET ALL USERS', rows)
         res.send(rows)
-      } else {
-        console.log(err)
       }
     })
   })
-
 }
 
-export { registerUser, userLogin, unosRacuna }
+const getSingleUser = (req, res) => {
+
+  const id = req.params.id
+
+  const { name, email } = req
+
+  const query = `SELECT name, email, uloga FROM user WHERE id = ${id}`
+
+  db.getConnection((error, connection) => {
+    if (error) {
+      throw error
+    }
+    connection.query(query, (err, rows) => {
+      connection.release()
+    if (!err) {
+      log(name, email, 'GET SINGLE USER', rows)
+      res.send(rows)
+    } else {
+      console.log(err)
+    }
+    })
+  })
+}
+
+const updateUser = (req, res) => {
+  const { podaci, id } = req.body
+
+
+  const { name, email } = req
+
+  const query = `UPDATE user SET name = '${podaci.ime}', email = '${podaci.email}', uloga = '${podaci.uloga}' WHERE id = ${id}`
+
+  db.getConnection((error, connection) => {
+    if (error) {
+      throw error
+    }
+    connection.query(query, (err, rows) => {
+      connection.release()
+    if (!err) {
+      log(name, email, 'UPDATE USER', req.body)
+      res.send(rows)
+    } else {
+      console.log(err)
+    }
+    })
+  })  
+}
+
+export { registerUser, userLogin, getAllUsers, getSingleUser, updateUser }

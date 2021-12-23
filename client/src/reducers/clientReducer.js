@@ -3,7 +3,7 @@ import { CLIENT_SAVE_REQUEST, CLIENT_SAVE_SUCCESS, CLIENT_SAVE_FAIL,
     GET_SINGLE_CLIENT_REQUEST, GET_SINGLE_CLIENT_RESET, GET_SINGLE_CLIENT_SUCCESS, GET_SINGLE_CLIENT_FAIL } from '../constants/clientConstants';
 
 
-
+//Reducer for saving and storaging new client values or updating existing one 
 export const clientReducer = (state = {}, action) => {
     switch (action.type) {
       case CLIENT_SAVE_REQUEST:
@@ -26,6 +26,8 @@ export const clientReducer = (state = {}, action) => {
     }
   }
 
+
+//Reducer for storaging all clients values
   export const allClientsReducer = (state = { clients: []}, action) => {
     switch (action.type) {
       case GET_ALL_CLIENTS_REQUEST:
@@ -58,6 +60,7 @@ export const clientReducer = (state = {}, action) => {
     }
   }
 
+  //Reducer for storaging single client values
   export const singleClientReducer = (state = { client: null}, action) => {
     switch (action.type) {
       case GET_SINGLE_CLIENT_REQUEST:

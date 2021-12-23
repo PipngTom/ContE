@@ -8,21 +8,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { noviKlijent, getSingleClient } from '../../actions/clientActions';
 import {GET_SINGLE_CLIENT_RESET} from '../../constants/clientConstants';
 
-
+//Component for editing and creating new client depending of id
 const NewClientScreen = ({match, history}) => {
 
     const dispatch = useDispatch()
 
+    //Built-in methods from react hook form library for form validation
     const { register, handleSubmit, formState: { errors }, setValue } = useForm({
+      //resolver connects react-hook-form library with yup library
       resolver: yupResolver(clientSchema)
     })
 
+    //Id is taken from params and indicates whom single client is it 
     const clientId = match.params.id;
 
+    //Selecting a state from reducer for displaying values from reducer in template
     const singleClient = useSelector(state => state.singleClient)
 
     const {client} = singleClient
 
+    //Setting a local state for new client 
     const [klijent, setKlijent] = useState({
         nazivKlijenta: '',
         adresaKlijenta: '',
@@ -53,10 +58,11 @@ const NewClientScreen = ({match, history}) => {
     useEffect(() => {
         if(clientId)//EDIT MODE
         {
-          
+          //If client from redux is not yet in reducer then dispatch getSingleClient method to get that single client 
             if(!client || client.id != clientId){
               dispatch(getSingleClient(clientId))
             } else{
+              //And if that client is already in reducer then set that values from client reducer to local state with useState hook 
                 setKlijent({...klijent,
                 nazivKlijenta: client.nazivKlijenta,
                 adresaKlijenta: client.adresaKlijenta,
@@ -81,6 +87,7 @@ const NewClientScreen = ({match, history}) => {
             balansOdg: client.uBalansnojOdgovornosti,
             zbirniRacun: client.zbirniRacun,
             podUgovorom: client.podUgovorom})
+            //setValue method helps for updating form to validate form fields all at once 
             setValue('nazivKlijenta', client.nazivBanke)
             setValue('kontaktMail', client.kontaktMail)
             setValue('pib', client.pib)
@@ -92,25 +99,30 @@ const NewClientScreen = ({match, history}) => {
 
     },[dispatch, client ,clientId])
 
+
+    //Handling input values in local state targeting name property and setting with currently value of input field
     const handleInput = (e) => {
         
         setKlijent({...klijent, [e.target.name] : e.target.value})
       }
 
+    //Handling checkbox value in local state targeting name property and setting with checked(there is no property value in check box field )
     const handleCheck = (e) => {
       setCheck({...check, [e.target.name]: e.target.checked ? 1 : 0})
     }
 
     const submitKlijent = async (data, e) => {
       e.preventDefault()
+      //If id exists then noviKlijent() will gonna update single client and if does not exists then noviKlijent() is gonna create new single client
         if(clientId){
             dispatch(noviKlijent({...klijent, ...check}, clientId))
         } else {
             dispatch(noviKlijent({...klijent, ...check}))
         }
         
-        
+        //Pushing to All clients component when one method execute
         history.push({pathname: `/clients`})
+        //Clearing redux state of single client after pushing to all clients component
         dispatch({type: GET_SINGLE_CLIENT_RESET})
 
     }
@@ -118,10 +130,12 @@ const NewClientScreen = ({match, history}) => {
     return (
         <>
         <FormContainer>
+          {/* Submiting form with handleSubmit method from useForm */}
         <Form onSubmit={handleSubmit(submitKlijent)} >
   <Row className="mb-3">
     <Form.Group as={Col} controlId="formGridEmail">
       <Form.Label>Naziv klijenta</Form.Label>
+      {/* errors and register properties are from useForm hook and isInvalid property is form validation from react bootstrap*/}
       <Form.Control isInvalid={errors.nazivKlijenta?.message ? true : false} type="text" name='nazivKlijenta' value={klijent.nazivKlijenta} {...register('nazivKlijenta')} onChange={handleInput} />
       <Form.Control.Feedback type='invalid'>{errors.nazivKlijenta?.message}</Form.Control.Feedback> 
     </Form.Group>
@@ -254,7 +268,10 @@ const NewClientScreen = ({match, history}) => {
                     </Button>
                 </Col>
                 <Col xs={3}>
-                    <Button type='submit' variant='primary' onClick={()=>history.push({pathname: `/clients`})}>
+                    <Button type='submit' variant='primary' onClick={()=> {
+                      history.push({pathname: `/clients`})
+                      dispatch({type: GET_SINGLE_CLIENT_RESET})
+                    }}>
                     Nazad
                     </Button>
                 </Col>

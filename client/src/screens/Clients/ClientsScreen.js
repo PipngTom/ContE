@@ -6,6 +6,7 @@ import { getAllClients, deleteSingleClient } from '../../actions/clientActions';
 import Loader from '../../components/Loader';
 import { GET_ALL_CLIENTS_RESET } from '../../constants/clientConstants';
 
+//Component for rendering all clients
 const ClientsScreen = ({history}) => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -14,40 +15,48 @@ const ClientsScreen = ({history}) => {
 
     const dispatch = useDispatch()
 
+    //Selecting a state from reducer for displaying values from reducer in template
     const allClients = useSelector(state => state.allClients)
 
     const {loading, clients} = allClients
 
 
     useEffect(() => {
+        //dispatching getAllClients() function for first rendering of this component to get all clients from db 
         dispatch(getAllClients())
         return () => {
             dispatch({type: GET_ALL_CLIENTS_RESET})
         }
     }, [dispatch])
 
+    //navigating to edit client component with id of single client
     const editHandler = (id) => {
         history.push({pathname: `/clients/edit/${id}`})
     }
 
+    //navigating to new client component 
     const noviKlijent = () => {
         history.push({pathname: `/clients/new`})
     }
 
+    //deleting client with id of single client
     const deleteHandler = (id) => {
         setSelectedId(id)
         setShowDeleteModal(true)
     }
 
+    //handling and closing modal with local state hook
     const handleDeleteClose = () => {
         setShowDeleteModal(false)
     }
 
+    //completed delete client and closing modal
     const handleDeleteAccept = () => {
         dispatch(deleteSingleClient(selectedId))
         setShowDeleteModal(false)
     }
 
+    //handler for filtering of a client name
     const handleTypeNazivKlijenta=(e)=>{
     
         setsearchString(e.target.value)
@@ -88,6 +97,7 @@ const ClientsScreen = ({history}) => {
                             <td></td>
                             <td></td>
                         </tr>
+                        {/* filtering clients name with js method filter() and maping clients from redux with js method map()  */}
                         {clients.filter((el)=>searchString==='' || el.nazivKlijenta.toUpperCase().includes(searchString.toUpperCase()))
                         .map(item => (
                             <tr key={item.id}>

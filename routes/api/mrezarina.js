@@ -5,9 +5,9 @@ import { protect } from '../../middleware/authMiddleware.js';
 const router = express.Router()
 
 router.route('/:id').get(protect, getMrezarina);
-router.route('/update').post(updateMrezarina)
+router.route('/update').post(protect, updateMrezarina)
 router.route('/').get(protect, getAllMrezarina)
-router.route('/new').post(saveMrezarina)
+router.route('/new').post(protect, saveMrezarina)
 router.route('/faktura/podatumu').get(protect, getMrezarinaPoDat)
 
 

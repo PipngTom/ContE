@@ -2,7 +2,7 @@ import { nadjiTabeluPoKategoriji, nadjiNazivVrsteSnabdevanja, nadjiNazivPoKatego
 import { nadjiPocetakObracuna, nadjiKrajObracuna } from '../../constants/datum';
 import { dajMeru, dajPunNaziv } from "../Fakture/pomocnaFunkcija";
 
-export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, namet,mesec, godina) => {
+export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, namet, euro, mesec, godina) => {
     let faktura = {}
     let zbirniRacun = {}
     let stavke = []
@@ -26,7 +26,7 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, n
         let sumN = 0
        
         stavke = fMetering.map((item,index) => {
-                let sum1 = (item[0].vt ? (item[0].vt * ugovor.cenaVT) : 0) + (item[0].nt ? (item[0].nt * ugovor.cenaNT) : 0) + (item[0].jt ? (item[0].jt * ugovor.cenaJT) : 0)
+                let sum1 = (item[0].vt ? (item[0].vt * (ugovor.cenaVT * euro)) : 0) + (item[0].nt ? (item[0].nt * (ugovor.cenaNT * euro)) : 0) + (item[0].jt ? (item[0].jt * (ugovor.cenaJT * euro)) : 0)
                 sumE = sumE + sum1
 
                 let sum2 = 0
@@ -162,7 +162,7 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, n
 
         fMetering.forEach((item, index) => {
             let sum2 = 0;
-            let sum1 = (item[0].vt ? (item[0].vt * ugovor.cenaVT) : 0) + (item[0].nt ? (item[0].nt * ugovor.cenaNT) : 0) + (item[0].jt ? (item[0].jt * ugovor.cenaJT) : 0)
+            let sum1 = (item[0].vt ? (item[0].vt * (ugovor.cenaVT * euro)) : 0) + (item[0].nt ? (item[0].nt * (ugovor.cenaNT * euro)) : 0) + (item[0].jt ? (item[0].jt * (ugovor.cenaJT * euro)) : 0)
             let sumEN = (item[0].vt ? item[0].vt : 0) + (item[0].nt ? item[0].nt : 0) + (item[0].jt ? item[0].jt : 0)
             let sum3 = sumEN * (namet.naknadaEe + namet.naknadaOie)
 
@@ -175,7 +175,9 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, n
                     col2: 'kWh',
                     col3: item[0].vt,
                     col4: ugovor.cenaVT,
-                    col5: ugovor.cenaVT * item[0].vt
+                    col5: euro,
+                    col6: ugovor.cenaVT * euro,
+                    col7: (ugovor.cenaVT * euro) * item[0].vt
                 })
             }
             if(item[0].nt) {
@@ -184,7 +186,9 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, n
                     col2: 'kWh',
                     col3: item[0].nt,
                     col4: ugovor.cenaNT,
-                    col5: ugovor.cenaNT * item[0].nt
+                    col5: euro,
+                    col6: ugovor.cenaNT * euro,
+                    col7: (ugovor.cenaNT * euro) * item[0].nt
                 })
             }
 
@@ -194,15 +198,19 @@ export const backupFunkcija = (klijent, fMetering, ugovor, brojila, mrezarina, n
                     col2: 'kWh',
                     col3: item[0].jt,
                     col4: ugovor.cenaJT,
-                    col5: ugovor.cenaJT * item[0].jt
+                    col5: euro,
+                    col6: ugovor.cenaJT * euro,
+                    col7: (ugovor.cenaJT * euro) * item[0].jt
                 })
             }
             tabela1.push({
                 col1: '',
                 col2: '',
                 col3: '',
-                col4: 'Ukupno',
-                col5: sum1
+                col4: '',
+                col5: '',
+                col6: 'Ukupno',
+                col7: sum1
             })
 
             let tabela2 = []

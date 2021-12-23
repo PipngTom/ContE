@@ -67,7 +67,7 @@ export const getAllMeters= () => async (dispatch, getState) => {
     }
   }
 
-  export const novoBrojilo = (brojilo, id = 0) => async (dispatch) => {
+  export const novoBrojilo = (brojilo, id = 0) => async (dispatch, getState) => {
     try {
         let meter
         meter = id ? {...brojilo, id} : {...brojilo}
@@ -75,9 +75,14 @@ export const getAllMeters= () => async (dispatch, getState) => {
       dispatch({
         type: METER_SAVE_REQUEST
       })
+
+      const {
+        userLogin: { userInfo }
+      } = getState()
   
       const config = {
         headers: {
+          Authorization: `Bearer ${userInfo.token}`,
           'Content-Type': 'application/json'
         }
       }
@@ -128,14 +133,22 @@ export const getAllMeters= () => async (dispatch, getState) => {
     }
 }
 
-export const deleteSingleMeter = (id) => async (dispatch) => {
+export const deleteSingleMeter = (id) => async (dispatch, getState) => {
   try {
       dispatch({
           type: METER_DELETE_REQUEST
         })
+
+        const { userLogin: { userInfo } } = getState()
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`
+          }
+        }
         
-  const { data } = await axios.delete(`/api/meters/${id}`) 
-  console.log(data)
+  const { data } = await axios.delete(`/api/meters/${id}`, config) 
+  
   if(data.message===''){
       dispatch({
           type: ALL_METERS_UPDATE,

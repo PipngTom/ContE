@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
  import { LinkContainer } from 'react-router-bootstrap'
  import { logout } from '../actions/userActions';
  import { useDispatch, useSelector } from 'react-redux';
+import { USER_REGISTER_RESET } from '../constants/userConstants';
 
 const Header = () => {
 
@@ -16,6 +17,7 @@ const Header = () => {
    const logoutHandler = () => {
       dispatch(logout())
       history.push( '/register')
+      dispatch({type: USER_REGISTER_RESET})
       
    }
 
@@ -36,51 +38,66 @@ const Header = () => {
                   <i className="fas fa-user-plus"></i> Register
                 </Nav.Link>
               </LinkContainer>}
-                {userInfo && <NavDropdown title='LogOut' id='username'>
-                  <NavDropdown.Item onClick={logoutHandler}>
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>}
                {!userInfo && <LinkContainer to="/login" >
                 <Nav.Link>
                   <i className="fas fa-user"></i> Sign In
                 </Nav.Link>
               </LinkContainer>}
-              {userInfo && <LinkContainer to="/clients">
-                <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Klijenti
-                </Nav.Link>
-              </LinkContainer>}
-              {userInfo && <LinkContainer to="/meters">
-                <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Brojila
-                </Nav.Link>
-              </LinkContainer>}
-              {userInfo && <LinkContainer to="/unosi">
-                <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Unos Merenja
-                </Nav.Link>
-              </LinkContainer>}
-              {userInfo && <LinkContainer to="/contracts">
-                <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Ugovori
-                </Nav.Link>
-              </LinkContainer>}
-              {userInfo && <LinkContainer to="/mrezarina">
-                <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Mrežarina
-                </Nav.Link>
-              </LinkContainer>}
-              {userInfo && <LinkContainer to="/nameti">
-                <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Nameti
-                </Nav.Link>
-              </LinkContainer>}
-              {userInfo && <LinkContainer to="/fakture">
-                <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Fakture
-                </Nav.Link>
-              </LinkContainer>}
+              {userInfo && <NavDropdown title='Ugovori' id='ugovori'>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/clients">
+                    <Nav.Link>
+                      Klijenti
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/contracts">
+                    <Nav.Link>
+                      Ugovori
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                </NavDropdown>}
+              {userInfo && <NavDropdown title='Brojila' id='brojila'>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/meters">
+                    <Nav.Link>
+                      Brojila
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/unosi">
+                    <Nav.Link>
+                      Unos Merenja
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/preuzimanjemerenja">
+                    <Nav.Link>
+                      Preuzimanje merenja
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                </NavDropdown>}
+              {userInfo && userInfo.uloga !== 'korisnik' && <NavDropdown title='Mrežarina' id='mrežarina'>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/mrezarina">
+                    <Nav.Link>
+                      Mrežarina
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/nameti">
+                    <Nav.Link>
+                      Nameti
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                </NavDropdown>}
               {userInfo && <LinkContainer to="/balansna">
                 <Nav.Link>
                   <i className="fas fa-user-plus"></i> Balansna odgovornost
@@ -91,16 +108,41 @@ const Header = () => {
                   <i className="fas fa-user-plus"></i> EMS
                 </Nav.Link>
               </LinkContainer>}
-              {userInfo && <LinkContainer to="/fakturaklijent">
-                <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Faktura za klijenta
-                </Nav.Link>
-              </LinkContainer>}
-              {userInfo && <LinkContainer to="/istorijafaktura">
-                <Nav.Link>
-                  <i className="fas fa-user-plus"></i> Istorija faktura
-                </Nav.Link>
-              </LinkContainer>}
+              {userInfo && <NavDropdown title='Fakture' id='fakture'>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/fakturaklijent">
+                    <Nav.Link>
+                      Faktura za Klijenta
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/istorijafaktura">
+                    <Nav.Link>
+                      Istorija Faktura
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item>
+                  <LinkContainer to="/kursevra">
+                    <Nav.Link>
+                      Kurs Evra
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>
+                </NavDropdown>}
+              {userInfo && <NavDropdown title={userInfo.name} id='username'>
+              {userInfo.uloga === 'super_admin' && <NavDropdown.Item>
+               <LinkContainer to="/korisnici">
+                    <Nav.Link>
+                    Korisnici
+                    </Nav.Link>
+                 </LinkContainer>
+                  </NavDropdown.Item>}
+                  <NavDropdown.Item onClick={logoutHandler}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>}
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { registerUs } from '../actions/userActions';
 import { useHistory } from 'react-router';
+import { USER_REGISTER_RESET } from '../constants/userConstants';
 
 const RegisterScreen = () => {
 
@@ -30,7 +31,7 @@ const RegisterScreen = () => {
     e.preventDefault()
     
     dispatch(registerUs(name, email, password))
-
+    //dispatch({type: USER_REGISTER_RESET})
     
   }
 

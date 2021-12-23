@@ -85,16 +85,19 @@ export const getMrezarinaPoDatumu = (datum) => async (dispatch, getState) => {
   }
 }
 
-export const updateMrezarina = (mrezarina, id) => async (dispatch) => {
+export const updateMrezarina = (mrezarina, id) => async (dispatch, getState) => {
     try {
       
 
       dispatch({
         type: MREZARINA_UPDATE_REQUEST
       })
+
+      const { userLogin: {userInfo} } = getState()
   
       const config = {
         headers: {
+          Authorization: `Bearer ${userInfo.token}`,
           'Content-Type': 'application/json'
         }
       }
@@ -120,15 +123,20 @@ export const updateMrezarina = (mrezarina, id) => async (dispatch) => {
     }
   }
 
-  export const saveNewMrezarina = (mrezarina, idZadnje) => async (dispatch) => {
+  export const saveNewMrezarina = (mrezarina, idZadnje) => async (dispatch, getState) => {
 
       const pack = {...mrezarina, idZadnje}
       dispatch({
         type: NEW_MREZARINA_REQUEST
       })
 
+      const { 
+        userLogin: { userInfo }
+       } = getState()
+
       const config = {
         headers: {
+          Authorization: `Bearer ${userInfo.token}`,
           'Content-Type': 'application/json'
         }
       }

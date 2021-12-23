@@ -1,8 +1,10 @@
 import db from '../db/db.js';
+import { log } from '../middleware/logFunkcija.js';
 
 const newMetering = (req, res) => {
 
-   
+    const { name, email } = req
+
         const { colone, tabela, meterId } = req.body
       let query;
       if(req.body.id){
@@ -51,6 +53,11 @@ const newMetering = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          if (req.body.id) {
+            log(name, email, 'UPDATE METERING', req.body)
+          } else {
+            log(name, email, 'NEW METERING', req.body)
+          }
           res.send(rows)
         } else {
           res.json({err: err.sqlMessage})
@@ -64,6 +71,7 @@ const newMetering = (req, res) => {
 
     const {id, tabela} = req.body
     
+    const { name, email } = req
       
     const query = `SELECT *, DATE_FORMAT(datumpoc, '%d.%m.%Y') AS datumpoc, DATE_FORMAT(datumkr, '%d.%m.%Y') AS datumkr FROM ${tabela} WHERE idBrojilo = ${id}`;
   
@@ -74,6 +82,7 @@ const newMetering = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'GET ALL METERING BY METER ID', req.body)
           res.send(rows)
         } else {
           console.log(err)
@@ -85,6 +94,8 @@ const newMetering = (req, res) => {
   const getMeteringByMeterIds = (req, res) => {
 
     const {datum: mesec, selectedMeters: primer} = req.body
+
+    const {name, email} = req
   //  const primer =  [{id:12, tabela: 'merenja_srednji_napon'}, {id:16, tabela: 'merenja_srednji_napon'}, {id: 14, tabela: 'merenja_sp_jednotarifno'}] 
   //  const mesec = '2021-08-15'
     //AND DATE(${mesec})<=datumkr AND DATE(${mesec})>=datumpoc
@@ -116,6 +127,7 @@ const newMetering = (req, res) => {
       //    tables.forEach((item,index)=>results[item.var]=values[index])
       //    console.log(results)
           ///results.push(values)
+          log(name, email, 'GET METERING BY METER IDS', req.body)
          res.send(values)
       })
       
@@ -130,6 +142,8 @@ const newMetering = (req, res) => {
 
   const fakturaMetering = (req, res) => {
     const { rezultatN, mesec, godina } = req.body
+
+    const { name, email } = req
    
     const queryPromises = rezultatN.map((item)=>{
       const query = `SELECT t.*, DATE_FORMAT(t.datumpoc, '%d.%m.%Y') AS datumpoc, DATE_FORMAT(t.datumkr, '%d.%m.%Y') AS datumkr, b.kategorija
@@ -148,6 +162,7 @@ const newMetering = (req, res) => {
     try{
       Promise.all(queryPromises).then((values)=>{
         const results = values.filter(item => item.length !== 0)
+        log(name, email, 'FAKTURA METERING', req.body)
         res.send(results)
       })
 
@@ -156,10 +171,16 @@ const newMetering = (req, res) => {
     }
   }
 
+  const savePreuzimanjeMerenja = (req, res) => {
+    console.log(req.body.merenje)
+  }
+
   const deleteSingleMetering = (req, res) => {
 
     
     const {tabela, id} = req.body
+
+    const { name, email } = req
       
     const query = `DELETE FROM ${tabela} WHERE ${tabela}.id = ${id}`;
   
@@ -170,6 +191,7 @@ const newMetering = (req, res) => {
       connection.query(query, (err, rows) => {
         connection.release()
         if (!err) {
+          log(name, email, 'DELETE SINGLE METERING', 'Uspešno su obrisani podaci ovog merenja..')
           res.send(rows)
         } else {
           console.log(err)
@@ -178,4 +200,4 @@ const newMetering = (req, res) => {
     })
   }
 
-  export {newMetering, getAllMeteringByMeterId, deleteSingleMetering, getMeteringByMeterIds, fakturaMetering}
+  export {newMetering, getAllMeteringByMeterId, deleteSingleMetering, getMeteringByMeterIds, fakturaMetering, savePreuzimanjeMerenja}

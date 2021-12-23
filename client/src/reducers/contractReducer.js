@@ -2,6 +2,8 @@ import {
     GET_ALL_CONTRACTS_REQUEST, GET_ALL_CONTRACTS_SUCCESS, GET_ALL_CONTRACTS_RESET, GET_ALL_CONTRACTS_FAIL, ALL_CONTRACTS_UPDATE,
     GET_SINGLE_CONTRACT_REQUEST, GET_SINGLE_CONTRACT_SUCCESS, GET_SINGLE_CONTRACT_RESET, GET_SINGLE_CONTRACT_FAIL, GET_SINGLE_CONTRACT_BY_CLIENT_ID_REQUEST, GET_SINGLE_CONTRACT_BY_CLIENT_ID_SUCCESS, GET_SINGLE_CONTRACT_BY_CLIENT_ID_FAIL, CONTRACT_SAVE_REQUEST, CONTRACT_SAVE_SUCCESS, CONTRACT_SAVE_FAIL } from '../constants/contractConstants';
 
+
+    //Reducer for storaging all contracts values
     export const allContractsReducer = (state = { contracts: []}, action) => {
         switch (action.type) {
           case GET_ALL_CONTRACTS_REQUEST:
@@ -34,6 +36,8 @@ import {
         }
       }
 
+
+      //Reducer for storaging single contract values
       export const singleContractReducer = (state = { contract: null}, action) => {
         switch (action.type) {
           case GET_SINGLE_CONTRACT_REQUEST:
@@ -61,6 +65,7 @@ import {
         }
       }
 
+      //Reducer for storaging contract values by clientid 
     export const singleContractByClientReducer = (state = { singleContractByClient: null }, action) => {
       switch (action.type) {
         case GET_SINGLE_CONTRACT_BY_CLIENT_ID_REQUEST:
@@ -83,6 +88,7 @@ import {
       }
     }
 
+    //Reducer for saving and storaging new contract values or updating existing one 
     export const saveContractReducer = (state = { contract: null, error: null }, action) => {
       switch (action.type) {
         case CONTRACT_SAVE_REQUEST:

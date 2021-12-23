@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { userRegisterReducer, userLoginReducer, unosReducer } from './reducers/userReducer';
+import { userRegisterReducer, userLoginReducer, allUsersReducer, singleUserReducer } from './reducers/userReducer';
 import { clientReducer, allClientsReducer, singleClientReducer } from './reducers/clientReducer';
 import { allMetersReducer, singleMeterReducer, allMetersByClientIdReducer } from './reducers/meterReducer';
 import { allContractsReducer, singleContractReducer, singleContractByClientReducer, saveContractReducer } from './reducers/contractReducer';
@@ -10,12 +10,11 @@ import { mrezarinaReducer, allMrezarineReducer, newMrezarinaReducer } from './re
 import { backupFakturaReducer, getBackUpFaktureReducer } from './reducers/backupFakturaReducer';
 import { allEmsReducer, emsReducer, emsSaveReducer } from './reducers/emsReducer';
 import { allNametiReducer, nametiReducer, newNametiReducer } from './reducers/nametiReducer';
-import { kursEuraReducer } from './reducers/kursEuraReducer';
+import { kursEuraReducer, allEuroReducer } from './reducers/kursEuraReducer';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userLogin: userLoginReducer,
-  unosRacun: unosReducer,
   client: clientReducer,
   allClients: allClientsReducer,
   singleClient: singleClientReducer,
@@ -41,7 +40,10 @@ const reducer = combineReducers({
   allNameti: allNametiReducer,
   jNamet: nametiReducer,
   newNameti: newNametiReducer,
-  kursE: kursEuraReducer 
+  allEuro: allEuroReducer,
+  kursE: kursEuraReducer,
+  allUsers: allUsersReducer,
+  singleUser: singleUserReducer
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null

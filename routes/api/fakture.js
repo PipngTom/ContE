@@ -5,7 +5,7 @@ import { protect } from '../../middleware/authMiddleware.js';
 const router = express.Router()
 
 
-router.route('/bfaktura').post(rezervnaFaktura).get(protect, getRezervnaFaktura);
+router.route('/bfaktura').post(protect, rezervnaFaktura).get(protect, getRezervnaFaktura);
 
 router.route('/:id').get(getContractByMeterId);
 

@@ -28,7 +28,7 @@ app.use('/api/mrezarina', mrezarinaRoutes)
 app.use('/api/fakture', faktureRoutes)
 app.use('/api/ems', emsRoutes)
 app.use('/api/nameti', nametiRoutes)
-app.use('/api/kurs', euroRoutes)
+app.use('/api/kursevra', euroRoutes)
 
 const PORT = process.env.PORT || 5000;
 

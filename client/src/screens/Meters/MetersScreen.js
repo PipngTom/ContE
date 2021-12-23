@@ -8,8 +8,10 @@ import Loader from '../../components/Loader';
 import { nadjiNazivPoKategoriji, nadjiNazivVrsteSnabdevanja } from '../../constants/brojila';
 import { GET_ALL_METERS_RESET } from '../../constants/meterConstants';
 
+//Component for rendering all meters 
 const MetersScreen = ({history}) => {
 
+    //local state for showing modal, selecting id for deleting meter, string for searching of meter and string for searching number of meter
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [selectedId, setSelectedId] = useState(0)
     const [searchString, setsearchString] = useState('')
@@ -25,40 +27,50 @@ const MetersScreen = ({history}) => {
 
 
     useEffect(() => {
+        //action for getting all meters 
         dispatch(getAllMeters())
+        //action for getting all clients
         dispatch(getAllClients())
         return () => {
+            //reseting state after exit from component
             dispatch({type: GET_ALL_METERS_RESET})
         }
     }, [dispatch])
 
+    //navigating to edit meter component with id of clicked item and dispatching get single meter client 
     const editHandler = (id) => {
         history.push({pathname: `/meters/edit/${id}`})
         dispatch(getSingleMeter(id))
     }
 
+    //navigating to create new meter component
     const novoBrojilo = () => {
         history.push({pathname: `/meters/new`})
     }
 
+    //deleting meter and closing modal function
     const deleteHandler = (id) => {
         setSelectedId(id)
         setShowDeleteModal(true)
     }
 
+    //closing modal 
     const handleDeleteClose = () => {
         setShowDeleteModal(false)
     }
 
+    //delete meter action and closing modal 
     const handleDeleteAccept = () => {
         dispatch(deleteSingleMeter(selectedId))
         setShowDeleteModal(false)
     }
 
+    //searching for name of client function
     const handleTypeNazivKlijenta=(e)=>{
         setsearchString(e.target.value)   
       }
 
+      //searching for number of meter function
       const handleTypeEdBroj=(e)=>{
         setsearchStringEdBroj(e.target.value)   
       }

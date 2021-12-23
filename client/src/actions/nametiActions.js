@@ -62,13 +62,18 @@ export const getNamete = (id) => async (dispatch, getState) => {
     }
 }
 
-export const snimiNamete = (nameti, id) => async (dispatch) => {
+export const snimiNamete = (nameti, id) => async (dispatch, getState) => {
     const pack = {...nameti, id}
     try {
          dispatch({type: SAVE_NAMETI_REQUEST})
 
+         const {
+             userLogin: { userInfo }
+         } = getState()
+
          const config = {
              headers: {
+                 Authorization: `Bearer ${userInfo.token}`,
                  'Content-Type': 'application/json'
              }
          }
@@ -87,14 +92,19 @@ export const snimiNamete = (nameti, id) => async (dispatch) => {
     }
 }
 
-export const updateNameti = (nameti, id) => async (dispatch) => {
+export const updateNameti = (nameti, id) => async (dispatch, getState) => {
     
 
     try {
         dispatch({type: NAMETI_UPDATE_REQUEST})
 
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
         const config = {
             headers: {
+                Authorization: `Bearer ${userInfo.token}`,
                 'Content-Type': 'application/json'
             }
         }

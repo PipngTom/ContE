@@ -8,9 +8,9 @@ router.route('/:id').get(protect, getNameti)
 
 router.route('/').get(protect, getAllNametii)
 
-router.route('/new').post(saveNameti)
+router.route('/new').post(protect, saveNameti)
 
-router.route('/update/podaci').post(updateNamete)
+router.route('/update/podaci').post(protect, updateNamete)
 
 router.route('/faktura/datum').get(protect, getNametePoDatumu)
 

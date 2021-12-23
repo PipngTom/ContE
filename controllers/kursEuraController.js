@@ -1,5 +1,6 @@
 import  soapRequest from 'easy-soap-request'
 import convert from 'xml-js'
+import { log } from '../middleware/logFunkcija.js'
 
 const kursEura = (req, res) => {
 
@@ -30,7 +31,7 @@ const sampleHeaders = {
 //         'Access-Control-Allow-Origin': '*',
 //         'Access-Control-Allow-Headers': '*',
     'Content-Type': 'text/xml; charset=utf-8',
-    'soapAction': `http://communicationoffice.nbs.rs/GetExchangeRateRsdEur`,
+    'soapAction': `http://communicationoffice.nbs.rs/GetExchangeRateByDate`,
 };
 // 9862d7db-7b33-4d80-9c1e-bccc2a701d79
 const xml = `
@@ -43,10 +44,10 @@ const xml = `
 </AuthenticationHeader>
 </soap:Header>
 <soap:Body>
-<GetExchangeRateRsdEur xmlns="http://communicationoffice.nbs.rs">
+<GetExchangeRateByDate xmlns="http://communicationoffice.nbs.rs">
 <date>${datumZaKurs}</date>
-<typeID>2</typeID>
-</GetExchangeRateRsdEur>
+<exchangeRateListTypeID>3</exchangeRateListTypeID>
+</GetExchangeRateByDate>
 </soap:Body>
 </soap:Envelope>
 `;
@@ -58,7 +59,7 @@ const xml = `
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 1000 }); // Optional timeout parameter(milliseconds)
     const { headers, body, statusCode } = response;
  //   console.log(headers);
- //   console.log(body);
+   // console.log(body);
     let index1 = body.indexOf("<Amount>");
     let index2 = body.indexOf("</Amount>");
     const finRez = body.substring(index1+8, index2)
@@ -67,11 +68,100 @@ const xml = `
     var result1 = convert.xml2json(body, {compact: true, spaces: 4});
    // console.log(result1)
     const pom = JSON.parse(result1)
-    const rezultat = pom['soap:Envelope']['soap:Body']['GetExchangeRateRsdEurResponse']
-    ['GetExchangeRateRsdEurResult']['diffgr:diffgram']['ExchangeRateDataSet']['ExchangeRateRsdEur']['Amount']['_text']
-    res.send(rezultat)
+   // console.log(pom)
+     const rezultat = pom['soap:Envelope']['soap:Body']['GetExchangeRateByDateResponse']
+    ['GetExchangeRateByDateResult']['diffgr:diffgram']['ExchangeRateDataSet']['ExchangeRate'].find(item => item.CurrencyCode._text == 978)
+    const rez = rezultat['MiddleRate']['_text']
+    //['ExchangeRateRsdEur']['Amount']['_text']
+console.log(rez)
+    res.send(rez) 
   })();
 }
 
-export { kursEura }
+import db from '../db/db.js';
+
+const getAllEuro = (req, res) => {
+
+    const { name, email } = req
+
+    const query = `SELECT *, DATE_FORMAT(datum, '%d-%m-%Y') AS datum FROM kursevra`
+
+    db.getConnection((err, connection) => {
+        if (err) {
+            throw err
+        }
+        connection.query(query, (err, rows) => {
+            connection.release()
+            if (!err) {
+                log(name, email, 'GET ALL KURS', rows)
+                res.send(rows)
+            } else {
+                console.log(err)
+            }
+        })
+    })
+}
+
+const getKursEura = (req, res) => {
+    const  id  = req.params.id
+
+    const {name, email} = req
+
+    const query = `SELECT *, DATE_FORMAT(datum, '%Y-%m-%d') AS datum FROM kursevra WHERE id = ${id}`
+
+    db.getConnection((err, connection) => {
+        if (err) {
+            throw err
+        }
+        connection.query(query, (err, rows) => {
+            connection.release()
+            if (!err) {
+                log(name, email, 'GET KURS EURA', rows)
+                res.send(rows)
+            } else {
+                console.log(err)
+            }
+        })
+    })
+}
+
+const saveEuro = (req, res) => {
+    const {datum, euro, id } = req.body
+
+    const { name, email } = req
+
+    const dat = datum.split('-')
+    const mesec = dat[1]
+    const godina = dat[0]
+    
+
+    let query
+    if (id === 0) {
+        query = `INSERT INTO kursevra (euro, datum, mesec, godina) VALUES ('${euro}', '${datum}', '${mesec}', '${godina}' )`
+    } else {
+         query = `UPDATE kursevra SET euro = '${euro}' WHERE mesec = '${mesec}' AND godina = '${godina}'`
+    }
+    
+
+    db.getConnection((err, connection) => {
+        if (err) {
+            throw err
+        }
+        connection.query(query, (err, rows) => {
+            connection.release()
+            if (!err) {
+                if (id === 0) {
+                    log(name, email, 'NEW EURO', req.body)
+                } else {
+                    log(name, email, 'UPDATE EURO', req.body)
+                }
+                res.send(rows)
+            } else {
+                console.log(err)
+            }
+        })
+    })
+}
+
+export { saveEuro, getAllEuro, getKursEura, kursEura }
 

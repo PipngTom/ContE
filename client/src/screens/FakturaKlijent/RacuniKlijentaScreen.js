@@ -48,6 +48,9 @@ const RacuniKlijentaScreen = ({ match }) => {
     const trenutniNameti = useSelector(state => state.jNamet)
     const { namet } = trenutniNameti
 
+    const kurs = useSelector(state => state.kursE)
+    const { euro } = kurs
+
 
     useEffect(() => {
         if (clientId){
@@ -153,7 +156,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                 theme: 'grid',
                 styles: { cellPadding: 2, font: 'DejaVuSans' },
                 headStyles:  { halign: 'center', valign: 'middle'} ,
-                columnStyles: { 1: { halign: 'center', cellWidth: 50 }, 2: { halign: 'right', cellWidth: 80 }, 3: { halign: 'right', cellWidth: 90 }, 4: { halign: 'right'}}
+                columnStyles: { 1: { halign: 'center', cellWidth: 50 }, 2: { halign: 'right', cellWidth: 80 }, 3: { halign: 'right', cellWidth: 80 }, 4: { halign: 'right', cellWidth: 80}, 5: { halign: 'right', cellWidth: 80 }, 6: { halign: 'right', cellWidth: 80 }}
             })
             doc.setFontSize(10)
             doc.text('2. Obračun za pristup sistemu za prenos/distribuciju električne energije', 40, doc.autoTable.previous.finalY + 15)
@@ -184,10 +187,10 @@ const RacuniKlijentaScreen = ({ match }) => {
             doc.addPage() 
         })
        
-        const faktura = backupFunkcija(client, fakMetering, contract, metersByClientId, mrezarinaZaFakturu, namet, mesecMerenja, godinaMerenja)
+        const faktura = backupFunkcija(client, fakMetering, contract, metersByClientId, mrezarinaZaFakturu, namet, euro, mesecMerenja, godinaMerenja)
         dispatch(backupFaktura(faktura))
         
-        doc.save('Faktura proba.pdf')
+        doc.save(`Faktura proba.pdf`)
     }
 
 
@@ -359,7 +362,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                         let sumEN = (item[0].vt ? item[0].vt : 0) + (item[0].nt ? item[0].nt : 0) + (item[0].jt ? item[0].jt : 0)
                         
 
-                        let sum1 = (item[0].vt ? (item[0].vt * (contract && contract.cenaVT)) : 0) + (item[0].nt ? (item[0].nt * (contract && contract.cenaNT)) : 0) + (item[0].jt ? (item[0].jt * (contract && contract.cenaJT)) : 0)
+                        let sum1 = (item[0].vt ? (item[0].vt * ((contract && contract.cenaVT) * (euro && euro))) : 0) + (item[0].nt ? (item[0].nt * ((contract && contract.cenaNT) * (euro && euro))) : 0) + (item[0].jt ? (item[0].jt * ((contract && contract.cenaJT) * (euro && euro))) : 0)
                         sumEnergija = sumEnergija + sum1
                         
                         let sum3 = sumEN * ((namet && namet.naknadaEe) + (namet && namet.naknadaOie))
@@ -483,7 +486,7 @@ const RacuniKlijentaScreen = ({ match }) => {
                 let sumEN = (item[0].vt ? item[0].vt : 0) + (item[0].nt ? item[0].nt : 0) + (item[0].jt ? item[0].jt : 0)
                 
 
-                let sum1 = (item[0].vt ? (item[0].vt *(contract && contract.cenaVT)) : 0) + (item[0].nt ? (item[0].nt * (contract && contract.cenaNT)) : 0) + (item[0].jt ? (item[0].jt * (contract && contract.cenaJT)) : 0)
+                let sum1 = (item[0].vt ? (item[0].vt * ((contract && contract.cenaVT) * (euro && euro))) : 0) + (item[0].nt ? (item[0].nt * ((contract && contract.cenaNT) * (euro && euro))) : 0) + (item[0].jt ? (item[0].jt * ((contract && contract.cenaJT) * (euro && euro))) : 0)
                 
                 let sum3 = sumEN * ((namet && namet.naknadaEe) + (namet && namet.naknadaOie))
 
@@ -563,16 +566,20 @@ const RacuniKlijentaScreen = ({ match }) => {
                                     <th>Naziv</th>
                                     <th>Jed. mere</th>
                                     <th>Isporučena količina</th>
-                                    <th>Jedinična cena</th>
+                                    <th>Jedinična cena(Eur)</th>
+                                    <th>Sr. kurs NBS na dan prometa(RSD)</th>
+                                    <th>Jedinična cena(RSD)</th>
                                     <th>Iznos</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 
-                                {(item[0].vt || item[0].vt === 0) ? <tr><td>Viša tarifa</td><td>kWh</td><td>{item[0].vt}</td><td>{contract && contract.cenaVT}</td><td>{numberWithDots(((contract && contract.cenaVT) * item[0].vt).toFixed(2))}</td></tr> : ''}
-                                {(item[0].nt || item[0].nt === 0) ? <tr><td>Niža tarifa</td><td>kWh</td><td>{item[0].nt}</td><td>{contract && contract.cenaNT}</td><td>{numberWithDots(((contract && contract.cenaNT) * item[0].nt).toFixed(2))}</td></tr> : ''}
-                                {(item[0].jt || item[0].jt === 0) ? <tr><td>Jedinstvena tarifa</td><td>kWh</td><td>{item[0].jt}</td><td>{contract && contract.cenaJT}</td><td>{numberWithDots(((contract && contract.cenaJT) * item[0].jt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].vt || item[0].vt === 0) ? <tr><td>Viša tarifa</td><td>kWh</td><td>{item[0].vt}</td><td>{contract && contract.cenaVT}</td><td>{euro && euro}</td><td>{numberWithDots(((contract && contract.cenaVT) * (euro && euro)).toFixed(6))}</td><td>{numberWithDots((((contract && contract.cenaVT) * (euro && euro)) * item[0].vt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].nt || item[0].nt === 0) ? <tr><td>Niža tarifa</td><td>kWh</td><td>{item[0].nt}</td><td>{contract && contract.cenaNT}</td><td>{euro && euro}</td><td>{numberWithDots(((contract && contract.cenaNT) * (euro && euro)).toFixed(6))}</td><td>{numberWithDots((((contract && contract.cenaNT) * (euro && euro)) * item[0].nt).toFixed(2))}</td></tr> : ''}
+                                {(item[0].jt || item[0].jt === 0) ? <tr><td>Jedinstvena tarifa</td><td>kWh</td><td>{item[0].jt}</td><td>{contract && contract.cenaJT}</td><td>{euro && euro}</td><td>{numberWithDots(((contract && contract.cenaJT) * (euro && euro)).toFixed(6))}</td><td>{numberWithDots((((contract && contract.cenaJT) * (euro && euro)) * item[0].jt).toFixed(2))}</td></tr> : ''}
                                 <tr>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>

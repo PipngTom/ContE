@@ -4,7 +4,6 @@ import Header from './components/Header';
 import { Container } from 'react-bootstrap';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
-import UnosScreen from './screens/UnosScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import LoginScreen from './screens/LoginScreen';
 import NewClientScreen from './screens/Clients/NewClientScreen';
@@ -18,8 +17,6 @@ import NewMeteringScreen from './screens/Metering/NewMeteringScreen';
 import AllMeteringScreen from './screens/Metering/AllMeteringScreen';
 import MrezarinaScreen from './screens/MrezarinaScreen';
 import AllMrezarinaScreen from './screens/AllMrezarinaScreen';
-import FaktureScreen from './screens/Fakture/FaktureScreen';
-import NewFakturaScreen from './screens/Fakture/NewFakturaScreen';
 import BalansnaOdgovornostScreen from './screens/BalansnaOdgovrnost/BalansnaOdgovornostScreen';
 import IstorijaFakturaScreen from './screens/IstorijatFaktura/IstorijaFakturaScreen';
 import Footer from './components/Footer';
@@ -35,6 +32,11 @@ import EditEMSScreen from './screens/BalansnaOdgovrnost/EditEMSScreen';
 import NewNametiScreen from './screens/Nameti/NewNametiScreen';
 import NametiScreen from './screens/Nameti/NametiScreen';
 import AllNametiScreen from './screens/Nameti/AllNametiScreen';
+import KursEvraScreen from './screens/KursEvra/KursEvraScreen';
+import AllEuroScreen from './screens/KursEvra/AllEuroScreen';
+import KorisniciScreen from './screens/KorisniciScreen';
+import EditKorisniciScreen from './screens/EditKorisniciScreen';
+import PreuzimanjeMerenjaScreen from './screens/PreuzimanjeMerenjaScreen';
 
 const App = () => {
   return (
@@ -43,10 +45,11 @@ const App = () => {
       <Header />
           <main className='py-3'>
             <Container>
-                <ProtectedRoute path='/unos' component={UnosScreen} /> 
                 <Route path='/' component={LandingScreen}/>
                 <Route path='/register' component={RegisterScreen} />
                 <Route path='/login' component={LoginScreen} />
+                <ProtectedRoute exact path='/korisnici' component={KorisniciScreen} />
+                <ProtectedRoute exact path='/korisnici/:id' component={EditKorisniciScreen} />
                 <ProtectedRoute exact path='/clients/new' component={NewClientScreen} />
                 <ProtectedRoute exact path='/clients/edit/:id' component={NewClientScreen} />
                 <ProtectedRoute exact path='/clients' component={ClientsScreen} />
@@ -59,12 +62,11 @@ const App = () => {
                 <ProtectedRoute exact path='/unosi' component={MeteringScreen} />
                 <ProtectedRoute exact path='/unosi/edit/:id' component={NewMeteringScreen} />
                 <ProtectedRoute exact path='/unosi/new' component={NewMeteringScreen} />
+                <ProtectedRoute exact path='/preuzimanjemerenja' component={PreuzimanjeMerenjaScreen} />
                 <ProtectedRoute exact path='/allmetering/:id' component={AllMeteringScreen} />
                 <ProtectedRoute exact path='/mrezarina' component={AllMrezarinaScreen} />
                 <ProtectedRoute exact path='/mrezarina/:id/:idpret' component={MrezarinaScreen} />
                 <ProtectedRoute exact path='/mrezarine/new/:id' component={NewMrezarinaScreen} />
-                <ProtectedRoute exact path='/fakture' component={FaktureScreen} />
-                <ProtectedRoute exact path='/fakture/new/:id' component={NewFakturaScreen} />
                 <ProtectedRoute exact path='/balansna' component={BalansnaOdgovornostScreen} />
                 <ProtectedRoute exact path='/fakturaklijent' component={FakturaZaKlijentaScreen} />
                 <ProtectedRoute exact path='/fakturaklijent/racuni/:id' component={RacuniKlijentaScreen} />
@@ -76,6 +78,9 @@ const App = () => {
                 <ProtectedRoute exact path='/nameti' component={AllNametiScreen} />
                 <ProtectedRoute exact path='/nameti/:id/:idpret' component={NametiScreen} />
                 <ProtectedRoute exact path='/namet/new/:id' component={NewNametiScreen} />
+                <ProtectedRoute exact path='/kursevra' component={AllEuroScreen} />
+                <ProtectedRoute exact path='/kursevra/new' component={KursEvraScreen} />
+                <ProtectedRoute exact path='/kursevra/edit/:id' component={KursEvraScreen} />
             </Container>
           </main>
         <Footer />

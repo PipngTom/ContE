@@ -8,19 +8,23 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { GET_SINGLE_CONTRACT_RESET, GET_ALL_CONTRACTS_RESET} from '../../constants/contractConstants';
 
-
+//New contract or Edit contract component depending on whether component have id or not
 const NewContractScreen = ({match, history}) => {
     const [showModal, setShowModal] = useState(false)
 
+    //Built-in methods from react hook form library for form validation
     const { register, handleSubmit, formState: { errors }, setValue   } = useForm(
         {
+             //resolver connects react-hook-form library with yup library
        resolver: yupResolver(ugovorSchema)
    } 
    )  
     const dispatch = useDispatch()
 
+    //Id is taken from params and indicates whom contract it is
     const contractId = match.params.id;
 
+    //Selecting a state from reducer for displaying values from reducer in template
     const singleContract = useSelector(state => state.singleContract)
     const {loading, error, contract} = singleContract
 
@@ -31,7 +35,7 @@ const NewContractScreen = ({match, history}) => {
     const { error: savedContractError } = savedContract
 
     
-
+    //Setting a local state for new contract
     const [ugovor, setUgovor] = useState({
         idKlijent: '',
         brojUgovora: '',
@@ -46,9 +50,11 @@ const NewContractScreen = ({match, history}) => {
         
         if(contractId)//EDIT MODE
         {
+            //If contract from redux is not yet in reducer then dispatch getSingleContract method to get that single contract 
             if(!contract || contract.id != contractId){
                 dispatch(getSingleContract(contractId))
             } else{
+                //And if that contract is already in reducer then set that values from contract reducer to local state with useState hook 
                 setUgovor({...ugovor,
                 idKlijent: contract.idKlijent,
                 brojUgovora: contract.brojUgovora,
@@ -58,6 +64,7 @@ const NewContractScreen = ({match, history}) => {
                 cenaNT: contract.cenaNT,
                 cenaJT: contract.cenaJT
             })
+            //setValue method helps for updating form to validate form fields all at once 
             setValue("cenaVT", contract.cenaVT)
             setValue("cenaNT", contract.cenaNT)
             setValue("cenaJT", contract.cenaJT) 
@@ -70,6 +77,7 @@ const NewContractScreen = ({match, history}) => {
 
     },[dispatch, contract, contractId, savedContractError])
 
+    //Handling input values in local state targeting name property and setting with currently value of input field
     const handleInput = (e) => {
     
         setUgovor({...ugovor, [e.target.name] : e.target.value})
@@ -78,11 +86,13 @@ const NewContractScreen = ({match, history}) => {
     const submitUgovor = async (data, e) => {
         e.preventDefault()
         
+        //If id exists then noviUgovor() will gonna update single contract and if does not exists then noviUgovor() is gonna create new single contract
          if(contractId){
             dispatch(noviUgovor(ugovor, contractId))
         } else {
             dispatch(noviUgovor(ugovor))
         }
+        //Clearing contract state when submiting and showing modal
         dispatch({type: GET_SINGLE_CONTRACT_RESET})
         //dispatch({type: GET_ALL_CONTRACTS_RESET})
         setShowModal(true)
@@ -92,7 +102,9 @@ const NewContractScreen = ({match, history}) => {
 
     }
 
+    //Closing modal handler and moving to all contracts component
     const handleDeleteClose = () => {
+        //If there is no error push me to all contracts
         if(!savedContractError){
             history.push({pathname: `/contracts`})
         }

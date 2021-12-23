@@ -5,9 +5,9 @@ import { protect } from '../../middleware/authMiddleware.js';
 const router = express.Router()
 
 router.route('/').get(protect, getAllMeters);
-router.route('/:id').get(protect, getSingleMeter).delete(deleteSingleMeter);
+router.route('/:id').get(protect, getSingleMeter).delete(protect, deleteSingleMeter);
 router.route('/racuni/:id').get(protect, getAllMetersByKlijentId);
-router.route('/new').post(newMeter);
+router.route('/new').post(protect, newMeter);
 
 
 

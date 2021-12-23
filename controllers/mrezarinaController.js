@@ -77,6 +77,7 @@ const getMrezarina = (req, res) => {
 
     const {idpret, mrezarina} = req.body
     
+    const { name, email } = req
 
     const setColumns = Object.keys(mrezarina).reduce((acc, cur, index, array)=>{
       if(cur!== 'vaziDo'){
@@ -122,6 +123,7 @@ const getMrezarina = (req, res) => {
        const promise1 = await queryPromise1()
        if(promise1.affectedRows == 1) {
            promise2 = await queryPromise2()
+           log(name, email, 'UPDATE MREZARINA', req.body)
            res.send(promise2)
        } else {
          res.send(promise1)
@@ -146,6 +148,7 @@ const saveMrezarina = async (req, res) => {
         sp_domacinstvo_vt, sp_domacinstvo_nt, sp_domacinstvo_odosnaga, sp_jednotarifno_jt, sp_jednotarifno_odosnaga,
         jr_jt, idZadnje } = req.body
   
+        const { name, email } = req
         
         const query1 = `INSERT INTO mrezarina (vaziOd, srednji_napon_vt, srednji_napon_reak, srednji_napon_odosnaga, 
           srednji_napon_nt, srednji_napon_prereak, srednji_napon_prekosnaga,
@@ -190,6 +193,7 @@ const saveMrezarina = async (req, res) => {
           const promise1 = await queryPromise1()
           if(promise1.affectedRows == 1) {
               promise2 = await queryPromise2()
+              log(name, email, 'NEW MREZARINA', req.body)
               res.send(promise2)
           } else {
             res.send(promise1)

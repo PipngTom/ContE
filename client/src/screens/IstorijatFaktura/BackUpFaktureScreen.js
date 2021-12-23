@@ -125,7 +125,7 @@ const BackUpFaktureScreen = ({match}) => {
                 theme: 'grid',
                 styles: { cellPadding: 2, font: 'DejaVuSans' },
                 headStyles:  { halign: 'center', valign: 'middle'} ,
-                columnStyles: { 1: { halign: 'center', cellWidth: 50 }, 2: { halign: 'right', cellWidth: 80 }, 3: { halign: 'right', cellWidth: 90 }, 4: { halign: 'right'}}
+                columnStyles: { 1: { halign: 'center', cellWidth: 50 }, 2: { halign: 'right', cellWidth: 80 }, 3: { halign: 'right', cellWidth: 80 }, 4: { halign: 'right', cellWidth: 80}, 5: { halign: 'right', cellWidth: 80 }, 6: { halign: 'right', cellWidth: 80 }}
             })
             doc.setFontSize(10)
             doc.text('2. Obračun za pristup sistemu za prenos/distribuciju električne energije', 40, doc.autoTable.previous.finalY + 15)
@@ -386,7 +386,9 @@ const BackUpFaktureScreen = ({match}) => {
                             <th>Naziv</th>
                             <th>Jed. mere</th>
                             <th>Isporučena količina</th>
-                            <th>Jedinična cena</th>
+                            <th>Jedinična cena(EUR)</th>
+                            <th>Sr. kurs NBS na dan prometa(RSD)</th>
+                            <th>Jedinična cena (RSD)</th>
                             <th>Iznos</th>
                         </tr>
                     </thead>
@@ -397,7 +399,9 @@ const BackUpFaktureScreen = ({match}) => {
                                 <td>{it.col2}</td>
                                 <td>{it.col3}</td>
                                 <td>{it.col4}</td>
-                                <td>{numberWithDots(it.col5.toFixed(2))}</td>
+                                <td>{it.col5}</td>
+                                <td>{typeof it.col6 == 'string' ? it.col6 : numberWithDots(Number(it.col6).toFixed(6))}</td>
+                                <td>{numberWithDots((it.col7).toFixed(2))}</td>
                                 
                             </tr>
                         )
